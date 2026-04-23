@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            
+            <!-- Icon -->
+            <div class="error-icon-wrapper mx-auto mb-4">
+                <i class="fa-solid fa-store-slash"></i>
+            </div>
+            
+            <!-- Error Code -->
+            <div class="error-code-badge mx-auto mb-3">
+                {{ error_code }}
+            </div>
+            
+            <h2 class="fw-bold mb-3" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">
+                Something's Missing
+            </h2>
+            <p class="mb-4" style="color: var(--text-muted); font-size: 1.05rem; line-height: 1.7;">{{ message }}</p>
+            
+            <!-- Action Buttons -->
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
+                <a href="/" class="error-btn-home">
+                    <i class="fa-solid fa-house me-2"></i> Go Back Home
+                </a>
+                <a href="https://wa.me/+8801791542023" class="error-btn-support">
+                    <i class="fa-brands fa-whatsapp me-2"></i> Support
+                </a>
+            </div>
+            
+            <!-- Divider -->
+            <div class="error-divider mx-auto my-5"></div>
+            
+            <!-- Popular Categories -->
+            <div>
+                <p class="error-section-label mb-3">Popular Categories</p>
+                <div class="d-flex justify-content-center gap-4">
+                    <a href="/category/islamic" class="error-cat-link">
+                        <i class="fa-solid fa-mosque me-1"></i> Islamic
+                    </a>
+                    <a href="/category/attar" class="error-cat-link">
+                        <i class="fas fa-air-freshener me-1"></i> Attar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Animation ── */
+    .container {
+        animation: errorFadeIn 0.8s ease forwards;
+    }
+    @keyframes errorFadeIn {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Icon ── */
+    .error-icon-wrapper {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--black-soft);
+        border: 1px solid var(--black-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.8rem;
+        color: var(--black-border);
+        position: relative;
+    }
+    .error-icon-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        border: 1px dashed var(--black-border);
+        opacity: 0.4;
+        animation: spin 30s linear infinite;
+    }
+    /* Subtle orange ambient glow behind the icon */
+    .error-icon-wrapper::before {
+        content: '';
+        position: absolute;
+        inset: -30px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        pointer-events: none;
+        z-index: -1;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    /* ── Error Code Badge ── */
+    .error-code-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12));
+        border: 1px solid var(--orange-subtle-border);
+        color: var(--orange);
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+        padding: 4px 30px;
+        border-radius: 14px;
+        box-shadow: 0 0 30px var(--orange-glow);
+    }
+
+    /* ── Buttons ── */
+    .error-btn-home {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px var(--orange-glow);
+        position: relative;
+        overflow: hidden;
+    }
+    .error-btn-home::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: left 0.5s ease;
+    }
+    .error-btn-home:hover::before {
+        left: 100%;
+    }
+    .error-btn-home:hover {
+        box-shadow: 0 8px 32px var(--orange-glow-strong);
+        transform: translateY(-3px);
+        color: #fff;
+    }
+
+    .error-btn-support {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(34, 197, 94, 0.08);
+        color: var(--green);
+        border: 1px solid rgba(34, 197, 94, 0.18);
+        padding: 14px 32px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    .error-btn-support:hover {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+        box-shadow: 0 8px 25px var(--green-glow);
+        transform: translateY(-3px);
+    }
+
+    /* ── Divider ── */
+    .error-divider {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--black-border), transparent);
+        border-radius: 2px;
+    }
+
+    /* ── Section Label ── */
+    .error-section-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+    }
+
+    /* ── Category Links ── */
+    .error-cat-link {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 50px;
+        border: 1px solid var(--black-border);
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+    }
+    .error-cat-link:hover {
+        color: var(--orange);
+        border-color: rgba(255, 107, 43, 0.25);
+        background: var(--orange-subtle);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 107, 43, 0.1);
+    }
+    .error-cat-link i {
+        font-size: 0.75rem;
+        color: var(--orange);
+        opacity: 0.5;
+        transition: opacity 0.25s;
+    }
+    .error-cat-link:hover i { opacity: 1; }
+
+    /* ── Responsive ── */
+    @media (max-width: 576px) {
+        .error-icon-wrapper { width: 90px; height: 90px; font-size: 2rem; }
+        .error-icon-wrapper::after { inset: -6px; }
+        .error-icon-wrapper::before { inset: -20px; }
+        .error-code-badge { font-size: 2rem; padding: 4px 22px; }
+        .error-btn-home,
+        .error-btn-support { padding: 12px 24px; font-size: 0.88rem; }
+        .error-btn-home:hover,
+        .error-btn-support:hover { transform: none; }
+        .error-cat-link:hover { transform: none; }
+    }
+</style>
+
+{% endblock %}

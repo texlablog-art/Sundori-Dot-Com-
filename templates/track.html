@@ -1,0 +1,528 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="mx-auto" style="max-width: 950px;">
+        
+        <!-- Header -->
+        <div class="text-center mb-5 animate__animated animate__fadeInDown">
+            <h3 class="track-page-title mb-1">
+                <i class="fa-solid fa-location-crosshairs me-2" style="color: var(--orange);"></i>Track Your Package
+            </h3>
+            <div class="track-orange-divider mx-auto mb-3"></div>
+            <p style="color: var(--text-muted); font-size: 0.92rem;">Real-time updates for H M Halal Shop BD order</p>
+        </div>
+        
+        <form method="POST" class="mb-5 px-md-4">
+            <div class="track-search-box">
+                <input type="text" name="order_id" class="track-search-input" 
+                       placeholder="Enter 10-digit Order ID (e.g. KM12345678)" required 
+                       value="{{ order.order_id if order else '' }}">
+                <button class="track-search-btn" type="submit">
+                    <i class="fa-solid fa-magnifying-glass me-1"></i> Track Now
+                </button>
+            </div>
+        </form>
+
+        {% if order %}
+        <div class="row g-4 animate__animated animate__fadeInUp">
+            
+            <div class="col-lg-5">
+                <!-- Shipping To Card -->
+                <div class="track-card mb-4" style="border-left: 4px solid var(--orange) !important;">
+                    <div class="track-card-accent"></div>
+                    <div class="p-4">
+                        <h6 class="track-meta-label mb-3">Shipping To:</h6>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-circle-user me-2" style="color: var(--orange); font-size: 1rem;"></i>
+                                <span class="fw-bold" style="color: var(--text-primary);">{{ order.name }}</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center">
+                                <i class="fa-solid fa-phone-volume me-2" style="color: var(--orange); font-size: 0.9rem;"></i>
+                                <span class="small" style="color: var(--text-secondary);">{{ order.phone }}</span>
+                            </div>
+                        </div>
+                        <div class="mb-0">
+                            <div class="d-flex align-items-start">
+                                <i class="fa-solid fa-map-location-dot me-2 mt-1" style="color: var(--orange); font-size: 0.9rem;"></i>
+                                <span class="small" style="color: var(--text-muted);">{{ order.address }}{% if order.city %}, {{ order.city }}{% endif %}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Card -->
+                <div class="track-card">
+                    <div class="track-card-accent"></div>
+                    <div class="p-4">
+                        <h6 class="track-meta-label mb-4">Order Summary</h6>
+                        <div class="track-items-list pe-1">
+                            {% for item in order.get('items_details', []) %}
+                            <div class="track-mini-item">
+                                <div class="track-mini-icon-box">
+                                    <i class="fa-solid fa-box-open" style="color: var(--orange); opacity: 0.8;"></i>
+                                </div>
+                                <div class="flex-grow-1" style="min-width: 0;">
+                                    <div class="small fw-bold" style="color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</div>
+                                    <div style="color: var(--text-muted); font-size: 0.75rem;">৳{{ item.price }}</div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div style="height: 1px; background: var(--black-border); margin: 16px 0;"></div>
+                        <div class="d-flex justify-content-between align-items-center px-1">
+                            <span class="fw-bold" style="color: var(--text-muted); font-size: 0.85rem;">Grand Total</span>
+                            <h3 class="fw-bold m-0" style="color: var(--orange); font-family: 'Playfair Display', serif;">৳{{ order.total }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <!-- Timeline Card -->
+                <div class="track-card h-100">
+                    <div class="track-card-accent"></div>
+                    <div class="p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <h5 class="fw-bold m-0" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Delivery Timeline</h5>
+                            <div class="text-end">
+                                <span class="d-block small" style="color: var(--text-muted);">Status</span>
+                                {% if order.status|lower == 'delivered' %}
+                                    <span class="track-status-badge track-status-delivered">
+                                        <i class="fa-solid fa-circle-check me-1"></i>{{ order.status }}
+                                    </span>
+                                {% elif order.status|lower == 'cancelled' %}
+                                    <span class="track-status-badge track-status-cancelled">
+                                        <i class="fa-solid fa-circle-xmark me-1"></i>{{ order.status }}
+                                    </span>
+                                {% elif order.status|lower == 'shipped' %}
+                                    <span class="track-status-badge track-status-shipped">
+                                        <i class="fa-solid fa-truck-fast me-1"></i>{{ order.status }}
+                                    </span>
+                                {% elif order.status|lower == 'confirmed' %}
+                                    <span class="track-status-badge track-status-confirmed">
+                                        <i class="fa-solid fa-check me-1"></i>{{ order.status }}
+                                    </span>
+                                {% elif order.status|lower == 'in region' %}
+                                    <span class="track-status-badge track-status-region">
+                                        <i class="fa-solid fa-location-dot me-1"></i>{{ order.status }}
+                                    </span>
+                                {% else %}
+                                    <span class="track-status-badge track-status-pending">
+                                        <i class="fa-solid fa-clock me-1"></i>{{ order.status if order.status else 'Pending' }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="timeline ps-3">
+                            {% set stages = [
+                                ('Pending', 'Order Placed & Confirmed'),
+                                ('Shipped', 'Handed to Courier'),
+                                ('In Region', 'Arrived in Your Region'),
+                                ('Delivered', 'Successfully Delivered')
+                            ] %}
+
+                            {% for key, label in stages %}
+                                {% set stage_info = namespace(active=false, time='Expected soon...') %}
+                                
+                                {% if key == 'Pending' %}
+                                    {% set stage_info.active = true %}
+                                    {% if order.created_at is string %}
+                                        {% set stage_info.time = order.created_at %}
+                                    {% else %}
+                                        {% set stage_info.time = order.created_at.strftime('%I:%M %p, %d %b %Y') %}
+                                    {% endif %}
+                                {% elif order.history %}
+                                    {% for h in order.history %}
+                                        {% if h.status|lower|trim == key|lower|trim %}
+                                            {% set stage_info.active = true %}
+                                            {% set stage_info.time = h.time %}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                            <div class="timeline-item d-flex mb-5">
+                                <div class="timeline-marker-wrapper me-4">
+                                    <div class="dot {% if stage_info.active %}active{% endif %}">
+                                        {% if stage_info.active %}
+                                            <i class="fa-solid fa-check" style="font-size: 10px; color: white !important;"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="line {% if stage_info.active %}active-line{% endif %}"></div>
+                                </div>
+                                <div class="timeline-content pb-2">
+                                    <h6 class="m-0 fw-bold {% if stage_info.active %}text-dark{% else %}text-muted opacity-50{% endif %}"
+                                        style="{% if stage_info.active %}color: var(--text-primary) !important; opacity: 1 !important;{% else %}color: var(--text-muted) !important; opacity: 0.5 !important;{% endif %}">
+                                        {{ label }}
+                                    </h6>
+                                    <p class="small m-0 mt-1 {% if stage_info.active %}fw-600{% else %}text-muted{% endif %}"
+                                       style="{% if stage_info.active %}color: var(--orange) !important;{% else %}color: var(--text-muted) !important;{% endif %}">
+                                        {{ stage_info.time }}
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% elif request.method == 'POST' %}
+        <!-- Empty State -->
+        <div class="track-empty-card mt-2 animate__animated animate__headShake">
+            <div class="py-5 text-center" style="position: relative; z-index: 1;">
+                <div class="track-empty-icon mx-auto mb-4">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                </div>
+                <h5 class="fw-bold" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">No Order Found</h5>
+                <p class="small mb-0" style="color: var(--text-muted);">We couldn't find an order for ID: <b style="color: var(--orange);">{{ request.form.get('order_id') }}</b></p>
+                <a href="/track" class="track-try-again-btn d-inline-block mt-3">
+                    <i class="fa-solid fa-arrow-rotate-left me-1"></i> Try Again
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Title ── */
+    .track-page-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+    .track-orange-divider {
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 3px;
+    }
+
+    /* ── Search Box ── */
+    .track-search-box {
+        display: flex;
+        align-items: center;
+        background: var(--black-card);
+        border: 1.5px solid var(--black-border);
+        border-radius: 50px;
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+    .track-search-box:focus-within {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px var(--orange-glow);
+    }
+    .track-search-input {
+        flex: 1;
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-primary) !important;
+        padding: 16px 24px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .track-search-input::placeholder { color: var(--text-muted) !important; }
+    .track-search-btn {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border: none;
+        padding: 16px 28px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+    .track-search-btn:hover {
+        background: linear-gradient(135deg, var(--orange), var(--orange-bright));
+        box-shadow: 0 4px 16px var(--orange-glow);
+    }
+
+    /* ══════════════════════════════════
+       CARDS
+    ══════════════════════════════════ */
+    .track-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+    .track-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        border: 1.5px solid transparent;
+        transition: border-color 0.3s ease;
+        pointer-events: none;
+        z-index: 1;
+    }
+    .track-card:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 16px var(--orange-glow);
+    }
+    .track-card:hover::after {
+        border-color: rgba(255, 107, 43, 0.12);
+    }
+    .track-card-accent {
+        height: 3px;
+        background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
+    }
+
+    /* ── Meta Labels ── */
+    .track-meta-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    /* ── Status Badges ── */
+    .track-status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+    .track-status-pending {
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        border: 1px solid var(--orange-subtle-border);
+    }
+    .track-status-confirmed {
+        background: rgba(13, 202, 240, 0.08);
+        color: #0DCAF0;
+        border: 1px solid rgba(13, 202, 240, 0.18);
+    }
+    .track-status-shipped {
+        background: rgba(217, 85, 15, 0.1);
+        color: var(--orange-dark);
+        border: 1px solid rgba(217, 85, 15, 0.2);
+    }
+    .track-status-region {
+        background: rgba(255, 133, 72, 0.08);
+        color: var(--orange-bright);
+        border: 1px solid rgba(255, 133, 72, 0.18);
+    }
+    .track-status-delivered {
+        background: rgba(34, 197, 94, 0.08);
+        color: var(--green);
+        border: 1px solid rgba(34, 197, 94, 0.18);
+    }
+    .track-status-cancelled {
+        background: rgba(232, 54, 58, 0.08);
+        color: var(--red);
+        border: 1px solid rgba(232, 54, 58, 0.18);
+    }
+
+    /* ── Items List ── */
+    .track-items-list {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+    .track-items-list::-webkit-scrollbar { width: 4px; }
+    .track-items-list::-webkit-scrollbar-track { background: transparent; }
+    .track-items-list::-webkit-scrollbar-thumb { background: var(--black-soft); border-radius: 10px; }
+
+    .track-mini-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--black-border);
+    }
+    .track-mini-item:last-child { border-bottom: none; }
+    .track-mini-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        background: var(--black-medium);
+        border: 1px solid var(--black-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    /* ══════════════════════════════════
+       TIMELINE
+    ══════════════════════════════════ */
+    .timeline-marker-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 30px;
+        flex-shrink: 0;
+    }
+
+    .dot {
+        width: 26px;
+        height: 26px;
+        background: var(--black-soft);
+        border-radius: 50%;
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 4px solid var(--black-card);
+        box-shadow: 0 0 0 1px var(--black-border);
+    }
+
+    .dot.active {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange)) !important;
+        box-shadow: 0 0 0 1px var(--orange), 0 0 18px var(--orange-glow-strong);
+    }
+
+    .line {
+        width: 3px;
+        height: 120%;
+        background: var(--black-soft);
+        position: absolute;
+        top: 26px;
+        z-index: 1;
+        border-radius: 3px;
+    }
+
+    .line.active-line {
+        background: linear-gradient(to bottom, var(--orange), rgba(255, 107, 43, 0.2)) !important;
+    }
+    .timeline-item:last-child .line { display: none; }
+
+    .fw-600 { font-weight: 600; }
+
+    /* ══════════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════════ */
+    .track-empty-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .track-empty-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-bright), var(--orange-dark));
+        z-index: 3;
+    }
+    .track-empty-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.3;
+        z-index: 0;
+    }
+    .track-empty-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--black-soft);
+        border: 1px solid var(--black-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: var(--black-border);
+        position: relative;
+        z-index: 1;
+    }
+    .track-try-again-btn {
+        background: none;
+        border: 1px solid var(--orange-subtle-border);
+        color: var(--orange);
+        padding: 10px 28px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-decoration: none;
+        transition: all 0.25s ease;
+        cursor: pointer;
+        position: relative;
+        z-index: 1;
+    }
+    .track-try-again-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        box-shadow: 0 4px 16px var(--orange-glow);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .track-card { border-radius: 16px; }
+        .track-card::after { border-radius: 16px; }
+        .track-card-accent { height: 2px; }
+        .track-search-box { border-radius: 16px; }
+        .track-search-btn { padding: 14px 20px; font-size: 0.82rem; }
+        .track-search-input { padding: 14px 18px; font-size: 0.88rem; }
+        .track-status-badge { font-size: 0.72rem; padding: 5px 12px; }
+        .timeline-item { margin-bottom: 40px; }
+        .dot { width: 22px; height: 22px; }
+        .line { top: 22px; }
+        .track-empty-card { border-radius: 16px; }
+        .track-card:hover { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+        .track-card:hover::after { border-color: transparent; }
+    }
+    @media (max-width: 480px) {
+        .track-search-btn { padding: 12px 16px; font-size: 0.78rem; }
+        .track-search-input { padding: 12px 16px; font-size: 0.85rem; }
+    }
+</style>
+{% endblock %}

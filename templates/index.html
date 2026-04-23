@@ -1,0 +1,1131 @@
+{% extends "base.html" %} {% block content %} {% if banners %}
+<!-- ═══ HERO SLIDER ═══ -->
+<section class="hero-section mb-5">
+  <div class="container">
+    <div
+      id="heroSlider"
+      class="carousel slide carousel-fade"
+      data-bs-ride="carousel"
+      data-bs-pause="false"
+    >
+      <div class="carousel-inner slider-radius">
+        {% for banner in banners %}
+        <div
+          class="carousel-item {% if loop.first %}active{% endif %}"
+          data-bs-interval="4500"
+        >
+          <a
+            href="{{ banner.link if banner.link else '#' }}"
+            class="slider-link"
+          >
+            <img
+              src="{{ banner.image_url }}"
+              class="d-block w-100 banner-img"
+              alt="Promotion"
+            />
+            <div class="slider-overlay"></div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Custom Controls -->
+      <button
+        class="slider-arrow slider-arrow-prev d-none d-md-flex"
+        type="button"
+        data-bs-target="#heroSlider"
+        data-bs-slide="prev"
+      >
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <button
+        class="slider-arrow slider-arrow-next d-none d-md-flex"
+        type="button"
+        data-bs-target="#heroSlider"
+        data-bs-slide="next"
+      >
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+
+      <!-- Dots -->
+      <div class="slider-dots d-none d-md-flex" id="sliderDots">
+        {% for banner in banners %}
+        <button
+          type="button"
+          class="slider-dot {% if loop.first %}active{% endif %}"
+          data-bs-target="#heroSlider"
+          data-bs-slide-to="{{ loop.index0 }}"
+        ></button>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ═══ CATEGORIES ═══ -->
+<section class="categories-section mb-5" data-animate>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h2 class="section-title m-0" style="font-size: 1.4rem">
+          Browse <span>Categories</span>
+        </h2>
+        <div class="orange-line"></div>
+      </div>
+    </div>
+
+    <div class="cat-scroll-track">
+      <div class="cat-scroll-inner">
+        {% set categories = [ ('islamic', 'fa-solid fa-mosque', 'Islamic'),
+        ('attar', 'fas fa-air-freshener', 'Attar'), ('beauty', 'fa-solid
+        fa-spa', 'Beauty'), ('fashion', 'fa-solid fa-shirt', 'Fashion'),
+        ('gadget', 'fa-solid fa-mobile-screen', 'Gadgets'), ('home', 'fa-solid
+        fa-house-chimney', 'Home'), ] %} {% for cat_id, icon, name in categories
+        %}
+        <div class="cat-card">
+          <a href="/category/{{ cat_id }}" class="text-decoration-none">
+            <div class="cat-icon-ring">
+              <div class="cat-icon-bg">
+                <i class="{{ icon }}"></i>
+              </div>
+              <div class="cat-icon-glow"></div>
+            </div>
+            <span class="cat-label">{{ name }}</span>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROMO STRIP ═══ -->
+<section class="promo-strip-section mb-5" data-animate data-delay="0.15">
+  <div class="container">
+    <div class="promo-strip-grid">
+      <div class="promo-card">
+        <div class="promo-icon-wrap">
+          <i class="fa-solid fa-truck-fast"></i>
+        </div>
+        <div class="promo-info">
+          <span class="promo-title">Free Delivery</span>
+          <span class="promo-sub">On orders over ৳999</span>
+        </div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon-wrap">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="promo-info">
+          <span class="promo-title">100% Authentic</span>
+          <span class="promo-sub">Guaranteed quality</span>
+        </div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon-wrap">
+          <i class="fa-solid fa-rotate-left"></i>
+        </div>
+        <div class="promo-info">
+          <span class="promo-title">Easy Returns</span>
+          <span class="promo-sub">Hassle-free refund</span>
+        </div>
+      </div>
+      <div class="promo-card">
+        <div class="promo-icon-wrap">
+          <i class="fa-solid fa-headset"></i>
+        </div>
+        <div class="promo-info">
+          <span class="promo-title">24/7 Support</span>
+          <span class="promo-sub">Always here for you</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PRODUCTS GRID ═══ -->
+<section
+  class="products-section pb-5"
+  id="products"
+  data-animate
+  data-delay="0.2"
+>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+      <div>
+        <h2 class="section-title m-0" style="font-size: 1.4rem">
+          Trending <span>Now</span>
+        </h2>
+        <div class="orange-line"></div>
+        <p
+          class="mt-2 mb-0"
+          style="font-size: 0.82rem; color: var(--text-muted)"
+        >
+          <i class="fa-solid fa-fire-flame-curved me-1 orange-text"></i> Most
+          popular picks this week
+        </p>
+      </div>
+      <a href="#" class="view-all-link text-decoration-none">
+        View All <i class="fa-solid fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-3 g-lg-4">
+      {% for p in products %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <div class="product-card-new">
+          <!-- Image Area -->
+          <div class="pc-img-area">
+            <a href="/product/{{ p._id }}">
+              <img
+                src="{{ p.main_image if p.main_image else 'https://placehold.co/400x400/161616/2E2E2E?text=No+Image' }}"
+                class="pc-img"
+                alt="{{ p.title }}"
+                loading="lazy"
+              />
+            </a>
+            <div class="pc-img-gradient"></div>
+
+            {% if p.del_price and p.del_price|int > p.price|int %}
+            <span class="pc-discount-badge">
+              <i class="fa-solid fa-tag me-1"></i>-{{ ((p.del_price|int -
+              p.price|int) / p.del_price|int * 100)|int }}%
+            </span>
+            {% endif %} {% if not p.in_stock %}
+            <div class="pc-sold-out">
+              <span>Sold Out</span>
+            </div>
+            {% endif %}
+
+            <!-- Quick cart button on hover -->
+            {% if p.in_stock %}
+            <a
+              href="/add_to_cart/{{ p._id }}"
+              class="pc-quick-cart"
+              title="Add to Cart"
+            >
+              <i class="fa-solid fa-cart-plus"></i>
+            </a>
+            {% endif %}
+          </div>
+
+          <!-- Info Area -->
+          <div class="pc-info-area">
+            <a href="/product/{{ p._id }}" class="text-decoration-none">
+              <p class="pc-title">{{ p.title }}</p>
+            </a>
+
+            <!-- Rating Stars -->
+            <div class="pc-rating">
+              <div class="pc-stars">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="pc-price-row">
+              <span class="pc-price">৳{{ p.price }}</span>
+              {% if p.del_price %}
+              <span class="pc-old-price">৳{{ p.del_price }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="pc-actions">
+              {% if p.in_stock %}
+              <a href="/add_to_cart/{{ p._id }}" class="pc-btn-cart">
+                <i class="fa-solid fa-cart-plus"></i>
+              </a>
+              <a
+                href="/add_to_cart/{{ p._id }}?next=checkout"
+                class="pc-btn-buy"
+              >
+                Buy Now
+              </a>
+              {% else %}
+              <button class="pc-btn-disabled" disabled>
+                <i class="fa-solid fa-ban me-1"></i> Out of Stock
+              </button>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-5" data-animate data-delay="0.1">
+      <a href="#" class="load-more-btn">
+        <span class="load-more-text">Explore More Products</span>
+        <i class="fa-solid fa-arrow-down load-more-icon"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  :root {
+    --black: #0D0D0D;
+    --black-light: #141414;
+    --black-medium: #1A1A1A;
+    --black-soft: #232323;
+    --black-card: #161616;
+    --black-elevated: #1E1E1E;
+    --black-border: #2E2E2E;
+    --orange: #FF6B2B;
+    --orange-bright: #FF8548;
+    --orange-light: #FFAA75;
+    --orange-pale: #FFD4B8;
+    --orange-dark: #D9550F;
+    --orange-deeper: #B34508;
+    --orange-glow: rgba(255, 107, 43, 0.25);
+    --orange-glow-strong: rgba(255, 107, 43, 0.4);
+    --orange-subtle: rgba(255, 107, 43, 0.08);
+    --orange-subtle-border: rgba(255, 107, 43, 0.15);
+    --red: #E8363A;
+    --red-glow: rgba(232, 54, 58, 0.25);
+    --green: #22C55E;
+    --green-dark: #16A34A;
+    --green-glow: rgba(34, 197, 94, 0.25);
+    --text-primary: #F0F0F0;
+    --text-secondary: #B0B0B0;
+    --text-muted: #6E6E6E;
+    --text-dim: #555555;
+    --star-gold: #F5A623;
+    --radius-xl: 20px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 10px;
+    --radius-full: 50px;
+  }
+
+  /* ══════════════════════════════════
+       HERO SLIDER
+       ══════════════════════════════════ */
+  .hero-section {
+    margin-top: 8px;
+  }
+
+  .slider-radius {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 1px solid var(--black-border);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    position: relative;
+  }
+
+  .slider-link {
+    position: relative;
+    display: block;
+  }
+
+  .banner-img {
+    height: 420px;
+    object-fit: cover;
+    transition: transform 6s ease;
+  }
+  .carousel-item.active .banner-img {
+    transform: scale(1.03);
+  }
+
+  .slider-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to right,
+      rgba(13, 13, 13, 0.4) 0%,
+      transparent 55%,
+      rgba(13, 13, 13, 0.2) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Custom Arrows */
+  .slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(13, 13, 13, 0.55);
+    backdrop-filter: blur(14px);
+    color: var(--orange) !important;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+  }
+  .slider-arrow-prev { left: 20px; }
+  .slider-arrow-next { right: 20px; }
+  .slider-arrow:hover {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff !important;
+    border-color: var(--orange);
+    box-shadow: 0 8px 28px var(--orange-glow-strong);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  /* Custom Dots */
+  .slider-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    gap: 8px;
+  }
+  .slider-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 0;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+  }
+  .slider-dot.active {
+    width: 32px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright));
+    box-shadow: 0 0 14px var(--orange-glow-strong);
+  }
+
+  /* Hide default carousel controls */
+  .carousel-control-prev,
+  .carousel-control-next,
+  .carousel-indicators {
+    display: none !important;
+  }
+
+  /* ══════════════════════════════════
+       SECTION TITLE
+       ══════════════════════════════════ */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .section-title span {
+    color: var(--orange);
+  }
+  .orange-line {
+    width: 45px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+    border-radius: 3px;
+    margin-top: 8px;
+  }
+  .orange-text {
+    color: var(--orange);
+  }
+
+  /* ══════════════════════════════════
+       CATEGORIES
+       ══════════════════════════════════ */
+  .cat-scroll-track {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 4px 0 12px;
+  }
+  .cat-scroll-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-scroll-inner {
+    display: flex;
+    gap: 16px;
+    min-width: max-content;
+    padding: 0 4px;
+  }
+
+  .cat-card {
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .cat-icon-ring {
+    position: relative;
+    width: 76px;
+    height: 76px;
+    margin: 0 auto;
+  }
+
+  .cat-icon-bg {
+    position: relative;
+    z-index: 2;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--orange);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .cat-icon-glow {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: var(--orange);
+    opacity: 0;
+    filter: blur(18px);
+    transition: opacity 0.4s;
+    z-index: 1;
+  }
+
+  .cat-card:hover .cat-icon-bg {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff;
+    border-color: var(--orange);
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 12px 36px var(--orange-glow-strong);
+  }
+  .cat-card:hover .cat-icon-glow {
+    opacity: 0.4;
+  }
+
+  .cat-label {
+    display: block;
+    margin-top: 12px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+  }
+  .cat-card:hover .cat-label {
+    color: var(--orange);
+  }
+
+  /* ══════════════════════════════════
+       PROMO STRIP
+       ══════════════════════════════════ */
+  .promo-strip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .promo-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-lg);
+    padding: 20px 18px;
+    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(180deg, var(--orange), var(--orange-dark));
+    border-radius: 0 3px 3px 0;
+    transition: height 0.4s ease;
+  }
+  .promo-card:hover::after {
+    height: 100%;
+  }
+  .promo-card:hover {
+    border-color: var(--orange-subtle-border);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25), 0 0 16px var(--orange-glow);
+  }
+
+  .promo-icon-wrap {
+    width: 46px;
+    height: 46px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--orange);
+    flex-shrink: 0;
+    transition: all 0.35s ease;
+  }
+  .promo-card:hover .promo-icon-wrap {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff;
+    box-shadow: 0 6px 20px var(--orange-glow);
+    transform: scale(1.05);
+  }
+
+  .promo-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .promo-title {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .promo-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ══════════════════════════════════
+       VIEW ALL LINK
+       ══════════════════════════════════ */
+  .view-all-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--orange) !important;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--orange-subtle-border);
+    transition: all 0.3s ease;
+  }
+  .view-all-link:hover {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff !important;
+    border-color: var(--orange);
+    box-shadow: 0 6px 20px var(--orange-glow);
+    transform: translateX(3px);
+  }
+  .view-all-link i {
+    font-size: 0.72rem;
+    transition: transform 0.3s;
+  }
+  .view-all-link:hover i {
+    transform: translateX(3px);
+  }
+
+  /* ══════════════════════════════════
+       PRODUCT CARD
+       ══════════════════════════════════ */
+  .product-card-new {
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Gradient border on hover */
+  .product-card-new::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 1.5px;
+    background: linear-gradient(
+      160deg,
+      transparent 25%,
+      rgba(255, 107, 43, 0.5) 55%,
+      rgba(255, 133, 72, 0.25) 80%,
+      transparent 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+    z-index: 5;
+  }
+  .product-card-new:hover::before {
+    opacity: 1;
+  }
+
+  .product-card-new:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      0 24px 64px rgba(0, 0, 0, 0.4),
+      0 0 50px var(--orange-glow);
+  }
+
+  /* Image Area */
+  .pc-img-area {
+    position: relative;
+    overflow: hidden;
+    background: var(--black-elevated);
+  }
+  .pc-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .product-card-new:hover .pc-img {
+    transform: scale(1.08);
+  }
+
+  .pc-img-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 13, 13, 0.55) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .product-card-new:hover .pc-img-gradient {
+    opacity: 1;
+  }
+
+  /* Discount Badge */
+  .pc-discount-badge {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 5px 14px 5px 12px;
+    font-weight: 800;
+    border-radius: 0 20px 20px 0;
+    z-index: 3;
+    letter-spacing: 0.02em;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+  }
+
+  /* Sold Out */
+  .pc-sold-out {
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 13, 13, 0.75);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  .pc-sold-out span {
+    background: var(--black-elevated);
+    border: 1px solid var(--black-border);
+    color: var(--text-muted);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 8px 24px;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Quick Cart (hover) */
+  .pc-quick-cart {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    z-index: 4;
+    opacity: 0;
+    transform: translateY(-10px) scale(0.8);
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 6px 20px var(--orange-glow-strong);
+    text-decoration: none;
+  }
+  .product-card-new:hover .pc-quick-cart {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .pc-quick-cart:hover {
+    background: linear-gradient(135deg, var(--orange), var(--orange-bright));
+    transform: translateY(0) scale(1.15) !important;
+    box-shadow: 0 8px 24px var(--orange-glow-strong);
+  }
+
+  /* Info Area */
+  .pc-info-area {
+    padding: 14px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .pc-title {
+    font-size: 0.84rem;
+    font-weight: 500;
+    line-height: 1.35;
+    height: 2.3rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    color: var(--text-primary) !important;
+    transition: color 0.2s;
+    margin-bottom: 6px;
+  }
+  a:hover .pc-title {
+    color: var(--orange) !important;
+  }
+
+  /* Stars */
+  .pc-rating {
+    margin-bottom: 8px;
+  }
+  .pc-stars {
+    display: flex;
+    gap: 2px;
+    font-size: 0.65rem;
+    color: var(--star-gold);
+  }
+  .pc-stars .fa-regular.fa-star {
+    color: var(--text-dim);
+  }
+
+  /* Price */
+  .pc-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .pc-price {
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--orange);
+  }
+  .pc-old-price {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: line-through;
+    font-weight: 500;
+  }
+
+  /* Action Buttons */
+  .pc-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .pc-btn-cart {
+    width: 40px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--black-border);
+    background: var(--black-elevated);
+    color: var(--orange) !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-decoration: none;
+  }
+  .pc-btn-cart:hover {
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff !important;
+    border-color: var(--orange);
+    box-shadow: 0 4px 16px var(--orange-glow);
+    transform: scale(1.08);
+  }
+  .pc-btn-buy {
+    flex: 1;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+    color: #fff !important;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px var(--orange-glow);
+  }
+  .pc-btn-buy:hover {
+    background: linear-gradient(135deg, var(--orange), var(--orange-bright));
+    box-shadow: 0 6px 24px var(--orange-glow-strong);
+    transform: translateY(-2px);
+    color: #fff !important;
+  }
+  .pc-btn-disabled {
+    width: 100%;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--black-elevated);
+    color: var(--text-dim);
+    border: 1px solid var(--black-border);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: not-allowed;
+    letter-spacing: 0.02em;
+  }
+
+  /* ══════════════════════════════════
+       LOAD MORE BUTTON
+       ══════════════════════════════════ */
+  .load-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 36px;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--black-border);
+    background: var(--black-card);
+    color: var(--text-secondary) !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: all 0.35s ease;
+  }
+  .load-more-btn:hover {
+    border-color: var(--orange);
+    color: var(--orange) !important;
+    box-shadow: 0 8px 30px var(--orange-glow);
+    transform: translateY(-3px);
+  }
+  .load-more-btn:hover .load-more-icon {
+    animation: bounce-down 0.6s ease infinite;
+  }
+  @keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* ══════════════════════════════════
+       RESPONSIVE
+       ══════════════════════════════════ */
+  @media (max-width: 991px) {
+    .promo-strip-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .banner-img {
+      height: 200px !important;
+    }
+    .slider-radius {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+    .hero-section {
+      margin: 0 -12px 32px;
+    }
+    .hero-section .container {
+      padding: 0;
+    }
+
+    .slider-arrow {
+      display: none !important;
+    }
+    .slider-dots {
+      display: flex !important;
+      bottom: 12px;
+    }
+    .slider-dot {
+      width: 6px;
+      height: 6px;
+    }
+    .slider-dot.active {
+      width: 22px;
+    }
+
+    .cat-scroll-inner {
+      gap: 20px;
+      padding: 0 16px 8px;
+    }
+    .cat-icon-ring {
+      width: 62px;
+      height: 62px;
+    }
+    .cat-icon-bg {
+      width: 62px;
+      height: 62px;
+      font-size: 1.2rem;
+    }
+    .cat-label {
+      font-size: 0.75rem;
+      margin-top: 8px;
+    }
+
+    .promo-strip-grid {
+      gap: 10px;
+    }
+    .promo-card {
+      padding: 14px 12px;
+      gap: 10px;
+    }
+    .promo-icon-wrap {
+      width: 38px;
+      height: 38px;
+      font-size: 0.9rem;
+    }
+    .promo-title {
+      font-size: 0.8rem;
+    }
+    .promo-sub {
+      font-size: 0.68rem;
+    }
+    .promo-card:hover {
+      transform: none;
+      box-shadow: none;
+    }
+
+    .pc-info-area {
+      padding: 10px 10px 12px;
+    }
+    .pc-title {
+      font-size: 0.76rem;
+      height: 2rem;
+      -webkit-line-clamp: 2;
+    }
+    .pc-stars {
+      font-size: 0.58rem;
+    }
+    .pc-price {
+      font-size: 1rem;
+    }
+    .pc-old-price {
+      font-size: 0.72rem;
+    }
+    .pc-actions {
+      gap: 6px;
+    }
+    .pc-btn-cart {
+      width: 34px;
+      height: 32px;
+      font-size: 0.8rem;
+    }
+    .pc-btn-buy {
+      height: 32px;
+      font-size: 0.72rem;
+    }
+    .pc-btn-disabled {
+      height: 32px;
+      font-size: 0.7rem;
+    }
+    .pc-discount-badge {
+      font-size: 0.6rem;
+      padding: 3px 10px 3px 8px;
+      top: 8px;
+    }
+    .pc-quick-cart {
+      display: none;
+    }
+    .product-card-new:hover {
+      transform: none;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    }
+    .product-card-new:hover::before {
+      opacity: 0;
+    }
+    .product-card-new:hover .pc-img {
+      transform: none;
+    }
+
+    .section-title {
+      font-size: 1.2rem !important;
+    }
+    .view-all-link {
+      font-size: 0.78rem;
+      padding: 6px 14px;
+    }
+    .load-more-btn:hover {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .banner-img {
+      height: 160px !important;
+    }
+    .promo-card {
+      padding: 12px 10px;
+    }
+    .promo-icon-wrap {
+      width: 34px;
+      height: 34px;
+      font-size: 0.85rem;
+      border-radius: var(--radius-sm);
+    }
+    .promo-title {
+      font-size: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  // ── Update slider dots on slide change ──
+  const heroSlider = document.getElementById("heroSlider");
+  if (heroSlider) {
+    heroSlider.addEventListener("slid.bs.carousel", (e) => {
+      document.querySelectorAll(".slider-dot").forEach((dot, i) => {
+        dot.classList.toggle("active", i === e.to);
+      });
+    });
+  }
+
+  // ── Touch swipe for category scroll ──
+  const catTrack = document.querySelector(".cat-scroll-track");
+  if (catTrack) {
+    let isDown = false,
+      startX,
+      scrollLeft;
+    catTrack.addEventListener("mousedown", (e) => {
+      isDown = true;
+      catTrack.style.cursor = "grabbing";
+      startX = e.pageX - catTrack.offsetLeft;
+      scrollLeft = catTrack.scrollLeft;
+    });
+    catTrack.addEventListener("mouseleave", () => {
+      isDown = false;
+      catTrack.style.cursor = "";
+    });
+    catTrack.addEventListener("mouseup", () => {
+      isDown = false;
+      catTrack.style.cursor = "";
+    });
+    catTrack.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - catTrack.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      catTrack.scrollLeft = scrollLeft - walk;
+    });
+  }
+</script>
+
+{% endblock %}

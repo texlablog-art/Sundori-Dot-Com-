@@ -1,0 +1,150 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h4 class="stats-page-title mb-1">Product Performance</h4>
+            <p class="stats-page-subtitle mb-0">Manage ratings, sales, and delivery charges for your products</p>
+            <div class="stats-orange-divider"></div>
+        </div>
+        <div class="stats-count-pill">
+            <span style="color: var(--text-muted);">Total Products:</span> 
+            <span style="color: var(--orange); font-weight: 700;">{{ products|length }}</span>
+        </div>
+    </div>
+
+    <div class="stats-table-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="stats-table-head">
+                        <th class="ps-4 py-3">Product</th>
+                        <th class="py-3">Current Status</th>
+                        <th class="py-3">Quick Update</th>
+                        <th class="py-3 text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+{% for p in products %}
+                    <tr class="stats-table-row">
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="{{ p.main_image }}" style="width: 48px; height: 48px; object-fit: cover; border-radius: 12px; border: 1px solid var(--black-border);">
+                                <div>
+                                    <div class="fw-bold text-truncate" style="max-width: 200px; color: var(--text-dim);">{{ p.title }}</div>
+                                    <div style="font-size: 11px; color: var(--text-dim);">ID: {{ p._id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-1">
+                                <span class="stats-badge stats-badge-rating"><i class="fa-solid fa-star me-1"></i> {{ p.rating if p.rating else '4.9' }}</span>
+                                <span class="stats-badge stats-badge-sold"><i class="fa-solid fa-cart-shopping me-1"></i> {{ p.sold_count if p.sold_count else '120+' }}</span>
+                                <span class="stats-badge stats-badge-delivery"><i class="fa-solid fa-truck me-1"></i> &#x09F3;{{ p.delivery_charge if p.delivery_charge else '0' }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <form action="/admin/update_stats/{{ p._id }}" method="POST" class="d-flex gap-2 align-items-center flex-wrap">
+                                <div class="stats-mini-input" title="Rating">
+                                    <span class="stats-mini-prefix"><i class="fa-solid fa-star" style="color: var(--orange);"></i></span>
+                                    <input type="number" name="rating" step="0.1" max="5" min="1" value="{{ p.rating if p.rating else 4.9 }}">
+                                </div>
+                                <div class="stats-mini-input" title="Sold Count">
+                                    <span class="stats-mini-prefix"><i class="fa-solid fa-plus" style="color: var(--success);"></i></span>
+                                    <input type="text" name="sold_count" value="{{ p.sold_count if p.sold_count else '120+' }}">
+                                </div>
+                                <div class="stats-mini-input" title="Delivery Charge">
+                                    <span class="stats-mini-prefix"><i class="fa-solid fa-truck" style="color: var(--text-dim);"></i></span>
+                                    <input type="number" name="delivery_charge" class="stats-delivery-input" value="{{ p.delivery_charge if p.delivery_charge else 0 }}" placeholder="0">
+                                </div>
+                                <button type="submit" class="stats-save-btn" title="Save All"><i class="fa-solid fa-check"></i></button>
+                            </form>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="/p/{{ p._id }}" target="_blank" class="stats-view-btn" title="View Landing Page"><i class="fa-solid fa-rocket me-1"></i> View</a>
+                                <button onclick="copyLandingLink('{{ p._id }}')" class="stats-copy-btn" title="Copy URL"><i class="fa-solid fa-link"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+{% endfor %}
+{% if not products %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="fa-solid fa-chart-simple d-block mb-3" style="font-size: 2.5rem; color: var(--black-border);"></i>
+                            <p style="color: var(--text-muted); margin: 0;">No products found.</p>
+                        </td>
+                    </tr>
+{% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="copyToast" class="stats-toast">
+    <i class="fa-solid fa-circle-check me-2" style="color: var(--success);"></i>
+    <span id="copyToastText">Link copied!</span>
+</div>
+
+<script>
+function copyLandingLink(id) {
+    var fullUrl = window.location.origin + '/p/' + id;
+    navigator.clipboard.writeText(fullUrl).then(function() {
+        showToast('Landing Page Link Copied!\n' + fullUrl);
+    }).catch(function(err) {
+        console.error('Could not copy text: ', err);
+        showToast('Failed to copy link. Please try again.', true);
+    });
+}
+function showToast(message, isError) {
+    var toast = document.getElementById('copyToast');
+    var text = document.getElementById('copyToastText');
+    text.textContent = message;
+    toast.style.borderColor = isError ? '#EF4444' : 'var(--success)';
+    toast.classList.add('stats-toast-show');
+    setTimeout(function() { toast.classList.remove('stats-toast-show'); }, 3000);
+}
+</script>
+
+<style>
+:root{--black:#080808;--black-soft:#0C0C0C;--black-elevated:#141414;--black-card:#161616;--black-input:#1A1A1A;--black-hover:#1E1E1E;--black-border:#232323;--black-border-light:#1C1C1C;--orange:#FF6B00;--orange-light:#FF8C33;--orange-dark:#E05E00;--orange-glow:rgba(255,107,0,0.18);--orange-glow-strong:rgba(255,107,0,0.30);--orange-subtle:rgba(255,107,0,0.06);--text-primary:#F0F0F0;--text-secondary:#999999;--text-muted:#5A5A5A;--text-dim:#3A3A3A;--danger:#EF4444;--success:#22C55E;--success-glow:rgba(34,197,94,0.2)}
+.stats-page-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.4rem;color:var(--text-primary)}
+.stats-page-subtitle{color:var(--text-muted);font-size:0.85rem}
+.stats-orange-divider{width:40px;height:3px;background:var(--orange);border-radius:3px;margin-top:8px}
+.stats-count-pill{background:var(--black-card);border:1px solid var(--black-border);padding:8px 18px;border-radius:50px;font-size:0.85rem;white-space:nowrap}
+.stats-table-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.stats-table-head{color:var(--text-muted)!important;font-size:0.7rem!important;text-transform:uppercase;letter-spacing:1px;border:none!important;background:var(--black-elevated)!important}
+.stats-table-head th{padding:1rem 0.75rem!important;border:none!important;font-weight:700}
+.stats-table-row{border-bottom:1px solid var(--black-border-light)!important;transition:background-color 0.15s ease}
+.stats-table-row:hover{background-color:var(--orange-subtle)!important}
+.stats-table-row td{padding:1rem 0.75rem!important;border:none!important;color:var(--text-primary);vertical-align:middle}
+.stats-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:600;letter-spacing:0.02em}
+.stats-badge-rating{background:var(--orange-subtle);color:var(--orange);border:1px solid rgba(255,107,0,0.2)}
+.stats-badge-rating i{color:var(--orange)}
+.stats-badge-sold{background:rgba(34,197,94,0.08);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.stats-badge-sold i{color:var(--success)}
+.stats-badge-delivery{background:rgba(90,90,90,0.08);color:var(--text-muted);border:1px solid rgba(90,90,90,0.15)}
+.stats-badge-delivery i{color:var(--text-dim)}
+.stats-mini-input{display:flex;align-items:stretch;border:1px solid var(--black-border);border-radius:10px;overflow:hidden;transition:all 0.2s ease;background:var(--black-input)}
+.stats-mini-input:focus-within{border-color:var(--orange);box-shadow:0 0 0 2px var(--orange-glow)}
+.stats-mini-prefix{padding:0 10px;display:flex;align-items:center;font-size:0.7rem;background:var(--black-hover);border-right:1px solid var(--black-border)}
+.stats-mini-input input{background:transparent!important;border:none!important;color:var(--text-primary)!important;padding:6px 8px;font-size:0.82rem;width:70px;box-shadow:none!important;outline:none!important}
+.stats-mini-input input::placeholder{color:var(--text-dim)!important}
+.stats-delivery-input{font-weight:700!important;color:var(--orange)!important}
+.stats-save-btn{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:var(--orange);border:none;color:var(--black);cursor:pointer;font-size:0.8rem;transition:all 0.2s ease;flex-shrink:0}
+.stats-save-btn:hover{background:var(--orange-dark);transform:scale(1.1);box-shadow:0 4px 12px var(--orange-glow)}
+.stats-view-btn{display:inline-flex;align-items:center;padding:6px 16px;border-radius:50px;background:var(--black-hover);border:1px solid var(--black-border);color:var(--text-secondary);text-decoration:none;font-size:0.8rem;font-weight:600;transition:all 0.2s ease;white-space:nowrap}
+.stats-view-btn:hover{background:var(--orange);color:var(--black);border-color:var(--orange);box-shadow:0 4px 14px var(--orange-glow)}
+.stats-view-btn i{color:inherit}
+.stats-copy-btn{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--black-hover);border:1px solid var(--black-border);color:var(--text-secondary);cursor:pointer;font-size:0.8rem;transition:all 0.2s ease}
+.stats-copy-btn:hover{background:var(--orange);color:var(--black);border-color:var(--orange);transform:scale(1.1)}
+.stats-toast{position:fixed;bottom:30px;right:30px;background:var(--black-card);border:1px solid var(--success);border-radius:14px;padding:14px 22px;font-size:0.85rem;color:var(--text-primary);box-shadow:0 10px 30px rgba(0,0,0,0.4),0 0 15px var(--success-glow);z-index:9999;transform:translateY(120px);opacity:0;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);white-space:pre-line;max-width:360px}
+.stats-toast-show{transform:translateY(0);opacity:1}
+@media(max-width:992px){.stats-table-card{border-radius:16px}.stats-mini-input input{width:60px}}
+@media(max-width:768px){.stats-table-card{border-radius:12px}.stats-mini-input{min-width:0}.stats-mini-input input{width:55px;font-size:0.78rem}.stats-view-btn{padding:5px 12px;font-size:0.75rem}}
+</style>
+
+{% endblock %}

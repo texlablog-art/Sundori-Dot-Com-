@@ -1,0 +1,610 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h3 class="cart-page-title mb-0">
+                <i class="fa-solid fa-bag-shopping me-2" style="color: var(--orange);"></i>Shopping Cart
+            </h3>
+            <div class="cart-orange-divider"></div>
+        </div>
+        <span class="cart-count-badge">{{ items|length }} Items</span>
+    </div>
+    
+    {% if items %}
+    <div class="row g-4">
+        
+        <!-- ── Cart Items ── -->
+        <div class="col-lg-8">
+            {% for item in items %}
+            <div class="cart-item-card mb-3">
+                <div class="p-3">
+                    <div class="row align-items-center">
+                        
+                        <!-- Product Image -->
+                        <div class="col-4 col-md-2">
+                            <div class="position-relative">
+                                <img src="{{ item.main_image }}" 
+                                     class="cart-product-img" 
+                                     alt="{{ item.title }}"
+                                     onerror="this.onerror=null;this.src='https://placehold.co/400?text=No+Image';">
+                            </div>
+                        </div>
+                        
+                        <!-- Product Info -->
+                        <div class="col-8 col-md-4">
+                            <h6 class="fw-bold mb-1 text-truncate" style="color: var(--text-primary);">{{ item.title }}</h6>
+                            <p class="small mb-2" style="color: var(--text-muted);">{{ item.category or 'Product' }}</p>
+                            
+                            <!-- Variant Selector -->
+                            {% if item.all_variants %}
+                            <div class="variant-selector">
+                                <form action="/update_variant/{{ loop.index0 }}" method="POST">
+                                    <div class="cart-variant-wrapper">
+                                        <label class="cart-variant-label">Size:</label>
+                                        <select name="new_variant" onchange="this.form.submit()" 
+                                                class="cart-variant-select">
+                                            {% for v in item.all_variants %}
+                                            <option value="{{ v.name }}" {% if v.name == item.variant %}selected{% endif %}>
+                                                {{ v.name }} - ৳{{ v.price }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-7 col-md-3 mt-3 mt-md-0">
+                            <div class="d-flex flex-column align-items-start align-items-md-center">
+                                <div class="cart-qty-box d-flex align-items-center">
+                                    <a href="/update_cart/{{ loop.index0 }}/minus" class="cart-qty-btn text-decoration-none">-</a>
+                                    <span class="cart-qty-val">{{ item.quantity }}</span>
+                                    <a href="/update_cart/{{ loop.index0 }}/plus" class="cart-qty-btn text-decoration-none">+</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price & Remove -->
+                        <div class="col-5 col-md-3 text-end mt-3 mt-md-0">
+                            <div class="small mb-1" style="color: var(--text-muted);">Total</div>
+                            <div class="fw-bold mb-2" style="color: var(--orange); font-size: 1.35rem;">৳{{ item.subtotal }}</div>
+                            <a href="/remove_from_cart/{{ loop.index0 }}" 
+                               class="cart-remove-btn text-decoration-none" 
+                               onclick="return confirm('Remove this item?')">
+                                <i class="fa-solid fa-trash-can me-1"></i> <span class="small">Remove</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Continue Shopping -->
+            <div class="mt-4">
+                <a href="/" class="cart-continue-link">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- ── Order Summary ── -->
+        <div class="col-lg-4">
+            <div class="cart-summary-card" style="position: sticky; top: 100px;">
+                <!-- Glow effect — absolutely positioned, won't affect layout -->
+                <div class="cart-summary-glow"></div>
+                
+                <div style="position: relative; z-index: 2;">
+                    <h5 class="cart-summary-title">
+                        <i class="fa-solid fa-receipt me-2" style="color: var(--orange);"></i>Order Summary
+                    </h5>
+
+                    <div class="cart-summary-row">
+                        <span>Items Subtotal</span>
+                        <span class="fw-bold" style="color: var(--text-primary);">৳{{ total }}</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>Delivery Charge</span>
+                        <span class="fw-bold" style="color: var(--green);">
+                            <i class="fa-solid fa-truck me-1" style="font-size: 0.7rem;"></i>FREE
+                        </span>
+                    </div>
+                    <div class="cart-summary-divider"></div>
+                    <div class="cart-summary-total">
+                        <div>
+                            <span class="fw-bold" style="color: var(--text-primary); font-size: 1.1rem;">Total Payable</span>
+                        </div>
+                        <span style="color: var(--orange); font-size: 1.6rem; font-weight: 800;">৳{{ total }}</span>
+                    </div>
+
+                    <a href="/checkout" class="cart-checkout-btn text-decoration-none text-center d-block">
+                        Proceed to Checkout <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+
+                    <!-- Trust Badges -->
+                    <div class="cart-trust-badges mt-3">
+                        <div class="cart-trust-item">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Secure Payment</span>
+                        </div>
+                        <div class="cart-trust-item">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Easy Returns</span>
+                        </div>
+                        <div class="cart-trust-item">
+                            <i class="fa-solid fa-mosque"></i>
+                            <span>100% Halal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- ── Empty Cart ── -->
+    <div class="cart-empty-card mt-4">
+        <div class="cart-empty-glow"></div>
+        <div class="py-5 text-center" style="position: relative; z-index: 2;">
+            <div class="cart-empty-icon mx-auto mb-4">
+                <i class="fa-solid fa-cart-arrow-down"></i>
+            </div>
+            <h4 class="fw-bold" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Your cart is currently empty!</h4>
+            <p class="small mb-4" style="color: var(--text-muted);">Discover our premium halal products and add items to get started.</p>
+            <a href="/" class="cart-explore-btn text-decoration-none">
+                <i class="fa-solid fa-compass me-2"></i>Explore Products
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Title ── */
+    .cart-page-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+    .cart-orange-divider {
+        width: 35px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 3px;
+        margin-top: 6px;
+    }
+
+    /* ── Count Badge ── */
+    .cart-count-badge {
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        padding: 6px 18px;
+        border-radius: 50px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        border: 1px solid var(--orange-subtle-border);
+        box-shadow: 0 2px 8px var(--orange-glow);
+    }
+
+    /* ══════════════════════════════════
+       CART ITEM CARD
+    ══════════════════════════════════ */
+    .cart-item-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 18px;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+    .cart-item-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 18px;
+        border: 1.5px solid transparent;
+        transition: border-color 0.3s ease;
+        pointer-events: none;
+    }
+    .cart-item-card:hover {
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25), 0 0 16px var(--orange-glow);
+    }
+    .cart-item-card:hover::after {
+        border-color: rgba(255, 107, 43, 0.2);
+    }
+
+    /* ── Product Image ── */
+    .cart-product-img {
+        width: 100%;
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        border-radius: 14px;
+        border: 1px solid var(--black-border);
+        transition: all 0.3s ease;
+    }
+    .cart-item-card:hover .cart-product-img {
+        transform: scale(1.03);
+        border-color: rgba(255, 107, 43, 0.2);
+    }
+
+    /* ── Variant Selector ── */
+    .cart-variant-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .cart-variant-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    .cart-variant-select {
+        background: var(--black-medium) !important;
+        border: 1px solid var(--black-border) !important;
+        color: var(--orange) !important;
+        border-radius: 50px !important;
+        padding: 4px 14px !important;
+        font-size: 0.75rem !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+        width: fit-content;
+        transition: 0.25s;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23FF6B2B' d='M5 6L0 0h10z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 12px center !important;
+        padding-right: 28px !important;
+    }
+    .cart-variant-select:hover {
+        border-color: rgba(255, 107, 43, 0.3) !important;
+    }
+    .cart-variant-select:focus {
+        border-color: var(--orange) !important;
+        box-shadow: 0 0 0 3px var(--orange-glow) !important;
+        outline: none;
+    }
+    .cart-variant-select option {
+        background: var(--black-card);
+        color: var(--text-primary);
+    }
+
+    /* ── Quantity Box ── */
+    .cart-qty-box {
+        width: fit-content;
+        min-width: 115px;
+        border: 1px solid var(--black-border);
+        border-radius: 50px;
+        overflow: hidden;
+        background: var(--black-medium);
+        transition: border-color 0.25s ease;
+    }
+    .cart-qty-box:hover {
+        border-color: rgba(255, 107, 43, 0.2);
+    }
+    .cart-qty-btn {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        font-weight: 800;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+    .cart-qty-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+    }
+    .cart-qty-val {
+        width: 42px;
+        text-align: center;
+        background: var(--black-soft);
+        height: 36px;
+        line-height: 36px;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+    }
+
+    /* ── Remove Button ── */
+    .cart-remove-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 5px 14px;
+        border-radius: 50px;
+        background: rgba(232, 54, 58, 0.06);
+        border: 1px solid rgba(232, 54, 58, 0.12);
+        color: var(--red);
+        font-size: 0.78rem;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+    .cart-remove-btn:hover {
+        background: var(--red);
+        color: #fff;
+        border-color: var(--red);
+        box-shadow: 0 4px 14px var(--red-glow);
+        transform: scale(1.03);
+    }
+
+    /* ── Continue Shopping ── */
+    .cart-continue-link {
+        text-decoration: none;
+        font-weight: 600;
+        color: var(--orange);
+        font-size: 0.9rem;
+        transition: 0.25s;
+        display: inline-flex;
+        align-items: center;
+    }
+    .cart-continue-link:hover {
+        color: var(--orange-bright);
+        transform: translateX(-3px);
+    }
+
+    /* ══════════════════════════════════
+       ORDER SUMMARY — FIXED VERSION
+    ══════════════════════════════════ */
+    .cart-summary-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        padding: 1.75rem;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    /* Top orange stripe */
+    .cart-summary-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        z-index: 3;
+    }
+
+    /* Glow is now a separate child div */
+    .cart-summary-glow {
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 170px;
+        height: 170px;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .cart-summary-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--text-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 1.5rem;
+    }
+
+    .cart-summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 14px;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+    }
+
+    .cart-summary-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--black-border), transparent);
+        margin: 18px 0;
+    }
+
+    .cart-summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    /* ── Checkout Button ── */
+    .cart-checkout-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 16px var(--orange-glow);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.02em;
+    }
+    .cart-checkout-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: left 0.5s ease;
+    }
+    .cart-checkout-btn:hover::before {
+        left: 100%;
+    }
+    .cart-checkout-btn:hover {
+        box-shadow: 0 8px 32px var(--orange-glow-strong);
+        transform: translateY(-3px);
+        color: #fff;
+    }
+    .cart-checkout-btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--orange-glow);
+    }
+
+    /* ── Trust Badges ── */
+    .cart-trust-badges {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+    }
+    .cart-trust-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    .cart-trust-item:hover {
+        color: var(--text-secondary);
+    }
+    .cart-trust-item i {
+        color: var(--green);
+        font-size: 0.75rem;
+    }
+
+    /* ══════════════════════════════════
+       EMPTY CART
+    ══════════════════════════════════ */
+    .cart-empty-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
+    }
+    .cart-empty-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-bright), var(--orange-dark));
+        z-index: 1;
+    }
+    /* Glow as child div */
+    .cart-empty-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+    }
+
+    .cart-empty-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12));
+        border: 1px solid var(--orange-subtle-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: var(--orange);
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 0 30px var(--orange-glow);
+    }
+
+    .cart-explore-btn {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0 4px 16px var(--orange-glow);
+    }
+    .cart-explore-btn:hover {
+        box-shadow: 0 8px 28px var(--orange-glow-strong);
+        transform: translateY(-2px);
+        color: #fff;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .cart-summary-card { border-radius: 18px; }
+    }
+    @media (max-width: 768px) {
+        .cart-item-card { border-radius: 14px; }
+        .cart-item-card::after { border-radius: 14px; }
+        .cart-summary-card { border-radius: 16px; padding: 1.25rem; }
+        .cart-product-img { border-radius: 10px; }
+        .cart-qty-box { min-width: 105px; }
+        .cart-qty-btn { width: 32px; height: 32px; }
+        .cart-qty-val { width: 38px; height: 32px; line-height: 32px; font-size: 0.88rem; }
+        .cart-trust-badges { gap: 10px; }
+        .cart-trust-item { font-size: 0.65rem; }
+        .cart-item-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+        .cart-item-card:hover::after { border-color: transparent; }
+    }
+    @media (max-width: 400px) {
+        .cart-trust-badges { flex-wrap: wrap; gap: 8px; }
+    }
+</style>
+
+{% endblock %}

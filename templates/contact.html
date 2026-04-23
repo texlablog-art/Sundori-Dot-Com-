@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% for category, message in messages %}
+    <div class="container mb-4">
+        <div class="contact-flash contact-flash-{{ 'success' if category == 'success' else 'error' }}">
+            <i class="fa-solid {% if category == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %} me-3"></i>
+            <span>{{ message }}</span>
+        </div>
+    </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="row g-5 align-items-center">
+                
+                <!-- ── Left: Info ── -->
+                <div class="col-md-5">
+                    <h1 class="contact-title mb-2">Let's <span class="orange-text">Talk</span></h1>
+                    <div class="contact-orange-divider mb-4"></div>
+                    <p class="mb-5" style="color: var(--text-secondary); line-height: 1.8;">
+                        Have a question or feedback? We'd love to hear from you. Reach out via the form or our direct channels.
+                    </p>
+                    
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0" style="color: var(--text-primary);">Email Support</h6>
+                                <p class="small mb-0" style="color: var(--text-muted);">demo@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0" style="color: var(--text-primary);">Call Us</h6>
+                                <p class="small mb-0" style="color: var(--text-muted);">+8801xxxxxxxxx</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--green);">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0" style="color: var(--text-primary);">Headquarters</h6>
+                                <p class="small mb-0" style="color: var(--text-muted);">Dhaka, Bangladesh</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Links -->
+                    <div class="d-flex gap-2 mt-4">
+                        <a href="#" class="contact-social-circle">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="contact-social-circle" style="background: rgba(34, 197, 94, 0.1); color: var(--green); border-color: rgba(34, 197, 94, 0.18);">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ── Right: Form ── -->
+                <div class="col-md-7">
+                    <div class="contact-form-card">
+                        <!-- Decorative glows -->
+                        <div class="contact-form-glow-tl"></div>
+                        <div class="contact-form-glow-br"></div>
+
+                        <form action="/contact" method="POST" style="position: relative; z-index: 2;">
+                            <!-- Name -->
+                            <div class="contact-field-group">
+                                <label for="c_name" class="contact-field-label">
+                                    <i class="fa-solid fa-user me-1"></i> Full Name
+                                </label>
+                                <input type="text" name="name" id="c_name" class="contact-input" placeholder=" " required>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="contact-field-group">
+                                <label for="c_email" class="contact-field-label">
+                                    <i class="fa-solid fa-envelope me-1"></i> Email Address
+                                </label>
+                                <input type="email" name="email" id="c_email" class="contact-input" placeholder=" " required>
+                            </div>
+
+                            <!-- Subject -->
+                            <div class="contact-field-group">
+                                <label for="c_subj" class="contact-field-label">
+                                    <i class="fa-solid fa-tag me-1"></i> Subject
+                                </label>
+                                <input type="text" name="subject" id="c_subj" class="contact-input" placeholder=" " required>
+                            </div>
+
+                            <!-- Message -->
+                            <div class="contact-field-group">
+                                <label for="c_msg" class="contact-field-label">
+                                    <i class="fa-solid fa-comment-dots me-1"></i> Your Message
+                                </label>
+                                <textarea name="message" id="c_msg" class="contact-textarea" placeholder="Write your message here..." rows="6" required></textarea>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit" class="contact-submit-btn">
+                                SEND MESSAGE <i class="fa-solid fa-paper-plane ms-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ══════════════════════════════════
+       FLASH MESSAGE
+    ══════════════════════════════════ */
+    .contact-flash {
+        display: flex;
+        align-items: center;
+        padding: 16px 20px;
+        border-radius: 16px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        animation: slideDown 0.5s ease forwards;
+    }
+    .contact-flash-success {
+        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, 0.2);
+        color: var(--green);
+    }
+    .contact-flash-success i { color: var(--green); font-size: 1.2rem; }
+    .contact-flash-error {
+        background: rgba(232, 54, 58, 0.08);
+        border: 1px solid rgba(232, 54, 58, 0.2);
+        color: var(--red);
+    }
+    .contact-flash-error i { color: var(--red); font-size: 1.2rem; }
+    @keyframes slideDown {
+        0% { opacity: 0; transform: translateY(-15px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Page Title ── */
+    .contact-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: var(--text-primary);
+    }
+    .orange-text {
+        color: var(--orange);
+        position: relative;
+    }
+    .contact-orange-divider {
+        width: 45px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 3px;
+    }
+
+    /* ── Info Items ── */
+    .contact-info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 16px;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+    .contact-info-item::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        border: 1.5px solid transparent;
+        transition: border-color 0.3s ease;
+        pointer-events: none;
+    }
+    .contact-info-item:hover {
+        transform: translateX(6px);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25), 0 0 12px var(--orange-glow);
+    }
+    .contact-info-item:hover::after {
+        border-color: rgba(255, 107, 43, 0.18);
+    }
+    .contact-info-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        margin-right: 14px;
+        transition: all 0.3s ease;
+    }
+    .contact-info-item:hover .contact-info-icon {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        box-shadow: 0 4px 14px var(--orange-glow);
+    }
+
+    /* ── Social Circles ── */
+    .contact-social-circle {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: var(--black-card);
+        color: var(--orange);
+        border: 1px solid var(--black-border);
+        text-decoration: none;
+        font-size: 0.95rem;
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .contact-social-circle:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        transform: translateY(-4px);
+        box-shadow: 0 6px 20px var(--orange-glow);
+    }
+
+    /* ══════════════════════════════════
+       FORM CARD
+    ══════════════════════════════════ */
+    .contact-form-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 28px;
+        padding: 2.5rem;
+        position: relative;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+    }
+    /* Top orange accent line */
+    .contact-form-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright), var(--orange));
+        z-index: 5;
+    }
+    .contact-form-glow-tl {
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 170px;
+        height: 170px;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .contact-form-glow-br {
+        position: absolute;
+        bottom: -40px;
+        right: -40px;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    /* ── Field Group ── */
+    .contact-field-group {
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+    .contact-field-label {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--orange);
+        margin-bottom: 8px;
+        letter-spacing: 0.03em;
+    }
+    .contact-field-label i {
+        font-size: 0.7rem;
+        opacity: 0.7;
+    }
+
+    /* ── Text Inputs ── */
+    .contact-input {
+        display: block;
+        width: 100%;
+        background: var(--black-medium) !important;
+        border: 1.5px solid var(--black-border) !important;
+        color: var(--text-primary) !important;
+        border-radius: 14px !important;
+        padding: 14px 16px;
+        font-size: 0.92rem;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.25s ease;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .contact-input:focus {
+        border-color: var(--orange) !important;
+        box-shadow: 0 0 0 3px var(--orange-glow) !important;
+        background: var(--black-medium) !important;
+        color: var(--text-primary) !important;
+    }
+    .contact-input::placeholder {
+        color: transparent !important;
+    }
+    .contact-input:not(:focus):not(:placeholder-shown) {
+        padding-top: 14px;
+    }
+
+    /* ── Textarea ── */
+    .contact-textarea {
+        display: block;
+        width: 100%;
+        background: var(--black-medium) !important;
+        border: 1.5px solid var(--black-border) !important;
+        color: var(--text-primary) !important;
+        border-radius: 14px !important;
+        padding: 14px 16px;
+        font-size: 0.92rem;
+        font-family: 'Inter', sans-serif;
+        line-height: 1.6;
+        resize: vertical;
+        min-height: 150px;
+        transition: all 0.25s ease;
+        outline: none !important;
+        box-shadow: none !important;
+    }
+    .contact-textarea:focus {
+        border-color: var(--orange) !important;
+        box-shadow: 0 0 0 3px var(--orange-glow) !important;
+        background: var(--black-medium) !important;
+        color: var(--text-primary) !important;
+    }
+    .contact-textarea::placeholder {
+        color: var(--text-muted) !important;
+        font-size: 0.88rem;
+    }
+    .contact-textarea::-webkit-scrollbar { width: 5px; }
+    .contact-textarea::-webkit-scrollbar-track { background: transparent; }
+    .contact-textarea::-webkit-scrollbar-thumb {
+        background: var(--black-soft);
+        border-radius: 10px;
+    }
+    .contact-textarea::-webkit-scrollbar-thumb:hover {
+        background: var(--orange-dark);
+    }
+
+    /* ── Submit Button ── */
+    .contact-submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 16px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        letter-spacing: 0.05em;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 16px var(--orange-glow);
+        position: relative;
+        overflow: hidden;
+    }
+    .contact-submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: left 0.5s ease;
+    }
+    .contact-submit-btn:hover::before {
+        left: 100%;
+    }
+    .contact-submit-btn:hover {
+        box-shadow: 0 8px 32px var(--orange-glow-strong);
+        transform: translateY(-3px);
+        color: #fff;
+    }
+    .contact-submit-btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--orange-glow);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .contact-form-card { border-radius: 22px; padding: 2rem; }
+    }
+    @media (max-width: 768px) {
+        .contact-title { font-size: 1.7rem; }
+        .contact-form-card { border-radius: 18px; padding: 1.5rem; }
+        .contact-info-item { padding: 12px; }
+        .contact-info-item:hover { transform: none; }
+        .contact-info-item:hover::after { border-color: transparent; }
+        .contact-info-icon { width: 40px; height: 40px; font-size: 0.9rem; margin-right: 12px; }
+        .contact-input { padding: 12px 14px; }
+        .contact-textarea { padding: 12px 14px; min-height: 130px; }
+        .contact-submit-btn:hover { transform: none; }
+    }
+    @media (max-width: 480px) {
+        .contact-form-card { border-radius: 16px; padding: 1.25rem; }
+        .contact-submit-btn { padding: 14px; font-size: 0.9rem; }
+    }
+</style>
+
+{% endblock %}

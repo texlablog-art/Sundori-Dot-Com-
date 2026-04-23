@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h3 class="orders-page-title mb-1">
+                    <i class="fa-solid fa-clock-rotate-left me-2" style="color: var(--orange);"></i>My Order History
+                </h3>
+                <div class="orders-orange-divider mx-auto mb-3"></div>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">Enter your 11-digit mobile number to see your orders.</p>
+                
+                <form action="/my-orders" method="POST" class="orders-search-box mt-4">
+                    <input type="tel" name="phone" class="orders-search-input" 
+                           placeholder="01XXXXXXXXX" maxlength="11" value="{{ phone or '' }}" required>
+                    <button class="orders-search-btn" type="submit">
+                        <i class="fa-solid fa-magnifying-glass me-1"></i> View Orders
+                    </button>
+                </form>
+            </div>
+
+            {% if orders %}
+                <!-- Count -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <span class="orders-count-label">
+                        Showing {{ orders|length }} Order{{ 's' if orders|length != 1 else '' }}
+                    </span>
+                </div>
+                
+                {% for order in orders %}
+                <div class="order-card mb-4">
+                    <!-- Top accent line -->
+                    <div class="order-card-accent"></div>
+
+                    <div class="p-4">
+                        
+                        <!-- Order ID & Status -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <small class="orders-meta-label">Order ID</small>
+                                <div class="fw-bold" style="color: var(--orange); font-size: 1.35rem;">
+                                    {{ order.order_id if order.order_id else order._id|string|last4 }}
+                                </div>
+                            </div>
+                            {% if order.status == 'Delivered' %}
+                                <span class="order-status-badge order-status-delivered">
+                                    <i class="fa-solid fa-circle-check me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Cancelled' %}
+                                <span class="order-status-badge order-status-cancelled">
+                                    <i class="fa-solid fa-circle-xmark me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Confirmed' %}
+                                <span class="order-status-badge order-status-confirmed">
+                                    <i class="fa-solid fa-check me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Shipped' %}
+                                <span class="order-status-badge order-status-shipped">
+                                    <i class="fa-solid fa-truck-fast me-1"></i>{{ order.status }}
+                                </span>
+                            {% else %}
+                                <span class="order-status-badge order-status-pending">
+                                    <i class="fa-solid fa-clock me-1"></i>{{ order.status if order.status else 'Pending' }}
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Items List -->
+                        <div class="order-items-box">
+                            {% if order.items_details %}
+                                {% for item in order.items_details %}
+                                <div class="order-mini-item">
+                                    <img src="{{ item.main_image if item.main_image else 'https://via.placeholder.com/100' }}" 
+                                         class="order-mini-img" alt="{{ item.title }}">
+                                    <div class="flex-grow-1" style="min-width: 0;">
+                                        <div class="small fw-bold" style="color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</div>
+                                        <div style="color: var(--text-muted); font-size: 0.75rem;">
+                                            Qty: {{ item.quantity }} • ৳{{ item.price }}
+                                        </div>
+                                    </div>
+                                    <div class="fw-bold small" style="color: var(--orange); white-space: nowrap;">৳{{ item.subtotal }}</div>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p class="small text-center py-2" style="color: var(--text-muted); font-style: italic;">No items found.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Total & Date -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="orders-meta-label">Grand Total</small>
+                                <div class="fw-bold" style="color: var(--text-primary); font-size: 1.4rem;">৳{{ order.total }}</div>
+                            </div>
+                            <div class="text-end">
+                                <small class="orders-meta-label">Ordered On</small>
+                                <span class="small fw-bold d-block" style="color: var(--text-secondary);">
+                                    {% if order.created_at and order.created_at.strftime %}
+                                        {{ order.created_at.strftime('%d %b, %Y') }}
+                                    {% else %}
+                                        Recently
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Track Footer -->
+                    <div class="order-card-footer">
+                        <form action="/track" method="POST" class="d-inline">
+                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                            <button type="submit" class="order-track-btn">
+                                <i class="fa-solid fa-location-crosshairs me-1"></i> Track Order Live
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+
+            {% elif phone %}
+                <!-- Empty State -->
+                <div class="orders-empty-card mt-4">
+                    <div class="py-5 text-center" style="position: relative; z-index: 2;">
+                        <div class="orders-empty-icon mx-auto mb-4">
+                            <i class="fa-solid fa-ghost"></i>
+                        </div>
+                        <h5 class="fw-bold" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">No Order Records Found</h5>
+                        <p class="small mb-0" style="color: var(--text-muted);">We couldn't find any orders for <b style="color: var(--orange);">{{ phone }}</b>. Please check the number.</p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Title ── */
+    .orders-page-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+    .orders-orange-divider {
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 3px;
+    }
+
+    /* ── Search Box ── */
+    .orders-search-box {
+        display: flex;
+        align-items: center;
+        background: var(--black-card);
+        border: 1.5px solid var(--black-border);
+        border-radius: 50px;
+        overflow: hidden;
+        transition: all 0.25s ease;
+    }
+    .orders-search-box:focus-within {
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px var(--orange-glow);
+    }
+    .orders-search-input {
+        flex: 1;
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-primary) !important;
+        padding: 14px 20px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        letter-spacing: 0.05em;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+    .orders-search-input::placeholder { color: var(--text-muted) !important; }
+    .orders-search-btn {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border: none;
+        padding: 14px 28px;
+        font-weight: 700;
+        font-size: 0.88rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+    .orders-search-btn:hover {
+        background: linear-gradient(135deg, var(--orange), var(--orange-bright));
+        box-shadow: 0 4px 16px var(--orange-glow);
+    }
+
+    /* ── Count Label ── */
+    .orders-count-label {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+    }
+
+    /* ══════════════════════════════════
+       ORDER CARD
+    ══════════════════════════════════ */
+    .order-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+    }
+    .order-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 20px;
+        border: 1.5px solid transparent;
+        transition: border-color 0.3s ease;
+        pointer-events: none;
+        z-index: 2;
+    }
+    .order-card:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px var(--orange-glow);
+    }
+    .order-card:hover::after {
+        border-color: rgba(255, 107, 43, 0.15);
+    }
+    .order-card-accent {
+        height: 3px;
+        background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
+    }
+
+    /* ── Meta Labels ── */
+    .orders-meta-label {
+        display: block;
+        font-size: 0.68rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+    }
+
+    /* ── Status Badges ── */
+    .order-status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+    .order-status-pending {
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        border: 1px solid var(--orange-subtle-border);
+    }
+    .order-status-confirmed {
+        background: rgba(13, 202, 240, 0.08);
+        color: #0DCAF0;
+        border: 1px solid rgba(13, 202, 240, 0.18);
+    }
+    .order-status-shipped {
+        background: rgba(217, 85, 15, 0.1);
+        color: var(--orange-dark);
+        border: 1px solid rgba(217, 85, 15, 0.2);
+    }
+    .order-status-delivered {
+        background: rgba(34, 197, 94, 0.08);
+        color: var(--green);
+        border: 1px solid rgba(34, 197, 94, 0.18);
+    }
+    .order-status-cancelled {
+        background: rgba(232, 54, 58, 0.08);
+        color: var(--red);
+        border: 1px solid rgba(232, 54, 58, 0.18);
+    }
+
+    /* ── Items Box ── */
+    .order-items-box {
+        background: var(--black-medium);
+        border: 1px solid var(--black-border);
+        border-radius: 14px;
+        padding: 12px;
+    }
+    .order-mini-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--black-border);
+    }
+    .order-mini-item:last-child { border-bottom: none; }
+    .order-mini-img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--black-border);
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    /* ── Card Footer ── */
+    .order-card-footer {
+        background: var(--black-medium);
+        border-top: 1px solid var(--black-border);
+        padding: 12px;
+        text-align: center;
+    }
+    .order-track-btn {
+        background: none;
+        border: none;
+        color: var(--orange);
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        padding: 4px 0;
+        text-decoration: none;
+    }
+    .order-track-btn:hover {
+        color: var(--orange-bright);
+        text-shadow: 0 0 12px var(--orange-glow);
+    }
+
+    /* ══════════════════════════════════
+       EMPTY STATE
+    ══════════════════════════════════ */
+    .orders-empty-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .orders-empty-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-bright), var(--orange-dark));
+        z-index: 3;
+    }
+    .orders-empty-card::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 220px;
+        height: 220px;
+        background: radial-gradient(circle, var(--orange-glow) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0.3;
+        z-index: 0;
+    }
+    .orders-empty-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--black-soft);
+        border: 1px solid var(--black-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: var(--black-border);
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .order-card { border-radius: 16px; }
+        .order-card::after { border-radius: 16px; }
+        .order-card-accent { height: 2px; }
+        .orders-search-btn { padding: 12px 20px; font-size: 0.82rem; }
+        .orders-empty-card { border-radius: 16px; }
+        .order-card:hover { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25); }
+        .order-card:hover::after { border-color: transparent; }
+    }
+    @media (max-width: 480px) {
+        .orders-search-box { border-radius: 16px; }
+        .orders-search-btn { padding: 12px 16px; font-size: 0.78rem; }
+        .orders-search-input { padding: 12px 16px; font-size: 0.88rem; }
+        .order-status-badge { font-size: 0.72rem; padding: 5px 12px; }
+    }
+</style>
+
+{% endblock %}

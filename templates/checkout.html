@@ -1,0 +1,770 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4 py-lg-5">
+    <div class="row g-4 justify-content-center">
+        
+        <!-- ── Left: Form ── -->
+        <div class="col-lg-7">
+            <div class="checkout-form-card mb-4">
+                <!-- Step 1 Header -->
+                <div class="checkout-step-header">
+                    <span class="checkout-step-badge">1</span>
+                    <h5 class="fw-bold m-0" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">Delivery Information</h5>
+                </div>
+                <div class="checkout-form-body">
+                    <form action="/checkout" method="POST" id="checkoutForm">
+                        <input type="hidden" name="applied_promo" id="hiddenPromoCode" value="{{ session.get('applied_promo', {}).get('code', '') }}">
+                        <input type="hidden" name="discount_amount" id="hiddenDiscountAmount" value="0">
+                        <input type="hidden" name="final_total" id="hiddenFinalTotal" value="{{ total }}">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="checkout-label">Full Name</label>
+                                <input type="text" name="name" class="checkout-input" placeholder="Ex: MD. UMAIR" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="checkout-label">Phone Number</label>
+                                <input type="tel" name="phone" class="checkout-input" placeholder="01XXXXXXXXX" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="checkout-label">Full Shipping Address</label>
+                                <textarea name="address" class="checkout-input" rows="3" placeholder="House, Road, Area, City..." required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 Header -->
+                        <h5 class="fw-bold mt-5 mb-4" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">
+                            <span class="checkout-step-badge">2</span> Payment Method
+                        </h5>
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="payment_method" id="pay_cod" value="cod" checked onclick="togglePaymentFields(false)">
+                                <label class="btn checkout-pay-card w-100 py-3" for="pay_cod">
+                                    <i class="fa-solid fa-truck-fast d-block fs-3 mb-2" style="color: var(--orange);"></i>
+                                    <span class="fw-bold small" style="color: var(--text-primary);">Cash on Delivery</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="payment_method" id="pay_now" value="digital" onclick="togglePaymentFields(true)">
+                                <label class="btn checkout-pay-card w-100 py-3" for="pay_now" data-bs-toggle="modal" data-bs-target="#paymentInstructionModal">
+                                    <i class="fa-solid fa-mobile-screen d-block fs-3 mb-2" style="color: var(--orange);"></i>
+                                    <span class="fw-bold small" style="color: var(--text-primary);">Online Payment</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Transaction ID Section -->
+                        <div id="trx_section" class="mb-4 d-none">
+                            <div class="checkout-trx-box">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="checkout-trx-icon me-3">
+                                        <i class="fa-solid fa-receipt"></i>
+                                    </div>
+                                    <h6 class="fw-bold m-0" style="color: var(--text-primary);">Payment Verification</h6>
+                                </div>
+                                <label class="checkout-label">Transaction ID (TrxID)</label>
+                                <input type="text" name="transaction_id" id="trx_input" class="checkout-input checkout-trx-input" placeholder="Paste your TrxID here">
+                                <small class="mt-2 d-block" style="font-size: 11px; color: var(--text-muted);">
+                                    Example: 8N7A1X9PP (From bKash/Nagad SMS)
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Mobile Submit -->
+                        <button type="submit" class="checkout-submit-btn d-lg-none mt-3">
+                            Confirm Order • ৳<span class="finalTotalDisplay">{{ total }}</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Right: Summary ── -->
+        <div class="col-lg-4">
+            <!-- Promo Code -->
+            <div class="checkout-promo-card mb-4">
+                <h6 class="fw-bold mb-3" style="color: var(--text-primary);">
+                    <i class="fa-solid fa-tag me-2" style="color: var(--orange);"></i>Promo Code
+                </h6>
+                <div class="checkout-promo-input-group">
+                    <input type="text" id="promoInput" class="checkout-promo-input" placeholder="Ex: SAVE10" value="{{ session.get('applied_promo', {}).get('code', '') }}">
+                    <button class="checkout-promo-btn" type="button" id="promoBtn" onclick="applyPromo()">Apply</button>
+                </div>
+                <div id="promoMessage" class="mt-2 small fw-bold"></div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="checkout-summary-card" style="position: sticky; top: 20px;">
+                <h5 class="fw-bold mb-4" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">
+                    Order Summary
+                </h5>
+                
+                <div class="checkout-items-scroll mb-4">
+                    {% for item in items %}
+                    <div class="checkout-mini-item">
+                        <img src="{{ item.image }}" class="checkout-mini-img" alt="{{ item.title }}">
+                        <div class="ms-3 flex-grow-1" style="min-width: 0;">
+                            <p class="mb-0 small fw-bold lh-sm" style="color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ item.title }}</p>
+                            {% if item.variant %}
+                            <span class="checkout-mini-variant">Option: {{ item.variant }}</span>
+                            {% endif %}
+                            <div style="color: var(--text-muted); font-size: 11px;">Qty: {{ item.quantity }} × ৳{{ item.price }}</div>
+                        </div>
+                        <span class="fw-bold small" style="color: var(--orange); white-space: nowrap;">৳{{ item.total }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="checkout-breakdown">
+                    <div class="checkout-breakdown-row">
+                        <span>Subtotal</span>
+                        <span class="fw-bold" style="color: var(--text-primary);">৳{{ total }}</span>
+                    </div>
+                    
+                    <div id="discountRow" class="checkout-breakdown-row checkout-discount-row d-none">
+                        <span>Discount (<span id="discountPercentDisplay">0</span>%)</span>
+                        <span class="fw-bold">-৳<span id="discountAmountDisplay">0</span></span>
+                    </div>
+
+                    <div class="checkout-breakdown-row">
+                        <span>Delivery</span>
+                        <span class="fw-bold" style="color: var(--green);">
+                            <i class="fa-solid fa-truck me-1" style="font-size: 0.65rem;"></i>{{ delivery_charge }}
+                        </span>
+                    </div>
+
+                    <div class="checkout-total-row">
+                        <span class="fw-bold" style="color: var(--text-primary); font-size: 1.1rem;">Total</span>
+                        <span style="color: var(--orange); font-size: 1.5rem; font-weight: 800;">৳<span class="finalTotalDisplay">{{ total }}</span></span>
+                    </div>
+                </div>
+
+                <!-- Desktop Submit -->
+                <button type="button" onclick="document.getElementById('checkoutForm').submit()" class="checkout-submit-btn d-none d-lg-block">
+                    <i class="fa-solid fa-lock me-2" style="font-size: 0.85rem;"></i>Place Order
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Payment Instruction Modal ── -->
+<div class="modal fade" id="paymentInstructionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="checkout-modal-content">
+            <div class="modal-header checkout-modal-header">
+                <h5 class="fw-bold m-0" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Payment Instructions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) brightness(0.6);"></button>
+            </div>
+            <div class="modal-body p-4 text-center">
+                <p class="small mb-4" style="color: var(--text-secondary);">
+                    Please send <b style="color: var(--orange);">৳<span class="finalTotalDisplay">{{ total }}</span></b> to our personal number:
+                </p>
+                
+                <!-- bKash -->
+                <div class="checkout-pay-method-box mb-3">
+                    <img src="https://download.logo.wine/logo/BKash/BKash-Icon-Logo.wine.png" width="40" class="me-3" alt="bKash">
+                    <div class="text-start">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">bKash (Personal)</div>
+                        <div class="h6 fw-bold m-0" style="color: var(--text-primary);">01xxxxxxxxx</div>
+                    </div>
+                    <button class="checkout-copy-btn ms-auto" onclick="copyNum('01xxxxxxxxx')">Copy</button>
+                </div>
+
+                <!-- Nagad -->
+                <div class="checkout-pay-method-box mb-4">
+                    <img src="https://download.logo.wine/logo/Nagad/Nagad-Logo.wine.png" width="40" class="me-3" alt="Nagad">
+                    <div class="text-start">
+                        <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Nagad (Personal)</div>
+                        <div class="h6 fw-bold m-0" style="color: var(--text-primary);">01xxxxxxxxx</div>
+                    </div>
+                    <button class="checkout-copy-btn ms-auto" onclick="copyNum('01xxxxxxxxx')">Copy</button>
+                </div>
+
+                <div class="checkout-modal-hint">
+                    <i class="fa-solid fa-circle-info me-2" style="color: var(--orange);"></i> Payment করার পর প্রাপ্ত <b style="color: var(--orange);">TrxID</b> নিচের বক্সে দিয়ে অর্ডার নিশ্চিত করুন।
+                </div>
+            </div>
+            <div class="modal-footer checkout-modal-footer">
+                <button type="button" class="checkout-modal-confirm-btn w-100" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-check me-2"></i>I've Sent Money
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Copy Toast ── -->
+<div id="copyToast" class="checkout-toast">
+    <i class="fa-solid fa-circle-check me-2" style="color: var(--green);"></i>
+    <span id="copyToastText">Copied!</span>
+</div>
+
+<script>
+    const originalSubtotal = parseFloat("{{ total|default(0) }}");
+    const deliveryCharge = parseFloat("{{ delivery_charge|default(0) }}");
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateFinalDisplay(originalSubtotal + deliveryCharge);
+    });
+
+    function updateFinalDisplay(amount) {
+        const formatted = amount.toLocaleString();
+        document.querySelectorAll('.finalTotalDisplay').forEach(el => el.innerText = formatted);
+        document.getElementById('hiddenFinalTotal').value = amount.toFixed(2);
+    }
+
+    function copyNum(num) {
+        navigator.clipboard.writeText(num).then(() => {
+            showToast("Number Copied: " + num);
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('copyToast');
+        const toastText = document.getElementById('copyToastText');
+        if (toast && toastText) {
+            toastText.textContent = message;
+            toast.classList.add('checkout-toast-show');
+            setTimeout(() => toast.classList.remove('checkout-toast-show'), 2500);
+        }
+    }
+
+    function applyPromo() {
+        const codeInput = document.getElementById('promoInput');
+        const code = codeInput.value.trim().toUpperCase();
+        const msg = document.getElementById('promoMessage');
+        const btn = document.getElementById('promoBtn');
+
+        if (!code) return;
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+        fetch('/apply_promo', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `promo_code=${encodeURIComponent(code)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = 'Apply';
+
+            if (data.success) {
+                const discPerc = parseFloat(data.discount);
+                const discAmt = (originalSubtotal * discPerc) / 100;
+                const finalTotal = (originalSubtotal - discAmt) + deliveryCharge;
+
+                document.getElementById('discountRow').classList.remove('d-none');
+                document.getElementById('discountPercentDisplay').innerText = discPerc;
+                document.getElementById('discountAmountDisplay').innerText = discAmt.toFixed(0);
+                
+                updateFinalDisplay(finalTotal);
+                document.getElementById('hiddenPromoCode').value = code;
+                document.getElementById('hiddenDiscountAmount').value = discAmt;
+
+                msg.style.color = 'var(--green)';
+                msg.innerText = "✓ " + data.message;
+            } else {
+                msg.style.color = 'var(--red)';
+                msg.innerText = "✕ " + data.message;
+                resetPromoUI();
+            }
+        })
+        .catch(err => {
+            console.error('Fetch Error:', err);
+            btn.disabled = false;
+            btn.innerHTML = 'Apply';
+        });
+    }
+
+    function resetPromoUI() {
+        document.getElementById('discountRow').classList.add('d-none');
+        const baseTotal = originalSubtotal + deliveryCharge;
+        updateFinalDisplay(baseTotal);
+        document.getElementById('hiddenPromoCode').value = "";
+        document.getElementById('hiddenDiscountAmount').value = "0";
+    }
+
+    function togglePaymentFields(isOnline) {
+        const section = document.getElementById('trx_section');
+        const input = document.getElementById('trx_input');
+        if (isOnline) {
+            section.classList.remove('d-none');
+            input.required = true;
+        } else {
+            section.classList.add('d-none');
+            input.required = false;
+            input.value = "";
+        }
+    }
+</script>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ══════════════════════════════════
+       FORM CARD
+    ══════════════════════════════════ */
+    .checkout-form-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    .checkout-form-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        z-index: 2;
+    }
+    .checkout-step-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--black-border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .checkout-step-badge {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.82rem;
+        font-weight: 800;
+        flex-shrink: 0;
+        box-shadow: 0 2px 10px var(--orange-glow);
+    }
+    .checkout-form-body { padding: 1.5rem; }
+
+    /* ── Inputs ── */
+    .checkout-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .checkout-input {
+        background: var(--black-medium) !important;
+        border: 1.5px solid var(--black-border) !important;
+        color: var(--text-primary) !important;
+        border-radius: 12px !important;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+        width: 100%;
+    }
+    .checkout-input:focus {
+        border-color: var(--orange) !important;
+        box-shadow: 0 0 0 3px var(--orange-glow) !important;
+        background: var(--black-medium) !important;
+        color: var(--text-primary) !important;
+        outline: none;
+    }
+    .checkout-input::placeholder { color: var(--text-muted) !important; }
+
+    /* ── Payment Cards ── */
+    .checkout-pay-card {
+        background: var(--black-medium);
+        border: 2px solid var(--black-border) !important;
+        border-radius: 16px !important;
+        cursor: pointer;
+        transition: all 0.25s ease;
+    }
+    .checkout-pay-card:hover {
+        border-color: rgba(255, 107, 43, 0.25) !important;
+        background: rgba(255, 107, 43, 0.03);
+    }
+    .btn-check:checked + .checkout-pay-card {
+        border-color: var(--orange) !important;
+        background: rgba(255, 107, 43, 0.08) !important;
+        box-shadow: 0 0 24px var(--orange-glow), inset 0 0 20px rgba(255, 107, 43, 0.03);
+    }
+
+    /* ── Trx Box ── */
+    .checkout-trx-box {
+        padding: 1.25rem;
+        background: var(--black-medium);
+        border: 1px solid var(--black-border);
+        border-radius: 16px;
+        border-left: 4px solid var(--orange);
+    }
+    .checkout-trx-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px var(--orange-glow);
+    }
+    .checkout-trx-input {
+        font-weight: 700 !important;
+        letter-spacing: 0.05em;
+        font-size: 1rem !important;
+        color: var(--orange) !important;
+    }
+
+    /* ── Submit Button ── */
+    .checkout-submit-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 14px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px var(--orange-glow);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.02em;
+    }
+    .checkout-submit-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        transition: left 0.5s ease;
+    }
+    .checkout-submit-btn:hover::before {
+        left: 100%;
+    }
+    .checkout-submit-btn:hover {
+        box-shadow: 0 8px 32px var(--orange-glow-strong);
+        transform: translateY(-2px);
+        color: #fff;
+    }
+    .checkout-submit-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px var(--orange-glow);
+    }
+
+    /* ══════════════════════════════════
+       PROMO CARD
+    ══════════════════════════════════ */
+    .checkout-promo-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 16px;
+        padding: 1.25rem;
+    }
+    .checkout-promo-input-group {
+        display: flex;
+        gap: 0;
+    }
+    .checkout-promo-input {
+        flex: 1;
+        background: var(--black-medium) !important;
+        border: 1.5px solid var(--black-border) !important;
+        border-right: none !important;
+        color: var(--text-primary) !important;
+        border-radius: 12px 0 0 12px !important;
+        padding: 0.65rem 1rem;
+        font-size: 0.88rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
+    .checkout-promo-input:focus {
+        border-color: var(--orange) !important;
+        box-shadow: none !important;
+        outline: none;
+    }
+    .checkout-promo-input::placeholder {
+        color: var(--text-muted) !important;
+        text-transform: none;
+        font-weight: 400;
+    }
+    .checkout-promo-btn {
+        background: var(--black-soft);
+        color: var(--orange);
+        border: 1px solid var(--black-border);
+        border-radius: 0 12px 12px 0;
+        padding: 0 18px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+    .checkout-promo-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        box-shadow: 0 2px 10px var(--orange-glow);
+    }
+    .checkout-promo-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* ══════════════════════════════════
+       ORDER SUMMARY
+    ══════════════════════════════════ */
+    .checkout-summary-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .checkout-summary-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange), var(--orange-bright), var(--orange-dark));
+        z-index: 2;
+    }
+
+    /* Items scroll */
+    .checkout-items-scroll {
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    .checkout-items-scroll::-webkit-scrollbar { width: 4px; }
+    .checkout-items-scroll::-webkit-scrollbar-track { background: transparent; }
+    .checkout-items-scroll::-webkit-scrollbar-thumb { background: var(--black-soft); border-radius: 10px; }
+
+    .checkout-mini-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--black-border);
+    }
+    .checkout-mini-item:last-child { border-bottom: none; }
+    .checkout-mini-img {
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--black-border);
+        flex-shrink: 0;
+    }
+    .checkout-mini-variant {
+        display: inline-block;
+        background: var(--black-soft);
+        color: var(--text-secondary);
+        border: 1px solid var(--black-border);
+        font-size: 9px;
+        padding: 1px 6px;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    /* Breakdown */
+    .checkout-breakdown-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 0.88rem;
+        color: var(--text-muted);
+    }
+    .checkout-discount-row {
+        color: var(--green) !important;
+    }
+    .checkout-discount-row span:first-child { color: var(--green); }
+    .checkout-discount-row span:last-child { color: var(--green); font-weight: 700; }
+
+    .checkout-total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid var(--black-border);
+        padding-top: 16px;
+        margin-top: 6px;
+        margin-bottom: 20px;
+    }
+
+    /* ══════════════════════════════════
+       MODAL
+    ══════════════════════════════════ */
+    .checkout-modal-content {
+        background: var(--black-card) !important;
+        border: 1px solid var(--black-border) !important;
+        border-radius: 24px !important;
+        color: var(--text-primary);
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--orange-glow);
+        overflow: hidden;
+        position: relative;
+    }
+    .checkout-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        z-index: 5;
+    }
+    .checkout-modal-header {
+        border-bottom: 1px solid var(--black-border) !important;
+        padding: 1.25rem 1.5rem;
+        background: var(--black-card);
+    }
+    .checkout-modal-footer {
+        border-top: 1px solid var(--black-border) !important;
+        padding: 0.75rem 1.5rem 1.25rem;
+        background: var(--black-card);
+    }
+    .modal-backdrop { backdrop-filter: blur(4px); }
+
+    .checkout-pay-method-box {
+        display: flex;
+        align-items: center;
+        padding: 14px;
+        background: var(--black-medium);
+        border: 1px solid var(--black-border);
+        border-radius: 14px;
+        transition: 0.25s ease;
+    }
+    .checkout-pay-method-box:hover {
+        border-color: rgba(255, 107, 43, 0.2);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .checkout-copy-btn {
+        background: var(--black-soft);
+        border: 1px solid var(--black-border);
+        color: var(--orange);
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+    .checkout-copy-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        box-shadow: 0 3px 12px var(--orange-glow);
+        transform: translateY(-1px);
+    }
+
+    .checkout-modal-hint {
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12));
+        border: 1px solid var(--orange-subtle-border);
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        text-align: start;
+    }
+
+    .checkout-modal-confirm-btn {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+        color: #fff;
+        border: none;
+        padding: 12px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 16px var(--orange-glow);
+        letter-spacing: 0.02em;
+    }
+    .checkout-modal-confirm-btn:hover {
+        box-shadow: 0 8px 28px var(--orange-glow-strong);
+        transform: translateY(-2px);
+    }
+
+    /* ── Copy Toast ── */
+    .checkout-toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--black-card);
+        border: 1px solid var(--green);
+        border-radius: 14px;
+        padding: 12px 22px;
+        font-size: 0.85rem;
+        color: var(--text-primary);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--green-glow);
+        z-index: 9999;
+        transform: translateY(120px);
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .checkout-toast-show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .checkout-form-card { border-radius: 16px; }
+        .checkout-summary-card { border-radius: 18px; }
+    }
+    @media (max-width: 768px) {
+        .checkout-form-card { border-radius: 14px; }
+        .checkout-form-body { padding: 1.15rem; }
+        .checkout-summary-card { border-radius: 16px; padding: 1.15rem; }
+        .checkout-pay-card { border-radius: 12px !important; padding: 12px 8px !important; }
+        .checkout-pay-card i { font-size: 1.5rem !important; }
+        .checkout-submit-btn:hover { transform: none; }
+    }
+</style>
+
+{% endblock %}

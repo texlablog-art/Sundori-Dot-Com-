@@ -1,0 +1,467 @@
+{% extends "admin_base.html" %}
+{% block content %}
+<div class="container-fluid py-5 px-md-5">
+    
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h2 class="logistics-title">
+                <i class="fa-solid fa-truck-ramp-box me-2" style="color: var(--orange);"></i> Logistics Management
+            </h2>
+            <div class="logistics-orange-divider"></div>
+        </div>
+        <a href="/admin/dashboard" class="logistics-back-btn">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Progress Legend -->
+    <div class="logistics-legend mb-4">
+        <div class="logistics-legend-item">
+            <span class="logistics-legend-dot" style="background: var(--orange);"></span>
+            <span style="color: var(--text-muted); font-size: 0.78rem;">Pending</span>
+        </div>
+        <div class="logistics-legend-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="logistics-legend-item">
+            <span class="logistics-legend-dot" style="background: #0DCAF0;"></span>
+            <span style="color: var(--text-muted); font-size: 0.78rem;">Confirmed</span>
+        </div>
+        <div class="logistics-legend-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="logistics-legend-item">
+            <span class="logistics-legend-dot" style="background: var(--orange-dark);"></span>
+            <span style="color: var(--text-muted); font-size: 0.78rem;">Shipped</span>
+        </div>
+        <div class="logistics-legend-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="logistics-legend-item">
+            <span class="logistics-legend-dot" style="background: var(--orange-bright);"></span>
+            <span style="color: var(--text-muted); font-size: 0.78rem;">In Region</span>
+        </div>
+        <div class="logistics-legend-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+        <div class="logistics-legend-item">
+            <span class="logistics-legend-dot" style="background: var(--green);"></span>
+            <span style="color: var(--text-muted); font-size: 0.78rem;">Delivered</span>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="logistics-table-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr class="logistics-table-head">
+                        <th class="ps-4">Order ID & Date</th>
+                        <th>Customer Details</th>
+                        <th>Current Status</th>
+                        <th class="text-center">Quick Update Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="logistics-table-row">
+                        <td class="ps-4">
+                            <span class="logistics-order-id">#{{ order.order_id }}</span>
+                            <small class="d-block" style="color: var(--text-muted);">{{ order.created_at.strftime('%d %b, %I:%M %p') }}</small>
+                        </td>
+                        <td>
+                            <div class="fw-bold" style="color: var(--text-muted);">{{ order.name }}</div>
+                            <div class="small" style="color: var(--text-muted);">
+                                <i class="fa-solid fa-phone me-1" style="color: var(--green); font-size: 0.7rem;"></i> {{ order.phone }}
+                            </div>
+                        </td>
+                        <td>
+                            {% if order.status == 'Pending' %}
+                                <span class="logistics-badge logistics-badge-pending logistics-pulse-pending">
+                                    <i class="fa-solid fa-clock me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Confirmed' %}
+                                <span class="logistics-badge logistics-badge-confirmed">
+                                    <i class="fa-solid fa-circle-check me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Shipped' %}
+                                <span class="logistics-badge logistics-badge-shipped">
+                                    <i class="fa-solid fa-truck-fast me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'In Region' %}
+                                <span class="logistics-badge logistics-badge-region">
+                                    <i class="fa-solid fa-location-dot me-1"></i>{{ order.status }}
+                                </span>
+                            {% elif order.status == 'Delivered' %}
+                                <span class="logistics-badge logistics-badge-delivered">
+                                    <i class="fa-solid fa-house-chimney-user me-1"></i>{{ order.status }}
+                                </span>
+                            {% else %}
+                                <span class="logistics-badge logistics-badge-default">
+                                    {{ order.status }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form action="/admin/track_manage/{{ order._id }}" method="POST" class="d-flex justify-content-center gap-2">
+                                <button type="submit" name="status" value="Confirmed" 
+                                        class="logistics-action-btn logistics-action-confirm"
+                                        {% if order.status != 'Pending' %}disabled{% endif %} title="Confirm Order">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+
+                                <button type="submit" name="status" value="Shipped" 
+                                        class="logistics-action-btn logistics-action-ship"
+                                        {% if order.status != 'Confirmed' %}disabled{% endif %} title="Hand to Courier">
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                </button>
+
+                                <button type="submit" name="status" value="In Region" 
+                                        class="logistics-action-btn logistics-action-region"
+                                        {% if order.status != 'Shipped' %}disabled{% endif %} title="Arrived in Region">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </button>
+
+                                <button type="submit" name="status" value="Delivered" 
+                                        class="logistics-action-btn logistics-action-deliver"
+                                        {% if order.status != 'In Region' %}disabled{% endif %} title="Complete Delivery">
+                                    <i class="fa-solid fa-house-chimney-user"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    {% if not orders %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5">
+                            <i class="fa-solid fa-truck-ramp-box d-block mb-3" style="font-size: 2.5rem; color: var(--black-border);"></i>
+                            <p style="color: var(--text-muted); margin: 0;">No orders to track.</p>
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Title ── */
+    .logistics-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: var(--text-primary);
+    }
+    .logistics-orange-divider {
+        width: 40px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 3px;
+        margin-top: 8px;
+    }
+
+    /* ── Back Button ── */
+    .logistics-back-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 20px;
+        border-radius: 50px;
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.25s ease;
+        white-space: nowrap;
+    }
+    .logistics-back-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        box-shadow: 0 4px 16px var(--orange-glow);
+        transform: translateY(-1px);
+    }
+
+    /* ── Progress Legend ── */
+    .logistics-legend {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 20px;
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 14px;
+        flex-wrap: wrap;
+        position: relative;
+        overflow: hidden;
+    }
+    .logistics-legend::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--orange-subtle-border), transparent);
+    }
+    .logistics-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .logistics-legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        box-shadow: 0 0 6px currentColor;
+    }
+    .logistics-legend-arrow {
+        color: var(--black-border);
+        font-size: 0.55rem;
+    }
+
+    /* ── Table Card ── */
+    .logistics-table-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        position: relative;
+    }
+    .logistics-table-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright), var(--orange));
+        z-index: 1;
+    }
+
+    /* ── Table Head ── */
+    .logistics-table-head {
+        color: var(--text-muted) !important;
+        font-size: 0.7rem !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none !important;
+        background: var(--black-medium) !important;
+    }
+    .logistics-table-head th {
+        padding: 1rem 1rem !important;
+        border: none !important;
+        font-weight: 700;
+    }
+
+    /* ── Table Row ── */
+    .logistics-table-row {
+        border-bottom: 1px solid var(--black-border) !important;
+        transition: background-color 0.2s ease;
+    }
+    .logistics-table-row:hover {
+        background-color: rgba(255, 107, 43, 0.04) !important;
+    }
+    .logistics-table-row:last-child {
+        border-bottom: none !important;
+    }
+    .logistics-table-row td {
+        padding: 1.1rem 1rem !important;
+        border: none !important;
+        color: var(--text-primary);
+        vertical-align: middle;
+    }
+
+    /* ── Order ID ── */
+    .logistics-order-id {
+        font-weight: 700;
+        color: var(--orange);
+        font-size: 0.95rem;
+    }
+
+    /* ══════════════════════════════════
+       STATUS BADGES
+    ══════════════════════════════════ */
+    .logistics-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+
+    /* Pending — Orange */
+    .logistics-badge-pending {
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.14));
+        color: var(--orange);
+        border: 1px solid var(--orange-subtle-border);
+    }
+
+    /* Confirmed — Cyan (kept for contrast) */
+    .logistics-badge-confirmed {
+        background: rgba(13, 202, 240, 0.08);
+        color: #0DCAF0;
+        border: 1px solid rgba(13, 202, 240, 0.18);
+    }
+
+    /* Shipped — Orange Dark */
+    .logistics-badge-shipped {
+        background: rgba(217, 85, 15, 0.1);
+        color: var(--orange-dark);
+        border: 1px solid rgba(217, 85, 15, 0.2);
+    }
+
+    /* In Region — Orange Bright */
+    .logistics-badge-region {
+        background: rgba(255, 133, 72, 0.08);
+        color: var(--orange-bright);
+        border: 1px solid rgba(255, 133, 72, 0.18);
+    }
+
+    /* Delivered — Green */
+    .logistics-badge-delivered {
+        background: rgba(34, 197, 94, 0.08);
+        color: var(--green);
+        border: 1px solid rgba(34, 197, 94, 0.18);
+    }
+
+    /* Default fallback */
+    .logistics-badge-default {
+        background: rgba(110, 110, 110, 0.08);
+        color: var(--text-muted);
+        border: 1px solid rgba(110, 110, 110, 0.15);
+    }
+
+    /* Pending pulse animation */
+    .logistics-pulse-pending {
+        animation: pulseOrange 2s infinite;
+    }
+    @keyframes pulseOrange {
+        0% { box-shadow: 0 0 0 0 var(--orange-glow); }
+        50% { box-shadow: 0 0 0 8px transparent; }
+        100% { box-shadow: 0 0 0 0 transparent; }
+    }
+
+    /* ══════════════════════════════════
+       ACTION BUTTONS
+    ══════════════════════════════════ */
+    .logistics-action-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        border: 1px solid;
+        background: transparent;
+        flex-shrink: 0;
+    }
+    .logistics-action-btn:hover:not(:disabled) {
+        transform: translateY(-3px);
+    }
+    .logistics-action-btn:active:not(:disabled) {
+        transform: translateY(-1px);
+    }
+    .logistics-action-btn:disabled {
+        opacity: 0.12;
+        cursor: not-allowed;
+        transform: none !important;
+        filter: grayscale(1);
+    }
+
+    /* Confirm — Cyan */
+    .logistics-action-confirm {
+        color: #0DCAF0;
+        border-color: rgba(13, 202, 240, 0.2);
+    }
+    .logistics-action-confirm:hover:not(:disabled) {
+        background: #0DCAF0;
+        color: var(--black);
+        border-color: #0DCAF0;
+        box-shadow: 0 5px 18px rgba(13, 202, 240, 0.3);
+    }
+
+    /* Ship — Orange Dark → Orange gradient on hover */
+    .logistics-action-ship {
+        color: var(--orange-dark);
+        border-color: rgba(217, 85, 15, 0.2);
+    }
+    .logistics-action-ship:hover:not(:disabled) {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        box-shadow: 0 5px 18px var(--orange-glow);
+    }
+
+    /* Region — Orange Bright */
+    .logistics-action-region {
+        color: var(--orange-bright);
+        border-color: rgba(255, 133, 72, 0.18);
+    }
+    .logistics-action-region:hover:not(:disabled) {
+        background: linear-gradient(135deg, var(--orange), var(--orange-bright));
+        color: #fff;
+        border-color: var(--orange-bright);
+        box-shadow: 0 5px 18px rgba(255, 133, 72, 0.3);
+    }
+
+    /* Deliver — Green */
+    .logistics-action-deliver {
+        color: var(--green);
+        border-color: rgba(34, 197, 94, 0.2);
+    }
+    .logistics-action-deliver:hover:not(:disabled) {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+        box-shadow: 0 5px 18px var(--green-glow);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 992px) {
+        .logistics-table-card { border-radius: 16px; }
+    }
+    @media (max-width: 768px) {
+        .logistics-table-card { border-radius: 12px; }
+        .logistics-legend { gap: 4px; padding: 10px 14px; }
+        .logistics-legend-arrow { display: none; }
+        .logistics-action-btn { width: 36px; height: 36px; font-size: 0.78rem; border-radius: 9px; }
+        .logistics-badge { font-size: 0.72rem; padding: 5px 12px; }
+    }
+    @media (max-width: 576px) {
+        .logistics-action-btn { width: 32px; height: 32px; border-radius: 8px; font-size: 0.7rem; }
+    }
+</style>
+
+{% endblock %}

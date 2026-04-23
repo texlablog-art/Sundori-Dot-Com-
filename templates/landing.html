@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.title }}</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co.com/FbZ50Q73/Screenshot-2026-04-09-224930-removebg-preview.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --black: #111111;
+            --black-light: #1A1A1A;
+            --black-medium: #222222;
+            --black-soft: #2A2A2A;
+            --black-card: #1E1E1E;
+            --black-border: #333333;
+            --gold: #C9A84C;
+            --gold-light: #F5E6B8;
+            --gold-dark: #8B6914;
+            --gold-glow: rgba(201, 168, 76, 0.25);
+            --green: #1A7A3A;
+            --green-dark: #145A2C;
+            --green-glow: rgba(26, 122, 58, 0.25);
+            --text-primary: #F5F5F5;
+            --text-secondary: #AAAAAA;
+            --text-muted: #777777;
+            --danger: #dc2626;
+            --danger-dim: rgba(220, 38, 38, 0.6);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--black);
+            font-family: 'Hind Siliguri', sans-serif;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* ===== টপ বার ===== */
+        .top-urgency-bar {
+            background: linear-gradient(90deg, var(--black-medium), rgba(201, 168, 76, 0.12), var(--black-medium));
+            color: var(--gold-light);
+            text-align: center;
+            padding: 9px 16px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+        }
+        .top-urgency-bar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.08), transparent);
+            animation: shimmer 2.5s infinite;
+        }
+        @keyframes shimmer { to { left: 160%; } }
+        .live-dot {
+            width: 8px; height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 6px;
+            animation: livePulse 1.2s infinite;
+        }
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(26,122,58,0.5); }
+            50% { opacity: 0.5; box-shadow: 0 0 0 4px rgba(26,122,58,0); }
+        }
+
+        /* ===== লাইভ ভিউয়ার বার ===== */
+        .viewer-bar {
+            background: var(--black-light);
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border-bottom: 1px solid var(--black-border);
+        }
+        .viewer-bar .eye-icon { color: var(--gold); margin-right: 4px; }
+        .viewer-count { 
+            color: var(--gold); 
+            font-weight: 800; 
+            display: inline-block;
+            min-width: 20px;
+        }
+
+        /* ===== ব্যাজ ===== */
+        .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+        .trust-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 0.72rem; font-weight: 700;
+            border: 1px solid;
+        }
+        .trust-badge.red { background: rgba(220,38,38,0.1); color: #f87171; border-color: rgba(220,38,38,0.2); }
+        .trust-badge.green { background: rgba(26,122,58,0.1); color: #4ade80; border-color: rgba(26,122,58,0.2); }
+        .trust-badge.blue { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+        .trust-badge.gold { background: rgba(201,168,76,0.1); color: var(--gold); border-color: rgba(201,168,76,0.2); }
+        .trust-badge.dark { background: var(--black-soft); color: var(--text-secondary); border-color: var(--black-border); }
+
+        /* ===== কার্ড ===== */
+        .product-card {
+            background: var(--black-card);
+            border-radius: 20px;
+            border: 1px solid var(--black-border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 6px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--gold), var(--green));
+            z-index: 2;
+        }
+        .product-title {
+            color: var(--text-primary);
+            font-weight: 800;
+            font-size: 1.5rem;
+            line-height: 1.4;
+        }
+
+        /* ===== ইমেজ ===== */
+        .main-image-wrap {
+            position: relative;
+            background: linear-gradient(145deg, var(--black-medium), var(--black-soft));
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid var(--black-border);
+        }
+        .main-image-wrap img {
+            width: 100%; max-height: 440px;
+            object-fit: contain; display: block;
+            transition: transform 0.5s;
+        }
+        .main-image-wrap:hover img { transform: scale(1.03); }
+        .image-badge {
+            position: absolute; top: 12px; left: 12px;
+            background: var(--gold-dark);
+            color: var(--black);
+            padding: 5px 12px; border-radius: 8px;
+            font-weight: 800; font-size: 0.8rem;
+            box-shadow: 0 4px 12px var(--gold-glow);
+            animation: badgePulse 2s infinite;
+        }
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .thumb-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .thumb-row::-webkit-scrollbar { height: 3px; }
+        .thumb-row::-webkit-scrollbar-thumb { background: var(--black-border); border-radius: 3px; }
+        .thumb-img {
+            width: 64px; height: 64px; border-radius: 10px;
+            object-fit: cover; border: 2px solid var(--black-border);
+            cursor: pointer; transition: 0.2s; flex-shrink: 0;
+            background: var(--black-soft);
+        }
+        .thumb-img.active, .thumb-img:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px var(--gold-glow);
+        }
+
+        /* ===== লাস্ট পারচেসড ===== */
+        .last-purchased {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 14px; padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12));
+            border: 1px solid rgba(201,168,76,0.18);
+            border-radius: 10px;
+            font-size: 0.82rem; font-weight: 600; color: var(--gold-light);
+        }
+        .last-purchased .lp-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            display: flex; align-items: center; justify-content: center;
+            color: var(--black); font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
+        }
+        .lp-time { color: var(--gold); font-weight: 700; }
+
+        /* ===== প্রাইস কার্ড ===== */
+        .sticky-side { position: sticky; top: 14px; }
+        .price-card {
+            background: var(--black-card);
+            border-radius: 20px;
+            border: 1px solid var(--black-border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 6px 24px rgba(0,0,0,0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--gold), var(--green));
+            z-index: 2;
+        }
+        .price-card-top {
+            background: linear-gradient(135deg, var(--black) 0%, var(--black-light) 100%);
+            padding: 24px 20px; text-align: center;
+            position: relative; overflow: hidden;
+        }
+        .price-card-top::after {
+            content: '';
+            position: absolute; top: -40%; right: -20%;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(201,168,76,0.1), transparent 70%);
+            border-radius: 50%;
+        }
+        .savings-tag {
+            display: inline-block;
+            background: rgba(201,168,76,0.1);
+            border: 1px solid rgba(201,168,76,0.2);
+            color: var(--gold);
+            padding: 4px 14px; border-radius: 20px;
+            font-size: 0.78rem; font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .old-price {
+            color: rgba(255,255,255,0.3);
+            text-decoration: line-through;
+            font-size: 1.1rem; font-weight: 500;
+        }
+        .new-price {
+            color: var(--gold); font-weight: 800;
+            font-size: 3rem; line-height: 1.1;
+            display: block; margin: 4px 0;
+            text-shadow: 0 2px 16px rgba(201,168,76,0.2);
+        }
+        .new-price .currency { font-size: 1.5rem; vertical-align: super; margin-right: 2px; }
+        .price-sub { color: rgba(255,255,255,0.35); font-size: 0.78rem; }
+
+        /* ===== কাউন্টডাউন ===== */
+        .countdown-section {
+            background: rgba(201,168,76,0.05);
+            border-bottom: 1px solid rgba(201,168,76,0.12);
+            padding: 12px 20px; text-align: center;
+        }
+        .countdown-label {
+            font-size: 0.78rem; color: var(--gold);
+            font-weight: 700; margin-bottom: 5px;
+        }
+        .countdown-timer { display: flex; justify-content: center; gap: 6px; }
+        .cd-block {
+            background: var(--black-soft);
+            border-radius: 7px;
+            padding: 5px 9px; min-width: 44px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border: 1px solid var(--black-border);
+        }
+        .cd-block .num { font-size: 1.2rem; font-weight: 800; color: var(--gold); line-height: 1; }
+        .cd-block .lbl { font-size: 0.58rem; color: var(--text-muted); font-weight: 600; }
+
+        /* ===== স্টক ===== */
+        .stock-bar-wrap {
+            padding: 14px 20px;
+            background: var(--black-card);
+            border-bottom: 1px solid var(--black-border);
+        }
+        .stock-text {
+            font-size: 0.8rem; font-weight: 700;
+            color: var(--gold); margin-bottom: 6px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .fire-icon { animation: fireFlicker 0.5s infinite alternate; display: inline-block; }
+        @keyframes fireFlicker { from { transform: scale(1); } to { transform: scale(1.2); } }
+        .stock-bar-bg {
+            height: 7px; background: rgba(201,168,76,0.1);
+            border-radius: 10px; overflow: hidden;
+        }
+        .stock-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            border-radius: 10px;
+            transition: width 1.5s ease;
+            position: relative;
+        }
+        .stock-bar-fill::after {
+            content: '';
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: stockShine 2s infinite;
+        }
+        @keyframes stockShine { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+        /* ===== ট্রাস্ট চেক ===== */
+        .trust-checklist { padding: 14px 20px; border-bottom: 1px solid var(--black-border); }
+        .trust-check-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 5px 0; font-size: 0.82rem; color: var(--text-secondary); font-weight: 500;
+        }
+        .check-icon {
+            width: 20px; height: 20px;
+            background: rgba(26,122,58,0.15); color: var(--green);
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.6rem; flex-shrink: 0; margin-top: 2px;
+        }
+
+        /* ===== ফর্ম ===== */
+        .order-form-wrap { padding: 20px; }
+        .form-step-label {
+            font-size: 0.74rem; color: var(--text-muted);
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 7px;
+        }
+        .step-num {
+            width: 22px; height: 22px;
+            background: var(--gold); color: var(--black);
+            border-radius: 50%; display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.68rem; font-weight: 800;
+        }
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block; font-size: 0.82rem;
+            font-weight: 700; color: var(--text-primary); margin-bottom: 5px;
+        }
+        .form-group label .req { color: var(--danger); }
+        .form-input {
+            width: 100%; padding: 13px 14px;
+            border: 2px solid var(--black-border); border-radius: 11px;
+            font-size: 0.95rem; font-family: 'Hind Siliguri', sans-serif;
+            font-weight: 500; color: var(--text-primary);
+            background: var(--black-medium); transition: 0.25s; outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--gold);
+            background: var(--black-soft);
+            box-shadow: 0 0 0 4px var(--gold-glow);
+        }
+        .form-input::placeholder { color: var(--text-muted); font-weight: 400; }
+        .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(220,38,38,0.1); }
+        .input-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; }
+        .input-error-msg { font-size: 0.72rem; color: var(--danger); margin-top: 3px; display: none; }
+        .form-input.error ~ .input-error-msg { display: block; }
+        textarea.form-input { resize: vertical; min-height: 72px; }
+
+        /* ===== CTA ===== */
+        .btn-cta {
+            width: 100%; padding: 16px 20px; border: none;
+            border-radius: 13px; font-family: 'Hind Siliguri', sans-serif;
+            font-size: 1.15rem; font-weight: 800; cursor: pointer;
+            position: relative; overflow: hidden; transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-cta-primary {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--black);
+            box-shadow: 0 4px 20px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+            animation: ctaBreath 3s ease-in-out infinite;
+        }
+        @keyframes ctaBreath {
+            0%, 100% { box-shadow: 0 4px 20px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.15); }
+            50% { box-shadow: 0 6px 30px rgba(201,168,76,0.4), inset 0 1px 0 rgba(255,255,255,0.15); }
+        }
+        .btn-cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(201,168,76,0.45);
+        }
+        .btn-cta-primary:active { transform: translateY(0); }
+        .btn-cta-primary::before {
+            content: '';
+            position: absolute; top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            animation: ctaShine 2.5s infinite;
+        }
+        @keyframes ctaShine { to { left: 160%; } }
+
+        .btn-cta-secondary {
+            background: var(--black-medium);
+            color: var(--gold);
+            border: 1px solid var(--black-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-size: 0.95rem; padding: 13px;
+        }
+        .btn-cta-secondary:hover { 
+            background: var(--black-soft); 
+            transform: translateY(-1px); 
+            border-color: rgba(201,168,76,0.3);
+        }
+
+        .secure-note {
+            text-align: center; font-size: 0.74rem;
+            color: var(--text-muted); margin-top: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+
+        /* ===== গ্যারান্টি ===== */
+        .guarantee-badge {
+            display: flex; align-items: center; gap: 10px;
+            background: linear-gradient(135deg, rgba(26,122,58,0.06), rgba(26,122,58,0.12));
+            border: 1px solid rgba(26,122,58,0.2); border-radius: 11px;
+            padding: 10px 14px; margin-top: 12px;
+        }
+        .guarantee-badge i { font-size: 1.3rem; color: var(--green); }
+        .guarantee-badge .gb-text { font-size: 0.8rem; font-weight: 700; color: #4ade80; line-height: 1.4; }
+        .guarantee-badge .gb-text small { font-weight: 400; color: var(--text-secondary); font-size: 0.72rem; }
+
+        /* ===== মিস করলে কী হবে ===== */
+        .miss-section {
+            background: linear-gradient(135deg, rgba(220,38,38,0.04), rgba(220,38,38,0.08));
+            border: 1px solid rgba(220,38,38,0.15); border-radius: 14px;
+            padding: 18px; margin-top: 16px;
+        }
+        .miss-section h5 {
+            font-size: 0.92rem; font-weight: 800;
+            color: #f87171; margin-bottom: 12px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .miss-item {
+            display: flex; align-items: flex-start; gap: 8px;
+            padding: 6px 0; font-size: 0.83rem;
+            color: var(--text-secondary); font-weight: 500; line-height: 1.5;
+        }
+        .miss-item .miss-x {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--danger); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.6rem; flex-shrink: 0; margin-top: 1px;
+        }
+
+        /* ===== ডেলিভারি ইনফো ===== */
+        .info-card {
+            background: var(--black-card); border-radius: 16px;
+            border: 1px solid var(--black-border); padding: 18px; margin-top: 14px;
+            position: relative; overflow: hidden;
+        }
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--gold), var(--green));
+        }
+        .info-card h5 {
+            font-size: 0.88rem; font-weight: 700;
+            color: var(--text-primary); margin-bottom: 12px;
+        }
+        .delivery-step { display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; }
+        .delivery-step:not(:last-child) { border-bottom: 1px solid var(--black-border); }
+        .step-icon {
+            width: 34px; height: 34px; border-radius: 9px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.82rem; flex-shrink: 0;
+        }
+        .step-icon.orange { background: rgba(201,168,76,0.1); color: var(--gold); }
+        .step-icon.green { background: rgba(26,122,58,0.1); color: var(--green); }
+        .step-icon.blue { background: rgba(59,130,246,0.1); color: #60a5fa; }
+        .step-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; line-height: 1.4; }
+        .step-text small { display: block; color: var(--text-muted); font-size: 0.74rem; }
+
+        /* ===== বিবরণ ===== */
+        .desc-section {
+            background: var(--black-card); border-radius: 16px;
+            border: 1px solid var(--black-border); padding: 20px; margin-top: 14px;
+            position: relative; overflow: hidden;
+        }
+        .desc-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--gold), var(--green));
+        }
+        .desc-section h4 {
+            font-size: 1rem; font-weight: 800;
+            color: var(--text-primary); margin-bottom: 12px;
+            display: flex; align-items: center; gap: 7px;
+        }
+        .desc-content { line-height: 1.9; font-size: 0.95rem; color: var(--text-secondary); }
+        .desc-content ul { padding-left: 0; margin: 8px 0; list-style: none; }
+        .desc-content li {
+            margin-bottom: 5px; position: relative;
+            padding-left: 20px;
+        }
+        .desc-content li::before {
+            content: '✓'; position: absolute; left: 0;
+            color: var(--green); font-weight: 800; font-size: 0.82rem;
+        }
+        .desc-content p { margin-bottom: 8px; }
+
+        /* ===== রিভিউ ===== */
+        .review-snippet {
+            display: flex; align-items: flex-start; gap: 10px;
+            padding: 12px 0; border-bottom: 1px solid var(--black-border);
+        }
+        .review-snippet:last-child { border-bottom: none; }
+        .review-avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
+        }
+        .review-stars { color: var(--gold); font-size: 0.72rem; margin-bottom: 2px; }
+        .review-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; line-height: 1.5; }
+        .review-name { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+        .review-verified {
+            display: inline-flex; align-items: center; gap: 3px;
+            font-size: 0.68rem; color: var(--green); font-weight: 700;
+            background: rgba(26,122,58,0.15); padding: 1px 6px;
+            border-radius: 4px; margin-left: 6px;
+        }
+
+        /* ===== FAQ ===== */
+        .faq-item {
+            border: 1px solid var(--black-border); border-radius: 10px;
+            margin-bottom: 6px; overflow: hidden; background: var(--black-card);
+        }
+        .faq-q {
+            padding: 12px 14px; font-weight: 700; font-size: 0.85rem;
+            color: var(--text-primary); cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            user-select: none;
+        }
+        .faq-q i { transition: 0.3s; color: var(--text-muted); font-size: 0.75rem; }
+        .faq-item.open .faq-q i { transform: rotate(180deg); color: var(--gold); }
+        .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .faq-item.open .faq-a { max-height: 200px; }
+        .faq-a-inner { padding: 0 14px 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
+
+        /* ===== সোশ্যাল প্রুফ টোস্ট ===== */
+        .social-proof-toast {
+            position: fixed; bottom: -120px; left: 16px;
+            background: var(--black-card); border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 0 1px var(--black-border);
+            display: flex; align-items: center; gap: 10px;
+            z-index: 1000;
+            transition: bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            max-width: 310px;
+        }
+        .social-proof-toast.show { bottom: 20px; }
+        .social-proof-toast .avatar {
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;
+        }
+        .social-proof-toast .text { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4; }
+        .social-proof-toast .text strong { color: var(--text-primary); }
+        .social-proof-toast .time-ago { font-size: 0.68rem; color: var(--text-muted); }
+
+        /* ===== মোবাইল স্টিকি CTA ===== */
+        .mobile-sticky-cta {
+            display: none; position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: var(--black-card); padding: 10px 14px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
+            z-index: 999; border-top: 1px solid var(--black-border);
+        }
+        .mobile-sticky-inner { display: flex; align-items: center; gap: 10px; }
+        .mobile-price-side { flex-shrink: 0; }
+        .mobile-price-side .old { font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; }
+        .mobile-price-side .new { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+        .mobile-sticky-inner .btn-cta { margin: 0; flex: 1; padding: 13px; font-size: 1rem; border-radius: 11px; }
+
+        /* ===== অ্যানিমেশন ===== */
+        .fade-up { opacity: 0; transform: translateY(18px); animation: fadeUp 0.5s ease forwards; }
+        @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+        .fade-d1 { animation-delay: 0.1s; }
+        .fade-d2 { animation-delay: 0.2s; }
+        .fade-d3 { animation-delay: 0.3s; }
+        .fade-d4 { animation-delay: 0.4s; }
+
+        /* ===== কম্প্যারিজন টেবিল ===== */
+        .compare-table {
+            width: 100%; border-collapse: collapse; font-size: 0.82rem;
+        }
+        .compare-table th, .compare-table td {
+            padding: 10px 12px; text-align: left;
+            border-bottom: 1px solid var(--black-border);
+        }
+        .compare-table th {
+            font-weight: 700; color: var(--text-primary); font-size: 0.78rem;
+            background: var(--black-medium);
+        }
+        .compare-table td { font-weight: 500; color: var(--text-secondary); }
+        .compare-good { color: var(--green); font-weight: 700; }
+        .compare-bad { color: #f87171; font-weight: 600; }
+
+        /* ===== রেসপন্সিভ ===== */
+        @media (max-width: 991px) {
+            .product-title { font-size: 1.25rem; }
+            .new-price { font-size: 2.5rem; }
+            .mobile-sticky-cta { display: block; }
+            body { padding-bottom: 75px; }
+            .desktop-only { display: none !important; }
+        }
+        @media (min-width: 992px) { .mobile-only { display: none !important; } }
+        @media (max-width: 575px) {
+            .new-price { font-size: 2.1rem; }
+            .btn-cta { font-size: 1rem; padding: 14px; }
+            .top-urgency-bar { font-size: 0.8rem; padding: 7px 12px; }
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--black-border); border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+<!-- আর্জেন্সি টপ বার -->
+<div class="top-urgency-bar">
+    <i class="fa-solid fa-bolt" style="color: var(--gold);"></i>
+    <span id="urgency-text">আজকের দিনে ৫২ জন এই প্রোডাক্ট অর্ডার করেছেন</span>
+    <span class="live-dot"></span>
+</div>
+
+<!-- লাইভ ভিউয়ার বার -->
+<div class="viewer-bar">
+    <i class="fa-solid fa-eye eye-icon"></i>
+    এখন <span class="viewer-count" id="viewerCount">২৪</span> জন এই পেজ দেখছেন
+</div>
+
+<div class="container py-3 py-lg-4">
+    <div class="row g-3">
+        <!-- বাম সাইড -->
+        <div class="col-lg-7">
+
+            <div class="product-card p-3 p-md-4 fade-up">
+                <div class="badge-row">
+                    <span class="trust-badge red"><i class="fa-solid fa-fire"></i> বেস্ট সেলার</span>
+                    <span class="trust-badge green"><i class="fa-solid fa-shield-halved"></i> অরিজিনাল</span>
+                    <span class="trust-badge blue"><i class="fa-solid fa-rotate-left"></i> রিটার্ন</span>
+                    <span class="trust-badge gold"><i class="fa-solid fa-truck-fast"></i> এক্সপ্রেস</span>
+                </div>
+
+                <h1 class="product-title">{{ product.title }}</h1>
+
+                <div class="d-flex align-items-center gap-2 mb-3" style="font-size: 0.82rem;">
+                    <span style="color: var(--gold); font-weight: 700;">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                        <span style="color: var(--text-primary); font-weight: 600; margin-left: 3px;">4.9</span>
+                    </span>
+                    <span style="color: var(--text-muted);">|</span>
+                    <span style="color: var(--text-muted); font-weight: 500;" id="reviewCountText">৩৮০+ রিভিউ</span>
+                    <span style="color: var(--text-muted);">|</span>
+                    <span style="color: var(--green); font-weight: 600;" id="soldCountText">৭২০+ বিক্রিত</span>
+                </div>
+
+                <div class="main-image-wrap">
+                    <div class="image-badge">
+                        <i class="fa-solid fa-arrow-down me-1"></i>
+                        <span id="discount-percent">০%</span> ছাড়
+                    </div>
+                    <img id="mainProductImage" src="{{ product.main_image }}" alt="{{ product.title }}">
+                </div>
+
+                {% if product.images and product.images|length > 1 %}
+                <div class="thumb-row" id="thumbRow">
+                    {% for img in product.images %}
+                    <img src="{{ img }}" class="thumb-img {% if loop.first %}active{% endif %}" onclick="switchImage(this, '{{ img }}')" alt="Thumb">
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- লাস্ট পারচেসড -->
+                <div class="last-purchased" id="lastPurchased">
+                    <div class="lp-avatar" id="lpAvatar">ম</div>
+                    <div>
+                        <span id="lpText"><strong>মাহমুদ</strong> ঢাকা থেকে মাত্র এইমাত্র কিনেছেন</span>
+                        <div class="lp-time" id="lpTime">১ মিনিট আগে</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- বিবরণ -->
+            <div class="desc-section fade-up fade-d1">
+                <h4><i class="fa-solid fa-circle-info" style="color: var(--gold);"></i> প্রোডাক্টের বিবরণ</h4>
+                <div class="desc-content">{{ product.description | safe }}</div>
+            </div>
+
+            <!-- কম্প্যারিজন -->
+            <div class="desc-section fade-up fade-d2">
+                <h4><i class="fa-solid fa-scale-balanced" style="color: var(--gold);"></i> কেন আমাদের থেকে নেবেন?</h4>
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>ফিচার</th>
+                            <th>আমাদের প্রোডাক্ট</th>
+                            <th>অন্যদের প্রোডাক্ট</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>কোয়ালিটি</td>
+                            <td class="compare-good"><i class="fa-solid fa-circle-check me-1"></i>প্রিমিয়াম</td>
+                            <td class="compare-bad"><i class="fa-solid fa-circle-xmark me-1"></i>লো-কোয়ালিটি</td>
+                        </tr>
+                        <tr>
+                            <td>গ্যারান্টি</td>
+                            <td class="compare-good"><i class="fa-solid fa-circle-check me-1"></i>১০০% মানি ব্যাক</td>
+                            <td class="compare-bad"><i class="fa-solid fa-circle-xmark me-1"></i>কোনো গ্যারান্টি নেই</td>
+                        </tr>
+                        <tr>
+                            <td>ডেলিভারি</td>
+                            <td class="compare-good"><i class="fa-solid fa-circle-check me-1"></i>১-২ দিন</td>
+                            <td class="compare-bad"><i class="fa-solid fa-circle-xmark me-1"></i>৫-৭ দিন</td>
+                        </tr>
+                        <tr>
+                            <td>সাপোর্ট</td>
+                            <td class="compare-good"><i class="fa-solid fa-circle-check me-1"></i>২৪/৭ হোয়াটসঅ্যাপ</td>
+                            <td class="compare-bad"><i class="fa-solid fa-circle-xmark me-1"></i>সাপোর্ট নেই</td>
+                        </tr>
+                        <tr>
+                            <td>প্রাইস</td>
+                            <td class="compare-good"><i class="fa-solid fa-circle-check me-1"></i>সেরা দাম</td>
+                            <td class="compare-bad"><i class="fa-solid fa-circle-xmark me-1"></i>বেশি দাম</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ডাইনামিক রিভিউ -->
+            <div class="desc-section fade-up fade-d3">
+                <h4><i class="fa-solid fa-comment-dots" style="color: var(--gold);"></i> ক্রেতাদের মতামত</h4>
+                <div id="reviewContainer"></div>
+            </div>
+
+            <!-- মিস করলে কী হবে -->
+            <div class="miss-section fade-up fade-d4">
+                <h5><i class="fa-solid fa-triangle-exclamation"></i> আজ নিলে না হলে কী মিস করবেন:</h5>
+                <div class="miss-item">
+                    <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
+                    <span>এই বিশেষ ছাড়ের দাম — কাল থেকে আবার আগের দামে চলে যাবে</span>
+                </div>
+                <div class="miss-item">
+                    <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
+                    <span>ফ্রি ডেলিভারি অফার — পরে ডেলিভারি চার্জ যোগ হতে পারে</span>
+                </div>
+                <div class="miss-item">
+                    <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
+                    <span>সীমিত স্টক — পরে এই প্রোডাক্ট আর পেতে পারেন না সপ্তাহখানেক</span>
+                </div>
+                <div class="miss-item">
+                    <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
+                    <span>অন্যরা আপনার চেয়ে আগে প্রোডাক্টটি ব্যবহার করে ফায়দা নিয়ে নেবে</span>
+                </div>
+            </div>
+
+            <!-- FAQ -->
+            <div class="desc-section fade-up fade-d4">
+                <h4><i class="fa-solid fa-circle-question" style="color: var(--gold);"></i> সচরাচর জিজ্ঞাসা</h4>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">এটি কি অরিজিনাল প্রোডাক্ট?<i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, আমরা ১০০% অরিজিনাল প্রোডাক্টই সেল করি। কোনো সমস্যা থাকলে রিটার্ন/রিপ্লেসমেন্ট পাবেন।</div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">ডেলিভারি কতদিনে পাবো?<i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-a"><div class="faq-a-inner">ঢাকায় ১-২ দিন, ঢাকার বাইরে ২-৪ দিনের মধ্যে ডেলিভারি পাবেন।</div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">ক্যাশ অন ডেলিভারি আছে?<i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, প্রোডাক্ট হাতে পেয়ে পেমেন্ট করতে পারবেন। কোনো অগ্রিম পেমেন্ট লাগবে না।</div></div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">রিটার্ন পলিসি কি?<i class="fa-solid fa-chevron-down"></i></div>
+                    <div class="faq-a"><div class="faq-a-inner">প্রোডাক্ট পেয়ে যদি মনে না হয়, ডেলিভারির সময়ই রিটার্ন করতে পারবেন। কোনো প্রশ্ন নেই।</div></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ডান সাইড -->
+        <div class="col-lg-5">
+            <div class="sticky-side">
+
+                <div class="price-card fade-up fade-d1">
+                    <div class="price-card-top">
+                        <div class="savings-tag">
+                            <i class="fa-solid fa-piggy-bank me-1"></i>
+                            আপনি বাঁচাচ্ছেন ৳<span id="savings-amount">০</span>
+                        </div>
+                        <span class="old-price">৳<span id="delPriceDisplay">০</span></span>
+                        <span class="new-price"><span class="currency">৳</span><span id="priceDisplay">০</span></span>
+                        <div class="price-sub">ইনক্লুডিং সব চার্জ</div>
+                    </div>
+
+                    <div class="countdown-section">
+                        <div class="countdown-label">
+                            <i class="fa-solid fa-clock me-1"></i>
+                            এই অফার শেষ হতে বাকি:
+                        </div>
+                        <div class="countdown-timer">
+                            <div class="cd-block"><div class="num" id="cd-hours">০২</div><div class="lbl">ঘণ্টা</div></div>
+                            <div class="cd-block"><div class="num" id="cd-mins">৪৭</div><div class="lbl">মিনিট</div></div>
+                            <div class="cd-block"><div class="num" id="cd-secs">৩৩</div><div class="lbl">সেকেন্ড</div></div>
+                        </div>
+                    </div>
+
+                    <div class="stock-bar-wrap">
+                        <div class="stock-text">
+                            <i class="fa-solid fa-fire fire-icon" style="color: var(--gold);"></i>
+                            <span>সীমিত স্টক — মাত্র <strong id="stock-left">৫</strong>টি বাকি!</span>
+                        </div>
+                        <div class="stock-bar-bg">
+                            <div class="stock-bar-fill" id="stock-bar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="trust-checklist">
+                        <div class="trust-check-item">
+                            <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                            <span>ক্যাশ অন ডেলিভারি — হাতে পেয়ে টাকা দিন</span>
+                        </div>
+                        <div class="trust-check-item">
+                            <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                            <span>১০০% অরিজিনাল প্রোডাক্ট গ্যারান্টি</span>
+                        </div>
+                        <div class="trust-check-item">
+                            <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                            <span>ডেলিভারির সময় রিটার্ন সুবিধা</span>
+                        </div>
+                        <div class="trust-check-item">
+                            <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                            <span>
+                                ডেলিভারি চার্জ:
+                                {% if product.del_charge and product.del_charge != '0' %}
+                                    ৳{{ product.del_charge }}
+                                {% else %}
+                                    <strong style="color: var(--green);">ফ্রি!</strong>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="order-form-wrap">
+                        <div class="form-step-label">
+                            <span class="step-num">1</span> আপনার তথ্য দিন
+                        </div>
+
+                        <form action="/buy-now/{{ product._id }}" method="POST" id="orderForm" onsubmit="return handleSubmit(event)">
+                            <div class="form-group">
+                                <label>আপনার নাম <span class="req">*</span></label>
+                                <input type="text" id="cust_name" name="name" class="form-input" placeholder="যেমন: শাহরিয়ার কবির" required>
+                                <div class="input-error-msg">অনুগ্রহ করে আপনার নাম লিখুন</div>
+                            </div>
+                            <div class="form-group">
+                                <label>মোবাইল নাম্বার <span class="req">*</span></label>
+                                <input type="tel" id="cust_phone" name="phone" class="form-input" placeholder="০১৭XX-XXXXXX" required>
+                                <div class="input-hint">১১ ডিজিটের বাংলাদেশি নাম্বার</div>
+                                <div class="input-error-msg">সঠিক মোবাইল নাম্বার দিন (০১ দিয়ে শুরু)</div>
+                            </div>
+                            <div class="form-group">
+                                <label>ডেলিভারি ঠিকানা <span class="req">*</span></label>
+                                <textarea id="cust_address" name="address" class="form-input" rows="3" placeholder="সম্পূর্ণ ঠিকানা লিখুন" required></textarea>
+                                <div class="input-hint">জেলা, উপজেলা, এলাকার নাম সহ</div>
+                                <div class="input-error-msg">অনুগ্রহ করে সম্পূর্ণ ঠিকানা লিখুন</div>
+                            </div>
+
+                            <div class="form-step-label" style="margin-top: 6px;">
+                                <span class="step-num">2</span> অর্ডার কনফার্ম করুন
+                            </div>
+
+                            <button type="submit" class="btn-cta btn-cta-primary" id="submitBtn">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                এখনই অর্ডার করুন
+                            </button>
+
+                            <button type="button" class="btn-cta btn-cta-secondary" onclick="document.getElementById('cust_phone').focus();">
+                                <i class="fa-brands fa-whatsapp" style="font-size: 1.15rem;"></i>
+                                হোয়াটসঅ্যাপে অর্ডার
+                            </button>
+
+                            <div class="secure-note">
+                                <i class="fa-solid fa-lock" style="color: var(--green);"></i>
+                                আপনার তথ্য সম্পূর্ণ নিরাপদ — কাউকে শেয়ার করি না
+                            </div>
+                        </form>
+
+                        <div class="guarantee-badge">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <div class="gb-text">
+                                ১০০% মানি ব্যাক গ্যারান্টি
+                                <small>পছন্দ না হলে ফেরত দিন, টাকা ফেরত পাবেন</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ডেলিভারি প্রসেস -->
+                <div class="info-card fade-up fade-d2 desktop-only">
+                    <h5><i class="fa-solid fa-truck-fast me-1" style="color: var(--gold);"></i> কিভাবে ডেলিভারি পাবেন?</h5>
+                    <div class="delivery-step">
+                        <div class="step-icon orange"><i class="fa-solid fa-clipboard-list"></i></div>
+                        <div class="step-text">অর্ডার কনফার্ম<small>ফর্ম পূরণ করে সাবমিট করুন</small></div>
+                    </div>
+                    <div class="delivery-step">
+                        <div class="step-icon blue"><i class="fa-solid fa-phone"></i></div>
+                        <div class="step-text">কল ভেরিফিকেশন<small>আমাদের টিম কল করে নিশ্চিত করবে</small></div>
+                    </div>
+                    <div class="delivery-step">
+                        <div class="step-icon green"><i class="fa-solid fa-box-open"></i></div>
+                        <div class="step-text">হাতে প্রোডাক্ট পান<small>প্রোডাক্ট নিন, তারপর টাকা দিন</small></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- মোবাইল স্টিকি CTA -->
+<div class="mobile-sticky-cta mobile-only">
+    <div class="mobile-sticky-inner">
+        <div class="mobile-price-side">
+            <div class="old">৳<span class="mobile-del-price">০</span></div>
+            <div class="new">৳<span class="mobile-price">০</span></div>
+        </div>
+        <button class="btn-cta btn-cta-primary" onclick="document.getElementById('cust_name').scrollIntoView({behavior:'smooth',block:'center'});">
+            <i class="fa-solid fa-bag-shopping"></i> অর্ডার করুন
+        </button>
+    </div>
+</div>
+
+<!-- সোশ্যাল প্রুফ টোস্ট -->
+<div class="social-proof-toast" id="socialToast">
+    <div class="avatar" id="toastAvatar">র</div>
+    <div>
+        <div class="text" id="toastText"><strong>রাহাত</strong> ঢাকা থেকে অর্ডার করেছেন</div>
+        <div class="time-ago" id="toastTime">২ মিনিট আগে</div>
+    </div>
+</div>
+
+<script>
+(function() {
+
+    // ==========================================
+    // প্রাইস ক্যালকুলেশন — del_price ও price ব্যবহার
+    // ==========================================
+    const delPriceRaw = '{{ product.del_price }}';
+    const priceRaw = '{{ product.price }}';
+    
+    // বাংলা সংখ্যা → ইংরেজি কনভার্ট ফাংশন
+    function bnToEn(str) {
+        const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+        return String(str).replace(/[০-৯]/g, d => map[d] || d);
+    }
+    
+    // ইংরেজি → বাংলা কনভার্ট
+    function enToBn(num) {
+        const map = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+        return String(num).replace(/\d/g, d => map[d]);
+    }
+
+    const delPrice = parseFloat(bnToEn(delPriceRaw)) || 0;
+    const price = parseFloat(bnToEn(priceRaw)) || 0;
+    const savings = delPrice - price;
+    const discountPercent = delPrice > 0 ? Math.round((savings / delPrice) * 100) : 0;
+
+    // প্রাইস ডিসপ্লে
+    document.getElementById('delPriceDisplay').textContent = enToBn(delPrice.toLocaleString('en-IN'));
+    document.getElementById('priceDisplay').textContent = enToBn(price.toLocaleString('en-IN'));
+    document.getElementById('savings-amount').textContent = enToBn(savings.toLocaleString('en-IN'));
+    document.getElementById('discount-percent').textContent = enToBn(discountPercent);
+    
+    // মোবাইল প্রাইস
+    document.querySelector('.mobile-del-price').textContent = enToBn(delPrice.toLocaleString('en-IN'));
+    document.querySelector('.mobile-price').textContent = enToBn(price.toLocaleString('en-IN'));
+
+    // ==========================================
+    // ডাইনামিক রিভিউ জেনারেটর — লাইফটাইম র‍্যান্ডম
+    // ==========================================
+    const firstNames = [
+        'রাহাত','ফাতেমা','তানভীর','নুসরাত','ইমরান','সাদিয়া','আরিফ','মাহমুদ',
+        'জান্নাত','সাকিব','আফরিন','রুমান','তাসনিম','হাসিব','শারমিন','ফাহিম',
+        'নাজমুল','সুমাইয়া','রিফাত','আবদুল্লাহ','মাসুদা','কামরুল','সাবরিন','জুয়েল',
+        'তানজিনা','মেহেদী','আশরাফুল','নাজনীন','সোহেল','রুবিনা','ওয়াসিম','ফারহানা',
+        'তৌহিদ','ইসরাত','বিলাল','নাফিসা','রাসেল','প্রিয়া','শাকিল','মারিয়া',
+        'জাকির','হাসিনা','ইকবাল','তামান্না','নাঈম','রুমানা','ফয়সাল','সামিয়া'
+    ];
+
+    const cities = [
+        'ঢাকা','চট্টগ্রাম','সিলেট','রাজশাহী','খুলনা','বরিশাল','রংপুর','ময়মনসিংহ',
+        'কুমিল্লা','গাজীপুর','নারায়ণগঞ্জ','যশোর','কক্সবাজার','টাঙ্গাইল','বগুড়া',
+        'দিনাজপুর','ব্রাহ্মণবাড়িয়া','ফেনী','নোয়াখালী','পাবনা','কিশোরগঞ্জ','মানিকগঞ্জ',
+        'মুন্সিগঞ্জ','শরীয়তপুর','মাদারীপুর','গোপালগঞ্জ','ঝালকাঠি','পিরোজপুর','চাঁদপুর','লক্ষ্মীপুর'
+    ];
+
+    const reviewTexts = [
+        'অসাধারণ কোয়ালিটি! ছবির চেয়েও ভালো পেয়েছি। ধন্যবাদ Shadhon Group!',
+        '২ দিনের মধ্যে ডেলিভারি পেয়েছি। প্যাকেজিং চমৎকার ছিল।',
+        'দামের তুলনায় অনেক ভালো। আবার অর্ডার করবো ইনশাআল্লাহ।',
+        'সবাইকে রেকমেন্ড করবো। ১০০% অরিজিনাল প্রোডাক্ট।',
+        'প্রথমে একটু সন্দেহ ছিল, কিন্তু পেয়ে মুগ্ধ হয়েছি!',
+        'অরিজিনাল প্রোডাক্ট, কোনো কম্প্রোমাইজ নেই। সন্তুষ্ট আমি।',
+        'দারুণ সার্ভিস! প্রোডাক্টও অসাধারণ, প্যাকেজিংও দারুণ।',
+        'আগেও নিয়েছি, এবারও নিলাম। কনসিস্টেন্সি মেইনটেইন করে।',
+        'মার্কেটে এত ভালো প্রোডাক্ট এই দামে পাওয়া কঠিন।',
+        'ফ্যামিলির সবাই পছন্দ করেছে। ধন্যবাদ আপনাদের!',
+        'কোয়ালিটি দেখে অবাক হয়ে গেলাম। রিপিট কাস্টমার হলাম।',
+        'একদম নিরাশ হইনি। বরং এক্সপেক্টেশনের বেশি পেয়েছি।',
+        'সাশ্রয়ী দামে প্রিমিয়াম কোয়ালিটি — দারুণ কম্বিনেশন!',
+        'ডেলিভারি ম্যানও বেশ বিনয়ী ছিলেন। ওভারঅল গুড এক্সপেরিয়েন্স।',
+        'অফিসে সব কলিগ জিজ্ঞেস করছে কোথায় থেকে নিলাম!'
+    ];
+
+    const starPatterns = [
+        [5,5,5,5,5],
+        [5,5,5,5,5],
+        [5,5,5,5,5],
+        [5,5,5,5,4],
+        [5,5,5,5,4],
+        [5,5,5,4,4],
+    ];
+
+    const avatarColors = [
+        '#3b82f6,#1d4ed8','#8b5cf6,#6d28d9','#ec4899,#be185d','#f59e0b,#b45309',
+        '#10b981,#047857','#ef4444,#b91c1c','#06b6d4,#0e7490','#f97316,#c2410c',
+        '#6366f1,#4338ca','#14b8a6,#0d9488','#e11d48,#9f1239','#84cc16,#4d7c0f'
+    ];
+
+    function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function generateStars(pattern) {
+        return pattern.map(s => s === 5 
+            ? '<i class="fa-solid fa-star"></i>' 
+            : '<i class="fa-solid fa-star-half-stroke"></i>'
+        ).join('');
+    }
+
+    function generateReviews(count) {
+        const usedNames = new Set();
+        const container = document.getElementById('reviewContainer');
+        container.innerHTML = '';
+
+        const shuffledNames = shuffle(firstNames);
+        const shuffledReviews = shuffle(reviewTexts);
+        const shuffledColors = shuffle(avatarColors);
+
+        for (let i = 0; i < count; i++) {
+            let name = shuffledNames[i % shuffledNames.length];
+            let city = randomFrom(cities);
+            while (usedNames.has(name + city)) {
+                name = randomFrom(firstNames);
+                city = randomFrom(cities);
+            }
+            usedNames.add(name + city);
+
+            const review = shuffledReviews[i % shuffledReviews.length];
+            const stars = randomFrom(starPatterns);
+            const color = shuffledColors[i % shuffledColors.length];
+            const firstLetter = name.charAt(0);
+            const isVerified = Math.random() > 0.3;
+
+            container.innerHTML += `
+                <div class="review-snippet">
+                    <div class="review-avatar" style="background: linear-gradient(135deg, ${color});">${firstLetter}</div>
+                    <div>
+                        <div class="review-stars">${generateStars(stars)}${isVerified ? '<span class="review-verified"><i class="fa-solid fa-circle-check"></i> ভেরিফাইড</span>' : ''}</div>
+                        <div class="review-text">${review}</div>
+                        <div class="review-name">${name} — ${city}</div>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // প্রতিবার র‍্যান্ডম ৫টি রিভিউ দেখাও
+    generateReviews(5);
+
+    // ১৫ সেকেন্ড পর রিভিউ রিফ্রেশ
+    setInterval(() => generateReviews(5), 15000);
+
+    // ==========================================
+    // কাউন্টডাউন টাইমার
+    // ==========================================
+    let totalSeconds = 2 * 3600 + 47 * 60 + 33;
+
+    function updateCountdown() {
+        if (totalSeconds <= 0) totalSeconds = 1 * 3600 + 15 * 60 + 30;
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+        document.getElementById('cd-hours').textContent = enToBn(String(h).padStart(2,'0'));
+        document.getElementById('cd-mins').textContent = enToBn(String(m).padStart(2,'0'));
+        document.getElementById('cd-secs').textContent = enToBn(String(s).padStart(2,'0'));
+        totalSeconds--;
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // ==========================================
+    // স্টক বার
+    // ==========================================
+    setTimeout(() => {
+        document.getElementById('stock-bar').style.width = '18%';
+    }, 400);
+
+    // প্রতি ৪০ সেকেন্ডে স্টক ১ কমাও
+    setInterval(() => {
+        const el = document.getElementById('stock-left');
+        let current = parseInt(bnToEn(el.textContent));
+        if (current > 2) {
+            current--;
+            el.textContent = enToBn(current);
+            const barWidth = Math.max(5, current * 3.5);
+            document.getElementById('stock-bar').style.width = barWidth + '%';
+        }
+    }, 40000);
+
+    // ==========================================
+    // লাইভ ভিউয়ার কাউন্টার
+    // ==========================================
+    let viewerBase = 24;
+    setInterval(() => {
+        viewerBase += Math.floor(Math.random() * 7) - 3;
+        if (viewerBase < 12) viewerBase = 12 + Math.floor(Math.random() * 5);
+        if (viewerBase > 45) viewerBase = 45 - Math.floor(Math.random() * 5);
+        document.getElementById('viewerCount').textContent = enToBn(viewerBase);
+    }, 3000);
+
+    // ==========================================
+    // আর্জেন্সি বার র‍্যান্ডম টেক্সট
+    // ==========================================
+    const urgencyTexts = [
+        'আজকের দিনে ' + enToBn(String(40 + Math.floor(Math.random()*25))) + ' জন এই প্রোডাক্ট অর্ডার করেছেন',
+        'গত ১ ঘণ্টায় ' + enToBn(String(8 + Math.floor(Math.random()*10))) + ' জন অর্ডার করেছেন — স্টক কমে যাচ্ছে!',
+        'এই অফারটি আজ রাত ১২টায় শেষ হবে',
+        'সীমিত স্টক — দেরি করলে পাবেন না!',
+        'এই দামে আর কখনো পাবেন না — নিশ্চিত করুন এখনই',
+        'গতকাল ' + enToBn(String(55 + Math.floor(Math.random()*30))) + ' জন কিনেছে — আপনি পিছিয়ে যাচ্ছেন!'
+    ];
+    let urgIdx = 0;
+    const urgEl = document.getElementById('urgency-text');
+    urgEl.style.transition = 'opacity 0.3s, transform 0.3s';
+
+    setInterval(() => {
+        urgIdx = (urgIdx + 1) % urgencyTexts.length;
+        urgEl.style.opacity = '0';
+        urgEl.style.transform = 'translateY(-6px)';
+        setTimeout(() => {
+            urgEl.textContent = urgencyTexts[urgIdx];
+            urgEl.style.opacity = '1';
+            urgEl.style.transform = 'translateY(0)';
+        }, 300);
+    }, 5000);
+
+    // ==========================================
+    // লাস্ট পারচেসড — র‍্যান্ডম আপডেট
+    // ==========================================
+    function updateLastPurchased() {
+        const name = randomFrom(firstNames);
+        const city = randomFrom(cities);
+        const minutes = Math.floor(Math.random() * 12) + 1;
+        const timeText = minutes <= 1 ? 'এইমাত্র' : enToBn(minutes) + ' মিনিট আগে';
+
+        document.getElementById('lpAvatar').textContent = name.charAt(0);
+        document.getElementById('lpText').innerHTML = '<strong>' + name + '</strong> ' + city + ' থেকে ' + (minutes <= 1 ? 'মাত্র এইমাত্র' : '') + ' কিনেছেন';
+        document.getElementById('lpTime').textContent = timeText;
+    }
+
+    setInterval(updateLastPurchased, 10000);
+
+    // ==========================================
+    // সোশ্যাল প্রুফ টোস্ট — র‍্যান্ডম
+    // ==========================================
+    let toastIdx = 0;
+    const toast = document.getElementById('socialToast');
+    const toastNames = shuffle(firstNames);
+    const toastCities = shuffle(cities);
+    const toastColors = shuffle(avatarColors);
+    const toastTimes = ['১ মিনিট আগে','২ মিনিট আগে','৩ মিনিট আগে','৫ মিনিট আগে','৭ মিনিট আগে','১০ মিনিট আগে','১২ মিনিট আগে','১৫ মিনিট আগে'];
+
+    function showToast() {
+        const name = toastNames[toastIdx % toastNames.length];
+        const city = toastCities[toastIdx % toastCities.length];
+        const color = toastColors[toastIdx % toastColors.length];
+        const time = toastTimes[Math.floor(Math.random() * toastTimes.length)];
+
+        document.getElementById('toastAvatar').textContent = name.charAt(0);
+        document.getElementById('toastAvatar').style.background = 'linear-gradient(135deg, ' + color + ')';
+        document.getElementById('toastText').innerHTML = '<strong>' + name + '</strong> ' + city + ' থেকে অর্ডার করেছেন';
+        document.getElementById('toastTime').textContent = time;
+
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+
+        toastIdx++;
+    }
+
+    setTimeout(() => {
+        showToast();
+        setInterval(showToast, 7000);
+    }, 4000);
+
+})();
+
+// ==========================================
+// ইমেজ সুইচ
+// ==========================================
+function switchImage(thumb, src) {
+    document.getElementById('mainProductImage').src = src;
+    document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+}
+
+// ==========================================
+// FAQ টগল
+// ==========================================
+function toggleFaq(el) {
+    const item = el.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+}
+
+// ==========================================
+// ফর্ম ভ্যালিডেশন
+// ==========================================
+function bnToEnLocal(str) {
+    const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+    return String(str).replace(/[০-৯]/g, d => map[d] || d);
+}
+
+function validateField(input) {
+    const val = input.value.trim();
+    let isValid = true;
+
+    if (input.id === 'cust_phone') {
+        const converted = bnToEnLocal(val);
+        input.value = converted;
+        isValid = /^01[3-9]\d{8}$/.test(converted);
+    } else if (input.id === 'cust_name') {
+        isValid = val.length >= 2;
+    } else if (input.id === 'cust_address') {
+        isValid = val.length >= 5;
+    }
+
+    input.classList.toggle('error', !isValid && val.length > 0);
+    return isValid;
+}
+
+document.querySelectorAll('.form-input').forEach(input => {
+    input.addEventListener('blur', function() { validateField(this); });
+    input.addEventListener('input', function() {
+        if (this.classList.contains('error')) validateField(this);
+    });
+});
+
+// বাংলা নাম্বার রিয়েল-টাইম কনভার্ট
+document.getElementById('cust_phone').addEventListener('input', function(e) {
+    const pos = this.selectionStart;
+    const converted = bnToEnLocal(this.value);
+    if (converted !== this.value) {
+        this.value = converted;
+        this.setSelectionRange(pos, pos);
+    }
+});
+
+// ==========================================
+// ফর্ম সাবমিট
+// ==========================================
+function handleSubmit(e) {
+    const name = document.getElementById('cust_name');
+    const phone = document.getElementById('cust_phone');
+    const address = document.getElementById('cust_address');
+
+    const v1 = validateField(name);
+    const v2 = validateField(phone);
+    const v3 = validateField(address);
+
+    if (!v1 || !v2 || !v3) {
+        e.preventDefault();
+        if (!v1) name.focus();
+        else if (!v2) phone.focus();
+        else address.focus();
+        return false;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> প্রসেসিং...';
+    btn.disabled = true;
+    btn.style.opacity = '0.8';
+
+    localStorage.setItem('checkout_name', name.value);
+    localStorage.setItem('checkout_phone', phone.value);
+    localStorage.setItem('checkout_address', address.value);
+
+    return true;
+}
+
+// ==========================================
+// LocalStorage থেকে লোড
+// ==========================================
+(function() {
+    const n = localStorage.getItem('checkout_name');
+    const p = localStorage.getItem('checkout_phone');
+    const a = localStorage.getItem('checkout_address');
+    if (n) document.getElementById('cust_name').value = n;
+    if (p) document.getElementById('cust_phone').value = p;
+    if (a) document.getElementById('cust_address').value = a;
+})();
+</script>
+
+</body>
+</html>

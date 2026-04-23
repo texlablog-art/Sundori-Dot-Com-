@@ -1,0 +1,872 @@
+{% extends "base.html" %} {% block content %}
+<div class="container py-5">
+  <!-- ═══ HERO HEADER ═══ -->
+  <div class="about-hero-header text-center mb-5 pb-lg-4" data-animate>
+    <div class="about-hero-glow"></div>
+    <span class="about-badge mb-3 d-inline-block">
+      <i class="fa-solid fa-sparkles me-1"></i> OUR STORY
+    </span>
+    <h1 class="about-hero-title mb-3">
+      Where <span class="orange-text">Style</span> Meets
+      <span class="orange-text">Trust</span>
+    </h1>
+    <p class="about-hero-desc mx-auto">
+      Sundori Dot Com is your go-to destination for trending fashion, authentic
+      beauty products, and lifestyle essentials. We believe everyone deserves to
+      look stunning — without overpaying.
+    </p>
+    <div class="orange-line mx-auto mt-4"></div>
+  </div>
+
+  <!-- ═══ FEATURE CARDS ═══ -->
+  <div class="row g-3 g-md-4 mb-5">
+    <div class="col-md-4" data-animate data-delay="0.1">
+      <div class="about-feature-card h-100 p-4 text-center">
+        <div class="about-icon-ring mx-auto mb-3">
+          <div class="about-icon-glow"></div>
+          <div class="about-icon-circle">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+        </div>
+        <h5 class="fw-bold mb-2" style="color: var(--text-primary)">
+          Premium Quality
+        </h5>
+        <p
+          class="small mb-0"
+          style="color: var(--text-muted); line-height: 1.7"
+        >
+          Every product is handpicked and quality-checked to ensure you receive
+          nothing but the best — every single time.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4" data-animate data-delay="0.2">
+      <div class="about-feature-card h-100 p-4 text-center">
+        <div class="about-icon-ring mx-auto mb-3">
+          <div class="about-icon-glow"></div>
+          <div class="about-icon-circle">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+        </div>
+        <h5 class="fw-bold mb-2" style="color: var(--text-primary)">
+          Nationwide Delivery
+        </h5>
+        <p
+          class="small mb-0"
+          style="color: var(--text-muted); line-height: 1.7"
+        >
+          From Dhaka to Cox's Bazar — we deliver to all 64 districts with fast,
+          reliable shipping right to your doorstep.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-4" data-animate data-delay="0.3">
+      <div class="about-feature-card h-100 p-4 text-center">
+        <div class="about-icon-ring mx-auto mb-3">
+          <div class="about-icon-glow"></div>
+          <div class="about-icon-circle">
+            <i class="fa-solid fa-headset"></i>
+          </div>
+        </div>
+        <h5 class="fw-bold mb-2" style="color: var(--text-primary)">
+          Dedicated Support
+        </h5>
+        <p
+          class="small mb-0"
+          style="color: var(--text-muted); line-height: 1.7"
+        >
+          Our team is always ready on WhatsApp to help with orders, product
+          questions, and personalized recommendations.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ WHY CHOOSE US ═══ -->
+  <div class="about-why-section px-3 px-md-5 py-5 mb-5" data-animate>
+    <div class="why-glow-1"></div>
+    <div class="why-glow-2"></div>
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4 mb-lg-0 pe-lg-5">
+        <span class="about-badge-2 mb-3 d-inline-block">
+          <i class="fa-solid fa-crown me-1"></i> WHY US
+        </span>
+        <h2 class="about-why-title mb-3">
+          Why Choose <span class="orange-text">Sundori Dot Com?</span>
+        </h2>
+        <p class="about-why-desc">
+          We don't just sell products — we deliver
+          <strong class="orange-text">confidence, style, and value</strong>. Our
+          platform is built to be the most trusted online shopping experience in
+          Bangladesh.
+        </p>
+        <ul class="about-check-list mt-4">
+          <li>
+            <span class="about-check-icon"
+              ><i class="fa-solid fa-circle-check"></i
+            ></span>
+            <span>100% Authentic & Verified Products Only</span>
+          </li>
+          <li>
+            <span class="about-check-icon"
+              ><i class="fa-solid fa-circle-check"></i
+            ></span>
+            <span>Secure & Trusted Payment Methods</span>
+          </li>
+          <li>
+            <span class="about-check-icon"
+              ><i class="fa-solid fa-circle-check"></i
+            ></span>
+            <span>Trending Fashion & Beauty — Curated Collections</span>
+          </li>
+          <li>
+            <span class="about-check-icon"
+              ><i class="fa-solid fa-circle-check"></i
+            ></span>
+            <span>Customer Satisfaction Guaranteed with Easy Returns</span>
+          </li>
+          <li>
+            <span class="about-check-icon"
+              ><i class="fa-solid fa-circle-check"></i
+            ></span>
+            <span>Exclusive Deals & Early Access for Followers</span>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-6 ps-lg-4">
+        <div class="about-image-wrapper">
+          <img
+            src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop"
+            class="about-image"
+            alt="Sundori shopping experience"
+          />
+          <div class="about-image-overlay"></div>
+          <div class="about-image-content">
+            <div class="about-image-stats">
+              <div class="about-stat-item">
+                <span class="about-stat-num">1000+</span>
+                <span class="about-stat-label">Products</span>
+              </div>
+              <div class="about-stat-divider"></div>
+              <div class="about-stat-item">
+                <span class="about-stat-num">64</span>
+                <span class="about-stat-label">Districts</span>
+              </div>
+              <div class="about-stat-divider"></div>
+              <div class="about-stat-item">
+                <span class="about-stat-num">4.8★</span>
+                <span class="about-stat-label">Rating</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TRUST STATS ═══ -->
+  <div class="row g-3 mb-5" data-animate>
+    <div class="col-6 col-md-3">
+      <div class="trust-card">
+        <div class="trust-card-glow"></div>
+        <div class="trust-icon-wrap">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="trust-number">5K+</div>
+        <div class="trust-label">Happy Customers</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="trust-card">
+        <div class="trust-card-glow"></div>
+        <div class="trust-icon-wrap">
+          <i class="fa-solid fa-bag-shopping"></i>
+        </div>
+        <div class="trust-number">10K+</div>
+        <div class="trust-label">Orders Delivered</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="trust-card">
+        <div class="trust-card-glow"></div>
+        <div class="trust-icon-wrap">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+        <div class="trust-number">64</div>
+        <div class="trust-label">Districts Covered</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="trust-card">
+        <div class="trust-card-glow"></div>
+        <div class="trust-icon-wrap">
+          <i class="fa-solid fa-message"></i>
+        </div>
+        <div class="trust-number">24/7</div>
+        <div class="trust-label">WhatsApp Support</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MISSION / VISION ═══ -->
+  <div class="row g-4 mb-4" data-animate>
+    <div class="col-md-6">
+      <div class="mv-card mv-card-mission">
+        <div class="mv-icon">
+          <i class="fa-solid fa-rocket"></i>
+        </div>
+        <h4 class="mv-title">Our Mission</h4>
+        <p class="mv-desc">
+          To make premium fashion, beauty & lifestyle products accessible to
+          every Bangladeshi — with unmatched convenience, authentic quality, and
+          prices that make sense. We're here to prove that looking amazing
+          doesn't require a luxury budget.
+        </p>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mv-card mv-card-vision">
+        <div class="mv-icon">
+          <i class="fa-solid fa-eye"></i>
+        </div>
+        <h4 class="mv-title">Our Vision</h4>
+        <p class="mv-desc">
+          To become Bangladesh's most loved and trusted online shopping
+          destination — known for curating the hottest trends, delivering
+          exceptional experiences, and building a community of confident,
+          stylish shoppers across the country.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CTA SECTION ═══ -->
+  <div class="about-cta-section text-center" data-animate>
+    <div class="about-cta-glow"></div>
+    <div class="about-cta-content">
+      <h3 class="about-cta-title mb-3">
+        Ready to <span class="orange-text">Shop Smarter?</span>
+      </h3>
+      <p class="about-cta-desc mb-4">
+        Join thousands of happy shoppers who trust Sundori Dot Com for the best
+        deals.
+      </p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="/" class="about-cta-btn about-cta-btn-primary">
+          <i class="fa-solid fa-bag-shopping me-2"></i> Start Shopping
+        </a>
+        <a
+          href="https://wa.me/+8801xxxxxxxxx"
+          target="_blank"
+          class="about-cta-btn about-cta-btn-secondary"
+        >
+          <i class="fa-brands fa-whatsapp me-2"></i> Chat With Us
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ══════════════════════════════════
+       HERO HEADER
+       ══════════════════════════════════ */
+  .about-hero-header {
+    position: relative;
+    padding-top: 20px;
+  }
+  .about-hero-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 300px;
+    background: radial-gradient(
+      ellipse,
+      var(--orange-glow) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .about-badge {
+    background: var(--orange-subtle);
+    color: var(--orange);
+    padding: 7px 22px;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    border: 1px solid rgba(255, 107, 0, 0.15);
+    position: relative;
+    z-index: 2;
+  }
+  .about-hero-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--text-primary);
+    line-height: 1.15;
+    position: relative;
+    z-index: 2;
+  }
+  .about-hero-desc {
+    max-width: 660px;
+    font-size: 1.02rem;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ══════════════════════════════════
+       FEATURE CARDS
+       ══════════════════════════════════ */
+  .about-feature-card {
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-xl);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .about-feature-card::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+  }
+  .about-feature-card:hover::after {
+    transform: scaleX(1);
+  }
+  .about-feature-card:hover {
+    border-color: rgba(255, 107, 0, 0.3);
+    transform: translateY(-8px);
+    box-shadow:
+      0 20px 50px rgba(0, 0, 0, 0.35),
+      0 0 40px var(--orange-glow);
+  }
+
+  .about-icon-ring {
+    position: relative;
+    width: 70px;
+    height: 70px;
+  }
+  .about-icon-circle {
+    position: relative;
+    z-index: 2;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: var(--orange-subtle);
+    color: var(--orange);
+    border: 1px solid rgba(255, 107, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .about-icon-glow {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: var(--orange);
+    opacity: 0;
+    filter: blur(18px);
+    transition: opacity 0.4s;
+    z-index: 1;
+  }
+  .about-feature-card:hover .about-icon-circle {
+    background: var(--orange);
+    color: var(--black);
+    border-color: var(--orange);
+    transform: scale(1.1);
+    box-shadow: 0 8px 24px var(--orange-glow);
+  }
+  .about-feature-card:hover .about-icon-glow {
+    opacity: 0.4;
+  }
+
+  /* ══════════════════════════════════
+       WHY CHOOSE US SECTION
+       ══════════════════════════════════ */
+  .about-why-section {
+    background: var(--black-elevated);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-xl);
+    position: relative;
+    overflow: hidden;
+  }
+  .why-glow-1 {
+    position: absolute;
+    top: -100px;
+    right: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, var(--orange-glow) 0%, transparent 65%);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .why-glow-2 {
+    position: absolute;
+    bottom: -80px;
+    left: -60px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(
+      circle,
+      rgba(255, 186, 8, 0.12) 0%,
+      transparent 65%
+    );
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .about-badge-2 {
+    background: rgba(255, 107, 0, 0.08);
+    color: var(--orange);
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    border: 1px solid rgba(255, 107, 0, 0.12);
+  }
+
+  .about-why-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+  .about-why-desc {
+    color: var(--text-secondary);
+    line-height: 1.85;
+    font-size: 0.95rem;
+  }
+
+  .about-check-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .about-check-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    transition: background 0.2s;
+  }
+  .about-check-list li:hover {
+    background: var(--orange-subtle);
+  }
+  .about-check-icon {
+    color: var(--orange);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .about-check-list li span:last-child {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* Image */
+  .about-image-wrapper {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--black-border);
+  }
+  .about-image {
+    border-radius: var(--radius-lg);
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+    display: block;
+    transition: transform 6s ease;
+  }
+  .about-image-wrapper:hover .about-image {
+    transform: scale(1.04);
+  }
+  .about-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(8, 8, 8, 0.85) 0%,
+      rgba(8, 8, 8, 0.2) 40%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+  .about-image-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 2;
+  }
+  .about-image-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    background: rgba(8, 8, 8, 0.6);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: 16px 24px;
+  }
+  .about-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .about-stat-num {
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: var(--orange);
+    line-height: 1.2;
+  }
+  .about-stat-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+  .about-stat-divider {
+    width: 1px;
+    height: 36px;
+    background: var(--black-border);
+  }
+
+  /* ══════════════════════════════════
+       TRUST CARDS
+       ══════════════════════════════════ */
+  .trust-card {
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-lg);
+    padding: 24px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s ease;
+  }
+  .trust-card-glow {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 80px;
+    background: var(--orange);
+    opacity: 0;
+    filter: blur(40px);
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .trust-card:hover {
+    border-color: rgba(255, 107, 0, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+  }
+  .trust-card:hover .trust-card-glow {
+    opacity: 0.25;
+  }
+
+  .trust-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    background: var(--orange-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 0.95rem;
+    color: var(--orange);
+    transition: all 0.35s;
+  }
+  .trust-card:hover .trust-icon-wrap {
+    background: var(--orange);
+    color: var(--black);
+    box-shadow: 0 4px 16px var(--orange-glow);
+  }
+
+  .trust-number {
+    font-family: "Playfair Display", serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--orange);
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .trust-label {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  /* ══════════════════════════════════
+       MISSION / VISION CARDS
+       ══════════════════════════════════ */
+  .mv-card {
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-xl);
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 100%;
+  }
+  .mv-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0;
+    border-radius: 0 4px 4px 0;
+    transition: height 0.5s ease;
+  }
+  .mv-card-mission::before {
+    background: var(--orange);
+  }
+  .mv-card-vision::before {
+    background: var(--star-gold);
+  }
+
+  .mv-card:hover::before {
+    height: 100%;
+  }
+  .mv-card:hover {
+    border-color: rgba(255, 107, 0, 0.2);
+    transform: translateY(-5px);
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.3);
+  }
+
+  .mv-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+    transition: all 0.35s;
+  }
+  .mv-card-mission .mv-icon {
+    background: var(--orange-subtle);
+    color: var(--orange);
+    border: 1px solid rgba(255, 107, 0, 0.1);
+  }
+  .mv-card-vision .mv-icon {
+    background: rgba(255, 186, 8, 0.08);
+    color: var(--star-gold);
+    border: 1px solid rgba(255, 186, 8, 0.1);
+  }
+  .mv-card:hover .mv-icon {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px var(--orange-glow);
+  }
+  .mv-card-mission:hover .mv-icon {
+    background: var(--orange);
+    color: var(--black);
+    border-color: var(--orange);
+  }
+  .mv-card-vision:hover .mv-icon {
+    background: var(--star-gold);
+    color: var(--black);
+    border-color: var(--star-gold);
+  }
+
+  .mv-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  .mv-desc {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  /* ══════════════════════════════════
+       CTA SECTION
+       ══════════════════════════════════ */
+  .about-cta-section {
+    background: var(--black-card);
+    border: 1px solid var(--black-border);
+    border-radius: var(--radius-xl);
+    padding: 56px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-cta-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 300px;
+    background: radial-gradient(
+      ellipse,
+      var(--orange-glow) 0%,
+      transparent 65%
+    );
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .about-cta-content {
+    position: relative;
+    z-index: 2;
+  }
+  .about-cta-title {
+    font-family: "Playfair Display", serif;
+    font-weight: 800;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
+    color: var(--text-primary);
+  }
+  .about-cta-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    max-width: 440px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  .about-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 13px 32px;
+    border-radius: var(--radius-full);
+    font-weight: 700;
+    font-size: 0.88rem;
+    text-decoration: none !important;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    letter-spacing: 0.01em;
+  }
+  .about-cta-btn-primary {
+    background: var(--orange);
+    color: var(--black) !important;
+    box-shadow: 0 6px 24px var(--orange-glow);
+  }
+  .about-cta-btn-primary:hover {
+    background: var(--orange-dark);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 36px var(--orange-glow-strong);
+    color: var(--black) !important;
+  }
+  .about-cta-btn-secondary {
+    background: transparent;
+    color: var(--orange) !important;
+    border: 1.5px solid rgba(255, 107, 0, 0.3);
+  }
+  .about-cta-btn-secondary:hover {
+    background: var(--orange-subtle);
+    border-color: var(--orange);
+    transform: translateY(-3px);
+    color: var(--orange) !important;
+  }
+
+  /* ══════════════════════════════════
+       RESPONSIVE
+       ══════════════════════════════════ */
+  @media (max-width: 991px) {
+    .about-image {
+      height: 300px;
+    }
+  }
+  @media (max-width: 768px) {
+    .about-hero-title {
+      font-size: 1.8rem;
+    }
+    .about-hero-desc {
+      font-size: 0.92rem;
+    }
+    .about-why-title {
+      font-size: 1.35rem;
+    }
+    .about-image {
+      height: 240px;
+    }
+    .about-image-stats {
+      gap: 16px;
+      padding: 12px 16px;
+    }
+    .about-stat-num {
+      font-size: 1rem;
+    }
+    .about-stat-label {
+      font-size: 0.62rem;
+    }
+    .trust-number {
+      font-size: 1.6rem;
+    }
+    .trust-card {
+      padding: 18px 12px;
+    }
+    .mv-card {
+      padding: 24px 20px;
+    }
+    .about-cta-section {
+      padding: 40px 20px;
+    }
+    .about-cta-btn {
+      padding: 11px 24px;
+      font-size: 0.82rem;
+    }
+    .about-check-list li {
+      padding: 8px 10px;
+      gap: 10px;
+    }
+  }
+  @media (max-width: 576px) {
+    .about-image {
+      height: 200px;
+    }
+    .about-image-stats {
+      gap: 12px;
+      padding: 10px 12px;
+    }
+    .about-stat-divider {
+      height: 28px;
+    }
+    .trust-number {
+      font-size: 1.4rem;
+    }
+    .trust-icon-wrap {
+      width: 34px;
+      height: 34px;
+      font-size: 0.8rem;
+    }
+  }
+</style>
+
+{% endblock %}

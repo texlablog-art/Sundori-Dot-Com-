@@ -1,0 +1,131 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    
+    <div class="row mb-5 text-center">
+        <div class="col-12">
+            <h2 class="theme-page-title">
+                <i class="fa-solid fa-wand-magic-sparkles me-2" style="color: var(--orange);"></i> Store Appearance
+            </h2>
+            <p class="theme-page-subtitle">Set the perfect vibe for your customers based on the season or festival.</p>
+            <div class="theme-orange-divider mx-auto"></div>
+        </div>
+    </div>
+
+    <form action="{{ url_for('update_theme') }}" method="POST">
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-4 col-md-6">
+                <div class="theme-card h-100{% if current_theme == 'default' %} theme-active{% endif %}" onclick="selectTheme(this)">
+                    <div class="theme-card-body text-center">
+                        <div class="theme-preview theme-preview-default">
+                            <span class="theme-preview-text" style="color: #fff;">Sundori Dot Com</span>
+                        </div>
+                        <h5 class="fw-bold mt-3" style="color: var(--text-primary);">Default Classic</h5>
+                        <p class="small" style="color: var(--text-muted);">Clean, modern dark &amp; orange branding.</p>
+                        <input class="d-none" type="radio" name="theme" value="default"{% if current_theme == 'default' %} checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="theme-card h-100{% if current_theme == 'winter' %} theme-active{% endif %}" onclick="selectTheme(this)">
+                    <div class="theme-card-body text-center">
+                        <div class="theme-preview theme-preview-winter">
+                            <i class="fa-solid fa-snowflake mb-2 fs-3" style="color: #38bdf8;"></i>
+                            <span class="theme-preview-text" style="color: #0369a1;">Winter Blue ❄️</span>
+                        </div>
+                        <h5 class="fw-bold mt-3" style="color: var(--text-primary);">Winter Frost</h5>
+                        <p class="small" style="color: var(--text-muted);">Cool ice tones with snowfall effects.</p>
+                        <input class="d-none" type="radio" name="theme" value="winter"{% if current_theme == 'winter' %} checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="theme-card h-100{% if current_theme == 'summer' %} theme-active{% endif %}" onclick="selectTheme(this)">
+                    <div class="theme-card-body text-center">
+                        <div class="theme-preview theme-preview-summer">
+                            <i class="fa-solid fa-sun mb-2 fs-3" style="color: #ea580c;"></i>
+                            <span class="theme-preview-text" style="color: #ea580c;">Summer Vibe ☀️</span>
+                        </div>
+                        <h5 class="fw-bold mt-3" style="color: var(--text-primary);">Summer Orange</h5>
+                        <p class="small" style="color: var(--text-muted);">Energetic warm colors &amp; sun vibes.</p>
+                        <input class="d-none" type="radio" name="theme" value="summer"{% if current_theme == 'summer' %} checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="theme-card h-100{% if current_theme == 'eid' %} theme-active{% endif %}" onclick="selectTheme(this)">
+                    <div class="theme-card-body text-center">
+                        <div class="theme-preview theme-preview-eid">
+                            <i class="fa-solid fa-star-and-crescent mb-2 fs-3" style="color: #fbbf24;"></i>
+                            <span class="theme-preview-text" style="color: #fbbf24;">Eid Mubarak ✨</span>
+                        </div>
+                        <h5 class="fw-bold mt-3" style="color: var(--text-primary);">Eid Festive</h5>
+                        <p class="small" style="color: var(--text-muted);">Celebration emerald green and gold tones.</p>
+                        <input class="d-none" type="radio" name="theme" value="eid"{% if current_theme == 'eid' %} checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <div class="theme-card h-100{% if current_theme == 'celebration' %} theme-active{% endif %}" onclick="selectTheme(this)">
+                    <div class="theme-card-body text-center">
+                        <div class="theme-preview theme-preview-victory">
+                            <div class="victory-sun"></div>
+                            <i class="fa-solid fa-flag mb-2 fs-3 position-relative" style="color: #fff; z-index: 2;"></i>
+                            <span class="theme-preview-text position-relative" style="color: #fff; z-index: 2; letter-spacing: 1px;">Victory Day 🇧🇩</span>
+                        </div>
+                        <h5 class="fw-bold mt-3" style="color: var(--text-primary);">National Celebration</h5>
+                        <p class="small" style="color: var(--text-muted);">Patriotic Green &amp; Red for national days.</p>
+                        <input class="d-none" type="radio" name="theme" value="celebration"{% if current_theme == 'celebration' %} checked{% endif %}>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 text-center">
+            <button type="submit" class="theme-save-btn">
+                <i class="fa-solid fa-check-circle me-2"></i> Save Appearance Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+function selectTheme(card) {
+    var cards = document.querySelectorAll('.theme-card');
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('theme-active');
+    }
+    var radio = card.querySelector('input[type="radio"]');
+    radio.checked = true;
+    card.classList.add('theme-active');
+}
+</script>
+
+<style>
+:root{--black:#080808;--black-soft:#0C0C0C;--black-elevated:#141414;--black-card:#161616;--black-input:#1A1A1A;--black-hover:#1E1E1E;--black-border:#232323;--black-border-light:#1C1C1C;--orange:#FF6B00;--orange-light:#FF8C33;--orange-dark:#E05E00;--orange-glow:rgba(255,107,0,0.18);--orange-glow-strong:rgba(255,107,0,0.30);--orange-subtle:rgba(255,107,0,0.06);--text-primary:#F0F0F0;--text-secondary:#999999;--text-muted:#5A5A5A;--text-dim:#3A3A3A;--success:#22C55E;--success-glow:rgba(34,197,94,0.2);--star-gold:#FFBA08}
+.theme-page-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.8rem;color:var(--text-primary)}
+.theme-page-subtitle{color:var(--text-muted);font-size:1rem;margin-top:4px}
+.theme-orange-divider{width:50px;height:3px;background:var(--orange);border-radius:3px;margin-top:12px}
+.theme-card{background:var(--black-card);border:2.5px solid var(--black-border)!important;border-radius:20px!important;transition:all 0.4s cubic-bezier(0.175,0.885,0.32,1.275);cursor:pointer;position:relative}
+.theme-card:hover{transform:translateY(-8px);border-color:rgba(255,107,0,0.3)!important;box-shadow:0 16px 40px rgba(0,0,0,0.35)!important}
+.theme-active{border-color:var(--orange)!important;background:var(--orange-subtle)!important;box-shadow:0 0 30px var(--orange-glow),0 12px 35px rgba(0,0,0,0.3)!important}
+.theme-active::after{content:'✓ Active';position:absolute;top:-14px;right:20px;background:var(--orange);color:var(--black);padding:5px 16px;border-radius:50px;font-size:0.72rem;font-weight:800;letter-spacing:0.03em;box-shadow:0 4px 15px var(--orange-glow);z-index:5}
+.theme-card-body{padding:1.75rem 1.5rem}
+.theme-preview{height:130px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.3s ease;overflow:hidden;position:relative}
+.theme-card:hover .theme-preview{transform:scale(0.97)}
+.theme-preview-text{font-weight:700;font-size:0.95rem;position:relative;z-index:2}
+.theme-preview-default{background:linear-gradient(135deg,#1A1A1A,#222222);border:1px solid rgba(255,107,0,0.08)}
+.theme-preview-default .theme-preview-text{color:#fff}
+.theme-preview-winter{background:linear-gradient(135deg,#e0f2fe,#bae6fd);border:1px solid #38bdf8}
+.theme-preview-summer{background:linear-gradient(135deg,#fff7ed,#fdba74);border:1px solid #f97316}
+.theme-preview-eid{background:linear-gradient(135deg,#064e3b,#065f46);border:2px solid #fbbf24}
+.theme-preview-victory{background:linear-gradient(135deg,#006a4e,#064e3b);border:2px solid #f42a41}
+.victory-sun{position:absolute;width:65px;height:65px;background:rgba(244,42,65,0.7);border-radius:50%;z-index:1;box-shadow:0 0 20px rgba(244,42,65,0.4)}
+.theme-save-btn{background:var(--orange);color:var(--black);border:none;padding:14px 40px;border-radius:16px;font-weight:700;font-size:1rem;cursor:pointer;transition:all 0.3s ease;display:inline-flex;align-items:center}
+.theme-save-btn:hover{background:var(--orange-dark);box-shadow:0 8px 30px var(--orange-glow-strong);transform:translateY(-3px)}
+@media(max-width:768px){.theme-page-title{font-size:1.4rem}.theme-card{border-radius:16px!important}.theme-card-body{padding:1.25rem}.theme-preview{height:100px;border-radius:10px}.theme-preview-text{font-size:0.82rem}.theme-save-btn{padding:12px 30px;font-size:0.9rem}}
+@media(max-width:480px){.theme-preview{height:85px;border-radius:8px}.victory-sun{width:45px;height:45px}}
+</style>
+
+{% endblock %}

@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="policy-page-title">
+                    <i class="fa-solid fa-shield-halved me-2" style="color: var(--orange);"></i>Privacy Policy
+                </h1>
+                <p style="color: var(--text-muted);">Last Updated: February 2026</p>
+                <div class="policy-orange-divider mx-auto"></div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="policy-card">
+                
+                <div class="policy-section">
+                    <h4 class="policy-heading">
+                        <span class="policy-heading-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                        Introduction
+                    </h4>
+                    <p>Welcome to <strong style="color: var(--orange);">H M Halal Shop BD</strong>. We value your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and safeguard your information when you visit our website and purchase our products.</p>
+                </div>
+
+                <div class="policy-section">
+                    <h4 class="policy-heading">
+                        <span class="policy-heading-icon"><i class="fa-solid fa-database"></i></span>
+                        Information We Collect
+                    </h4>
+                    <p>When you place an order or contact us, we collect certain information to provide a better service, including:</p>
+                    <ul class="policy-list">
+                        <li><strong style="color: var(--text-primary);">Personal Details:</strong> Name, phone number, and delivery address.</li>
+                        <li><strong style="color: var(--text-primary);">Order Information:</strong> Details of the items you purchase and your Order ID.</li>
+                        <li><strong style="color: var(--text-primary);">Communication:</strong> Any messages you send us via our contact form.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h4 class="policy-heading">
+                        <span class="policy-heading-icon" style="background: rgba(34, 197, 94, 0.1); color: var(--green);"><i class="fa-solid fa-circle-check"></i></span>
+                        How We Use Your Data
+                    </h4>
+                    <p>Your data is used strictly for business purposes:</p>
+                    <ul class="policy-list">
+                        <li>To process and deliver your orders efficiently.</li>
+                        <li>To allow you to track your order status using our system.</li>
+                        <li>To contact you regarding order updates or customer support.</li>
+                    </ul>
+                </div>
+
+                <div class="policy-section">
+                    <h4 class="policy-heading">
+                        <span class="policy-heading-icon" style="background: rgba(232, 54, 58, 0.08); color: var(--red);"><i class="fa-solid fa-lock"></i></span>
+                        Data Security
+                    </h4>
+                    <p>We implement industry-standard security measures to ensure your personal information remains safe. We do not sell, trade, or rent your personal identification information to third parties.</p>
+                </div>
+
+                <div class="policy-section">
+                    <h4 class="policy-heading">
+                        <span class="policy-icon-alt"><i class="fa-solid fa-cookie-bite"></i></span>
+                        Cookies
+                    </h4>
+                    <p>Our website uses "cookies" (specifically session cookies) to remember the items in your cart. This is essential for the functionality of our shop.</p>
+                </div>
+
+                <div class="policy-section" style="margin-bottom: 0;">
+                    <h4 class="policy-heading">
+                        <span class="policy-heading-icon"><i class="fa-solid fa-envelope"></i></span>
+                        Contact Us
+                    </h4>
+                    <p>If you have any questions about this Privacy Policy, please reach out to us through our social media channels or our contact page.</p>
+                </div>
+
+            </div>
+            
+            <!-- Back Button -->
+            <div class="text-center mt-4">
+                <a href="/" class="policy-back-btn">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Return to Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --black: #0D0D0D;
+        --black-light: #141414;
+        --black-medium: #1A1A1A;
+        --black-soft: #232323;
+        --black-card: #161616;
+        --black-border: #2E2E2E;
+        --orange: #FF6B2B;
+        --orange-bright: #FF8548;
+        --orange-light: #FFAA75;
+        --orange-pale: #FFD4B8;
+        --orange-dark: #D9550F;
+        --orange-deeper: #B34508;
+        --orange-glow: rgba(255, 107, 43, 0.25);
+        --orange-glow-strong: rgba(255, 107, 43, 0.4);
+        --orange-subtle: rgba(255, 107, 43, 0.08);
+        --orange-subtle-border: rgba(255, 107, 43, 0.15);
+        --red: #E8363A;
+        --red-glow: rgba(232, 54, 58, 0.25);
+        --green: #22C55E;
+        --green-dark: #16A34A;
+        --green-glow: rgba(34, 197, 94, 0.25);
+        --text-primary: #F0F0F0;
+        --text-secondary: #B0B0B0;
+        --text-muted: #6E6E6E;
+    }
+
+    /* ── Page Title ── */
+    .policy-page-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 2rem;
+        color: var(--text-primary);
+    }
+    .policy-orange-divider {
+        width: 50px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--orange-dark), var(--orange));
+        border-radius: 2px;
+        margin-top: 12px;
+    }
+
+    /* ── Content Card ── */
+    .policy-card {
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .policy-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green), var(--orange));
+    }
+
+    /* ── Sections ── */
+    .policy-section {
+        margin-bottom: 2rem;
+    }
+    .policy-section p,
+    .policy-section li {
+        color: var(--text-secondary);
+        line-height: 1.8;
+        font-size: 0.92rem;
+    }
+    .policy-section h4 {
+        margin-top: 0;
+    }
+
+    /* ── Section Headings ── */
+    .policy-heading {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--black-border);
+    }
+    .policy-heading-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12));
+        color: var(--orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+    .policy-icon-alt {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: rgba(110, 110, 110, 0.06);
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+    /* ── List ── */
+    .policy-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .policy-list li {
+        padding: 8px 0 8px 16px;
+        position: relative;
+        color: var(--text-secondary);
+        font-size: 0.92rem;
+        line-height: 1.7;
+    }
+    .policy-list li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 16px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orange);
+        opacity: 0.45;
+    }
+
+    /* ── Back Button ── */
+    .policy-back-btn {
+        display: inline-flex;
+        align-items: center;
+        background: var(--black-card);
+        border: 1px solid var(--black-border);
+        color: var(--orange);
+        padding: 12px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.25s ease;
+    }
+    .policy-back-btn:hover {
+        background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+        color: #fff;
+        border-color: var(--orange);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--orange-glow);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+        .policy-page-title { font-size: 1.6rem; }
+        .policy-card { border-radius: 20px; padding: 1.75rem; }
+    }
+    @media (max-width: 480px) {
+        .policy-page-title { font-size: 1.4rem; }
+        .policy-card { border-radius: 16px; padding: 1.25rem; }
+        .policy-heading { font-size: 1.05rem; gap: 10px; }
+        .policy-heading-icon { width: 36px; height: 36px; font-size: 0.85rem; }
+        .policy-icon-alt { width: 36px; height: 36px; font-size: 0.85rem; }
+    }
+</style>
+
+{% endblock %}

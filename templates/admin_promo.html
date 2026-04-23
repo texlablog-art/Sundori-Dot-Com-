@@ -1,0 +1,163 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="container-fluid py-4">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="promo-form-card sticky-top" style="top: 80px;">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="promo-icon-circle me-3"><i class="fa-solid fa-ticket"></i></div>
+                    <div>
+                        <h5 class="fw-bold m-0" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">New Coupon</h5>
+                        <span class="d-block" style="font-size: 0.66rem; color: var(--text-dim); font-weight: 600;">Create promo codes</span>
+                    </div>
+                </div>
+                <form action="/admin/add_promo" method="POST">
+                    <div class="mb-3">
+                        <label class="promo-label">Promo Code</label>
+                        <input type="text" name="code" class="promo-input promo-code-input" placeholder="e.g. SUMMER25" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="promo-label">Discount Percentage (%)</label>
+                        <input type="number" name="discount" class="promo-input promo-discount-input" placeholder="10" max="100" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="promo-label">Applicable Products</label>
+                        <select name="products" id="productSelect" class="promo-input" multiple="multiple" required>
+                            <option value="all" selected>Select All Products</option>
+{% for p in products %}
+                            <option value="{{ p._id }}">{{ p.title }}</option>
+{% endfor %}
+                        </select>
+                        <p class="promo-hint mt-2">Search and select multiple products. Choose "Select All" for store-wide.</p>
+                    </div>
+                    <button type="submit" class="promo-submit-btn"><i class="fa-solid fa-wand-magic-sparkles me-2"></i>Create Coupon</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="promo-table-card">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="d-flex align-items-center">
+                        <h5 class="fw-bold m-0 me-3" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">Active Promotions</h5>
+                        <span class="promo-count-badge">{{ coupons|length }}</span>
+                    </div>
+                </div>
+{% if coupons %}
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr class="promo-table-head">
+                                <th>Code</th>
+                                <th>Discount</th>
+                                <th>Applicability</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+{% for c in coupons %}
+                            <tr class="promo-table-row">
+                                <td><span class="promo-code-badge">{{ c.code }}</span></td>
+                                <td class="fw-bold" style="color: var(--success); font-size: 1rem;">{{ c.discount_percent }}% OFF</td>
+                                <td>
+{% if 'all' in c.applicable_products %}
+                                    <span class="promo-scope-badge promo-scope-all"><i class="fa-solid fa-globe me-1"></i>All Products</span>
+{% else %}
+                                    <span class="promo-scope-badge promo-scope-select"><i class="fa-solid fa-box me-1"></i>{{ c.applicable_products|length }} Items</span>
+{% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <form action="/admin/delete_promo/{{ c._id }}" method="POST" onsubmit="return confirm('Delete this coupon permanently?')">
+                                        <button class="promo-delete-btn" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+{% else %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-ticket d-block mb-3" style="font-size: 2.5rem; color: var(--black-border);"></i>
+                    <p style="color: var(--text-muted); margin: 0;">No active promotions yet.</p>
+                </div>
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+ $(document).ready(function() {
+    $('#productSelect').select2({
+        placeholder: "Search for products...",
+        allowClear: true,
+        closeOnSelect: false,
+        width: '100%'
+    });
+    $('#productSelect').on('select2:select', function(e) {
+        if(e.params.data.id === 'all') {
+            $(this).val(['all']).trigger('change');
+        } else {
+            var currentValues = $(this).val();
+            var index = currentValues.indexOf('all');
+            if (index > -1) {
+                currentValues.splice(index, 1);
+                $(this).val(currentValues).trigger('change');
+            }
+        }
+    });
+});
+</script>
+
+<style>
+:root{--black:#080808;--black-soft:#0C0C0C;--black-elevated:#141414;--black-card:#161616;--black-input:#1A1A1A;--black-hover:#1E1E1E;--black-border:#232323;--orange:#FF6B00;--orange-light:#FF8C33;--orange-dark:#E05E00;--orange-glow:rgba(255,107,0,0.18);--orange-glow-strong:rgba(255,107,0,0.30);--orange-subtle:rgba(255,107,0,0.06);--text-primary:#F0F0F0;--text-secondary:#999999;--text-muted:#5A5A5A;--text-dim:#3A3A3A;--danger:#EF4444;--success:#22C55E}
+.promo-form-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:20px;padding:1.75rem;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.promo-icon-circle{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--orange-subtle);color:var(--orange);border:1px solid rgba(255,107,0,0.12);flex-shrink:0}
+.promo-label{font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;display:block}
+.promo-input{background:var(--black-input)!important;border:1px solid var(--black-border)!important;color:var(--text-primary)!important;border-radius:12px!important;padding:0.6rem 0.85rem;font-size:0.9rem;transition:all 0.2s ease;width:100%}
+.promo-input:focus{border-color:var(--orange)!important;box-shadow:0 0 0 3px var(--orange-glow)!important;outline:none}
+.promo-input::placeholder{color:var(--text-dim)!important;font-size:0.85rem}
+.promo-code-input{font-weight:700!important;letter-spacing:0.1em;text-transform:uppercase;font-size:1rem!important;color:var(--orange)!important}
+.promo-discount-input{font-weight:700!important;font-size:1.1rem!important;color:var(--success)!important}
+.promo-hint{font-size:0.72rem;color:var(--text-dim);line-height:1.5;margin:0}
+.promo-submit-btn{width:100%;background:var(--orange);color:var(--black);border:none;padding:13px;border-radius:14px;font-weight:700;font-size:0.92rem;cursor:pointer;transition:all 0.3s ease;display:flex;align-items:center;justify-content:center}
+.promo-submit-btn:hover{background:var(--orange-dark);box-shadow:0 8px 28px var(--orange-glow-strong);transform:translateY(-2px)}
+.select2-container--default .select2-selection--multiple{background-color:var(--black-input)!important;border:1px solid var(--black-border)!important;border-radius:12px!important;padding:6px 8px!important;min-height:44px!important}
+.select2-container--default.select2-container--focus .select2-selection--multiple{border-color:var(--orange)!important;box-shadow:0 0 0 3px var(--orange-glow)!important}
+.select2-container--default .select2-selection--multiple .select2-selection__rendered{padding:0!important}
+.select2-selection__choice{background-color:var(--orange)!important;color:var(--black)!important;border:none!important;border-radius:8px!important;padding:3px 10px!important;font-size:0.78rem!important;font-weight:600!important;margin:2px 4px 2px 0!important}
+.select2-selection__choice__remove{color:var(--black)!important;margin-right:6px!important;opacity:0.5;transition:opacity 0.2s}
+.select2-selection__choice__remove:hover{opacity:1}
+.select2-container--default .select2-search--inline .select2-search__field{background:transparent!important;border:none!important;color:var(--text-primary)!important;font-size:0.85rem;padding:0;margin:0}
+.select2-container--default .select2-search--inline .select2-search__field::placeholder{color:var(--text-dim)!important}
+.select2-dropdown{background-color:var(--black-card)!important;border:1px solid var(--black-border)!important;border-radius:12px!important;box-shadow:0 10px 30px rgba(0,0,0,0.5)!important;margin-top:6px!important;overflow:hidden}
+.select2-search--dropdown{padding:10px!important}
+.select2-container--default .select2-search--dropdown .select2-search__field{background-color:var(--black-input)!important;border:1px solid var(--black-border)!important;border-radius:10px!important;color:var(--text-primary)!important;padding:8px 12px!important;outline:none!important}
+.select2-container--default .select2-search--dropdown .select2-search__field::placeholder{color:var(--text-dim)!important}
+.select2-container--default .select2-search--dropdown .select2-search__field:focus{border-color:var(--orange)!important;box-shadow:0 0 0 3px var(--orange-glow)!important}
+.select2-results__option{background-color:var(--black-card)!important;color:var(--text-secondary)!important;padding:10px 14px!important;font-size:0.88rem!important;transition:all 0.1s ease}
+.select2-results__option:hover,.select2-container--default .select2-results__option--highlighted[aria-selected]{background-color:var(--orange-subtle)!important;color:var(--orange)!important}
+.select2-container--default .select2-results__option[aria-selected=true]{background-color:rgba(255,107,0,0.08)!important;color:var(--orange)!important;font-weight:600}
+.promo-table-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:20px;padding:1.75rem;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.promo-count-badge{background:var(--orange-subtle);color:var(--orange);padding:3px 12px;border-radius:50px;font-size:0.75rem;font-weight:700;border:1px solid rgba(255,107,0,0.12)}
+.promo-table-head{color:var(--text-muted)!important;font-size:0.7rem!important;text-transform:uppercase;letter-spacing:1px;border:none!important;background:var(--black-elevated)!important}
+.promo-table-head th{padding:1rem 0.75rem!important;border:none!important;font-weight:700}
+.promo-table-row{border-bottom:1px solid var(--black-border)!important;transition:background-color 0.15s ease}
+.promo-table-row:hover{background-color:var(--orange-subtle)!important}
+.promo-table-row td{padding:1rem 0.75rem!important;border:none!important;color:var(--text-primary);vertical-align:middle}
+.promo-code-badge{display:inline-block;background:var(--orange-subtle);color:var(--orange);padding:6px 18px;border-radius:10px;font-size:1rem;font-weight:800;letter-spacing:0.12em;border:1px solid rgba(255,107,0,0.2);font-family:'Inter',monospace}
+.promo-scope-badge{display:inline-flex;align-items:center;padding:5px 14px;border-radius:50px;font-size:0.78rem;font-weight:600}
+.promo-scope-all{background:rgba(34,197,94,0.08);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.promo-scope-select{background:rgba(90,90,90,0.08);color:var(--text-muted);border:1px solid rgba(90,90,90,0.15)}
+.promo-delete-btn{width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.15);color:var(--danger);cursor:pointer;transition:all 0.2s;font-size:0.85rem}
+.promo-delete-btn:hover{background:var(--danger);color:#fff;border-color:var(--danger);transform:scale(1.1);box-shadow:0 4px 15px rgba(239,68,68,0.25)}
+@media(max-width:768px){.promo-form-card,.promo-table-card{border-radius:16px;padding:1.25rem}.promo-code-badge{font-size:0.85rem;padding:5px 12px}}
+</style>
+
+{% endblock %}

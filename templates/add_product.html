@@ -1,0 +1,319 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row g-4">
+    <div class="col-lg-5 col-xl-4">
+      <div class="admin-form-card sticky-top" style="top: 80px">
+        <div class="d-flex align-items-center mb-4">
+          <div class="admin-icon-circle me-3"><i class="fa-solid fa-plus"></i></div>
+          <div>
+            <h5 class="fw-bold m-0" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Add New Product</h5>
+            <span class="d-block" style="font-size: 0.68rem; color: var(--text-dim); font-weight: 600;">Fill details to publish</span>
+          </div>
+        </div>
+        <form action="/admin/add_product" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="admin-label">Product Title</label>
+            <input type="text" name="title" class="admin-input" placeholder="e.g. Premium Skincare Set" required>
+          </div>
+          <div class="mb-3">
+            <label class="admin-label">Category</label>
+            <select name="category" class="admin-input">
+              <option value="fashion">Fashion</option>
+              <option value="beauty">Beauty</option>
+              <option value="islamic">Islamic</option>
+              <option value="attar">Attar</option>
+              <option value="electronics">Electronics</option>
+              <option value="lifestyle">Lifestyle</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="admin-label">Product Description</label>
+            <textarea name="description" class="admin-input" rows="3" placeholder="Describe your product..."></textarea>
+          </div>
+          <div class="mb-4 admin-variant-box">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <label class="admin-label mb-0">Product Variants</label>
+              <button type="button" class="admin-pill-btn" onclick="addVariantRow()"><i class="fa-solid fa-plus me-1"></i>Add</button>
+            </div>
+            <div id="variantContainer"></div>
+            <small style="color: var(--text-muted); font-size: 9px;">* Add different sizes (M, XL) or ML (50ml, 100ml) with prices.</small>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-12 mb-2">
+              <label class="admin-label">Main Image (Thumbnail)</label>
+              <input type="file" name="main_image" class="admin-input admin-file-input small" required>
+            </div>
+            <div class="col-12">
+              <label class="admin-label">Gallery Images (Multiple)</label>
+              <input type="file" name="extra_images" class="admin-input admin-file-input small" multiple id="extraImgInput">
+              <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2 mt-2"></div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="admin-label">YouTube Video URL</label>
+            <div class="admin-input-group">
+              <span class="admin-input-prefix"><i class="fa-brands fa-youtube" style="color: #ff0000"></i></span>
+              <input type="url" name="video_url" class="admin-input admin-input-no-radius" placeholder="https://youtube.com/watch?v=...">
+            </div>
+          </div>
+          <div class="row g-2 mb-4">
+            <div class="col-6">
+              <label class="admin-label">Base Price (&#x09F3;)</label>
+              <input type="number" name="price" class="admin-input admin-price-input" required>
+            </div>
+            <div class="col-6">
+              <label class="admin-label">Old Price</label>
+              <input type="number" name="del_price" class="admin-input" style="color: var(--text-muted);">
+            </div>
+          </div>
+          <div class="mb-4">
+            <div class="admin-stock-toggle">
+              <label class="admin-label mb-0">In Stock</label>
+              <label class="admin-switch">
+                <input type="checkbox" name="in_stock" checked>
+                <span class="admin-switch-slider"></span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="admin-submit-btn"><i class="fa-solid fa-cloud-arrow-up me-2"></i>Publish Product</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-7 col-xl-8">
+      <div class="admin-table-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="fw-bold m-0" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Live Inventory</h5>
+          <span class="admin-count-badge">{{ products|length }} Items</span>
+        </div>
+        <div class="admin-search-wrap mb-3">
+          <i class="fa-solid fa-magnifying-glass admin-search-icon"></i>
+          <input type="text" class="admin-search-input" placeholder="Search products..." id="inventorySearch" oninput="filterProducts()">
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr style="color: var(--text-muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--black-border);">
+                <th class="pb-3" style="width: 40%">Product &amp; Variants</th>
+                <th class="pb-3 text-center">Stock Status</th>
+                <th class="pb-3 text-end">Price Info</th>
+                <th class="pb-3 text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+{% for p in products %}
+              <tr class="admin-table-row" style="border-bottom: 1px solid var(--black-border)" data-search="{{ p.title|lower }} {{ p.category|lower }}">
+                <td class="py-3">
+                  <div class="d-flex align-items-start">
+                    <div class="position-relative me-3 flex-shrink-0">
+                      <img src="{{ p.main_image }}" width="55" height="55" style="border-radius: 12px; border: 1px solid var(--black-border); object-fit: cover;">
+{% if p.video_url %}
+                      <span class="position-absolute top-0 start-0 badge rounded-pill" style="font-size: 8px; transform: translate(-30%, -30%); background: #ff0000; border: 2px solid var(--black-card);"><i class="fa-solid fa-play"></i></span>
+{% endif %}
+                    </div>
+                    <div style="min-width: 0">
+                      <div class="fw-bold small text-truncate" style="color: var(--text-muted)">{{ p.title }}</div>
+                      <span class="d-block mb-1" style="font-size: 11px; color: var(--text-muted)">{{ p.category }}</span>
+{% if p.variants %}
+                      <div class="d-flex flex-wrap gap-1 mt-1">
+{% for v in p.variants %}
+                        <span class="admin-variant-chip">{{ v.name }}: &#x09F3;{{ v.price }}</span>
+{% endfor %}
+                      </div>
+{% endif %}
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <form action="/admin/toggle_stock/{{ p._id }}" method="POST">
+{% if p.in_stock %}
+                    <button type="submit" class="admin-stock-btn admin-stock-in"><span class="admin-stock-dot" style="background: var(--success)"></span> IN STOCK</button>
+{% else %}
+                    <button type="submit" class="admin-stock-btn admin-stock-out"><span class="admin-stock-dot" style="background: var(--danger)"></span> OUT</button>
+{% endif %}
+                  </form>
+                </td>
+                <td class="text-end">
+                  <div class="fw-bold small" style="color: var(--orange)">&#x09F3;{{ p.price }}</div>
+{% if p.del_price and p.del_price|int > 0 %}
+                  <del style="color: var(--text-muted); font-size: 10px">&#x09F3;{{ p.del_price }}</del>
+{% endif %}
+                </td>
+                <td class="text-end">
+                  <div class="dropdown">
+                    <button class="admin-more-btn" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                      <li><button class="dropdown-item small py-2" data-bs-toggle="modal" data-bs-target="#editModal{{ p._id }}"><i class="fa-solid fa-pen-to-square me-2" style="color: var(--orange)"></i>Edit</button></li>
+                      <li><hr class="dropdown-divider" style="border-color: var(--black-border)"></li>
+                      <li><form action="/admin/delete_product/{{ p._id }}" method="POST" onsubmit="return confirm('Delete this product permanently?')"><button type="submit" class="dropdown-item small text-danger py-2"><i class="fa-solid fa-trash-can me-2"></i>Delete</button></form></li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <div class="modal fade" id="editModal{{ p._id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="admin-modal-content">
+                    <div class="modal-header" style="border-bottom: 1px solid var(--black-border); padding: 1.25rem 1.5rem;">
+                      <h5 class="modal-title fw-bold" style="color: var(--text-primary); font-family: 'Playfair Display', serif;">Edit Product</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) brightness(0.6)"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                      <form action="/admin/edit_product/{{ p._id }}" method="POST">
+                        <div class="mb-3">
+                          <label class="admin-label">Product Title</label>
+                          <input type="text" name="title" class="admin-input" value="{{ p.title }}" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                          <div class="col-6">
+                            <label class="admin-label">Current Price (&#x09F3;)</label>
+                            <input type="number" name="price" class="admin-input admin-price-input" value="{{ p.price }}" required>
+                          </div>
+                          <div class="col-6">
+                            <label class="admin-label">Discount Price</label>
+                            <input type="number" name="del_price" class="admin-input" value="{{ p.del_price }}">
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label class="admin-label">Category</label>
+                          <select name="category" class="admin-input">
+                            <option value="fashion"{% if p.category == 'fashion' %} selected{% endif %}>Fashion</option>
+                            <option value="beauty"{% if p.category == 'beauty' %} selected{% endif %}>Beauty</option>
+                            <option value="islamic"{% if p.category == 'islamic' %} selected{% endif %}>Islamic</option>
+                            <option value="attar"{% if p.category == 'attar' %} selected{% endif %}>Attar</option>
+                            <option value="electronics"{% if p.category == 'electronics' %} selected{% endif %}>Electronics</option>
+                            <option value="lifestyle"{% if p.category == 'lifestyle' %} selected{% endif %}>Lifestyle</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
+                          <label class="admin-label">Description</label>
+                          <textarea name="description" class="admin-input" rows="4">{{ p.description }}</textarea>
+                        </div>
+                        <div class="d-flex gap-2 pt-2">
+                          <button type="button" class="admin-cancel-btn w-100" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="admin-submit-btn w-100" style="padding: 0.65rem"><i class="fa-solid fa-floppy-disk me-1"></i>Save Changes</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+{% endfor %}
+{% if not products %}
+              <tr>
+                <td colspan="4" class="text-center py-5">
+                  <i class="fa-solid fa-box-open d-block mb-3" style="font-size: 2.5rem; color: var(--black-border)"></i>
+                  <p style="color: var(--text-muted); margin: 0">No products yet. Add your first product!</p>
+                </td>
+              </tr>
+{% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function addVariantRow() {
+    var container = document.getElementById("variantContainer");
+    var row = document.createElement("div");
+    row.className = "row g-2 mb-2 variant-row";
+    row.style.animation = "fadeInUp 0.3s ease forwards";
+    row.innerHTML = '<div class="col-6"><input type="text" name="variant_name[]" class="admin-input admin-variant-input" placeholder="e.g. 50ml or XL" required></div><div class="col-4"><input type="number" name="variant_price[]" class="admin-input admin-variant-input" placeholder="Price" required></div><div class="col-2 text-end"><button type="button" class="admin-variant-remove" onclick="this.parentElement.parentElement.remove()"><i class="fa-solid fa-circle-minus"></i></button></div>';
+    container.appendChild(row);
+}
+document.getElementById("extraImgInput").addEventListener("change", function(e) {
+    var container = document.getElementById("imagePreviewContainer");
+    container.innerHTML = "";
+    for (var i = 0; i < e.target.files.length; i++) {
+        (function(file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var img = document.createElement("img");
+                img.src = event.target.result;
+                img.style.cssText = "width:55px;height:55px;object-fit:cover;border-radius:12px;border:1px solid var(--black-border);background:var(--black-medium);padding:2px;";
+                container.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        })(e.target.files[i]);
+    }
+});
+function filterProducts() {
+    var query = document.getElementById("inventorySearch").value.toLowerCase();
+    var rows = document.querySelectorAll(".admin-table-row");
+    for (var i = 0; i < rows.length; i++) {
+        var text = rows[i].getAttribute("data-search") || "";
+        rows[i].style.display = text.indexOf(query) !== -1 ? "" : "none";
+    }
+}
+</script>
+
+<style>
+:root{--black:#080808;--black-light:#0e0e0e;--black-medium:#1a1a1a;--black-soft:#222222;--black-card:#161616;--black-border:#232323;--orange:#ff6b00;--orange-light:#ff8c33;--orange-dark:#e05e00;--orange-glow:rgba(255,107,0,0.18);--orange-subtle:rgba(255,107,0,0.06);--text-primary:#f0f0f0;--text-secondary:#999999;--text-muted:#5a5a5a;--text-dim:#3a3a3a;--danger:#ef4444;--success:#22c55e}
+body{background-color:var(--black)!important;color:var(--text-primary)!important}
+.admin-form-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:18px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.admin-table-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:18px;padding:1.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.admin-icon-circle{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--orange-subtle);color:var(--orange);border:1px solid rgba(255,107,0,0.12);flex-shrink:0}
+.admin-label{font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem;display:block}
+.admin-input{background:var(--black-medium)!important;border:1px solid var(--black-border)!important;color:var(--text-primary)!important;border-radius:12px!important;padding:0.6rem 0.85rem;font-size:0.9rem;transition:all 0.2s ease;width:100%}
+.admin-input:focus{border-color:var(--orange)!important;box-shadow:0 0 0 3px var(--orange-glow)!important;outline:none}
+.admin-input::placeholder{color:var(--text-dim)!important;font-size:0.85rem}
+.admin-file-input{padding:0.45rem 0.85rem;font-size:0.8rem}
+.admin-file-input::-webkit-file-upload-button{background:var(--black-soft);border:1px solid var(--black-border);color:var(--orange);padding:4px 12px;border-radius:8px;font-size:0.75rem;font-weight:600;cursor:pointer;margin-right:10px;transition:0.2s}
+.admin-file-input::-webkit-file-upload-button:hover{background:var(--orange);color:var(--black);border-color:var(--orange)}
+.admin-input-group{display:flex;align-items:stretch}
+.admin-input-prefix{background:var(--black-soft);border:1px solid var(--black-border);border-right:none;border-radius:12px 0 0 12px;padding:0 14px;display:flex;align-items:center;font-size:1rem}
+.admin-input-no-radius{border-radius:0 12px 12px 0!important}
+.admin-price-input{color:var(--orange)!important;font-weight:700!important;font-size:1.05rem!important}
+.admin-variant-box{padding:1rem;background:var(--black-medium);border-radius:14px;border:1px dashed var(--black-border)}
+.admin-variant-input{padding:0.4rem 0.6rem!important;font-size:0.82rem!important}
+.admin-variant-input::placeholder{font-size:11px!important;color:var(--text-dim)!important}
+.admin-variant-remove{background:none;border:none;color:var(--danger);font-size:1rem;cursor:pointer;padding:4px;margin-top:2px;transition:0.2s}
+.admin-variant-remove:hover{transform:scale(1.2)}
+.admin-pill-btn{background:var(--orange);color:var(--black);border:none;padding:2px 12px;border-radius:50px;font-size:11px;font-weight:700;cursor:pointer;transition:0.2s}
+.admin-pill-btn:hover{background:var(--orange-dark);box-shadow:0 3px 10px var(--orange-glow)}
+.admin-stock-toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--black-medium);border-radius:12px;border:1px solid var(--black-border)}
+.admin-switch{position:relative;display:inline-block;width:46px;height:24px;cursor:pointer}
+.admin-switch input{opacity:0;width:0;height:0}
+.admin-switch-slider{position:absolute;inset:0;background:var(--black-border);border-radius:50px;transition:0.3s}
+.admin-switch-slider::before{content:"";position:absolute;width:18px;height:18px;left:3px;bottom:3px;background:var(--text-muted);border-radius:50%;transition:0.3s}
+.admin-switch input:checked+.admin-switch-slider{background:var(--orange);box-shadow:0 0 12px var(--orange-glow)}
+.admin-switch input:checked+.admin-switch-slider::before{transform:translateX(22px);background:var(--black)}
+.admin-submit-btn{background:var(--orange);color:var(--black);border:none;width:100%;font-weight:700;padding:0.85rem;border-radius:14px;font-size:0.95rem;cursor:pointer;transition:all 0.3s ease;display:flex;align-items:center;justify-content:center}
+.admin-submit-btn:hover{background:var(--orange-dark);box-shadow:0 8px 25px var(--orange-glow);transform:translateY(-2px)}
+.admin-cancel-btn{background:var(--black-soft);color:var(--text-secondary);border:1px solid var(--black-border);padding:0.65rem;border-radius:14px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:0.2s}
+.admin-cancel-btn:hover{background:var(--black-border);color:var(--text-primary)}
+.admin-count-badge{background:var(--orange-subtle);color:var(--orange);padding:6px 16px;border-radius:50px;font-size:0.78rem;font-weight:700;border:1px solid rgba(255,107,0,0.12)}
+.admin-search-wrap{position:relative}
+.admin-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-dim);font-size:0.85rem}
+.admin-search-input{width:100%;background:var(--black-medium);border:1px solid var(--black-border);border-radius:12px;color:var(--text-primary);padding:10px 14px 10px 40px;font-size:0.84rem;transition:0.25s}
+.admin-search-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-glow)}
+.admin-search-input::placeholder{color:var(--text-dim)}
+.admin-variant-chip{background:var(--black-soft);color:var(--text-secondary);border:1px solid var(--black-border);font-size:9px;padding:2px 8px;border-radius:6px;font-weight:500}
+.admin-stock-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}
+.admin-stock-btn{border:none;font-size:10px;font-weight:700;padding:5px 14px;border-radius:50px;cursor:pointer;transition:0.2s;white-space:nowrap;display:inline-flex;align-items:center}
+.admin-stock-in{background:rgba(34,197,94,0.08);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.admin-stock-in:hover{background:var(--success);color:#fff;border-color:var(--success)}
+.admin-stock-out{background:rgba(239,68,68,0.06);color:var(--danger);border:1px solid rgba(239,68,68,0.2)}
+.admin-stock-out:hover{background:var(--danger);color:#fff;border-color:var(--danger)}
+.admin-more-btn{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--black-soft);border:1px solid var(--black-border);color:var(--text-secondary);cursor:pointer;transition:0.2s;font-size:0.85rem}
+.admin-more-btn:hover{background:var(--orange);color:var(--black);border-color:var(--orange)}
+.admin-table-row{transition:background 0.2s ease}
+.admin-table-row:hover{background-color:rgba(255,107,0,0.04)!important}
+.admin-modal-content{background:var(--black-card)!important;border:1px solid var(--black-border)!important;border-radius:20px!important;overflow:hidden;color:var(--text-primary);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.modal-backdrop{backdrop-filter:blur(4px)}
+.dropdown-menu{background:var(--black-card)!important;border:1px solid var(--black-border)!important;border-radius:12px!important;box-shadow:0 10px 30px rgba(0,0,0,0.4)!important;padding:6px!important}
+.dropdown-item{color:var(--text-secondary)!important;border-radius:8px!important;margin:2px 0!important;transition:0.15s}
+.dropdown-item:hover{background:var(--orange-subtle)!important;color:var(--orange)!important}
+.dropdown-divider{border-color:var(--black-border)!important}
+@keyframes fadeInUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--black-soft);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--orange-dark)}
+@media(max-width:768px){.admin-form-card,.admin-table-card{border-radius:16px;padding:1.15rem}.admin-submit-btn{padding:0.75rem;font-size:0.9rem}}
+</style>
+
+{% endblock %}

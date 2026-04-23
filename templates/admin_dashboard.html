@@ -1,0 +1,352 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="dash-alert dash-alert-{{ category if category != 'error' else 'danger' }} mb-4" role="alert">
+<i class="fa-solid {% if category == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %} me-2"></i>
+{{ message }}
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="filter: invert(1) brightness(0.6);"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h2 class="dash-title mb-1">Admin Dashboard</h2>
+            <p class="dash-subtitle mb-0">Real-time order management and store statistics.</p>
+            <div class="dash-orange-divider"></div>
+        </div>
+        <div class="d-flex gap-2">
+            <div class="dash-search-box">
+                <span class="dash-search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="orderSearch" class="dash-search-input" placeholder="Search by name or phone..." onkeyup="filterTable()">
+            </div>
+            <button class="dash-refresh-btn" onclick="location.reload()" title="Refresh">
+                <i class="fa-solid fa-rotate"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-5">
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card dash-stat-revenue h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="dash-stat-label">Total Revenue</small>
+                    <span class="dash-stat-icon"><i class="fa-solid fa-coins"></i></span>
+                </div>
+                <h3 class="fw-bold mb-0" style="color: var(--orange);">&#x09F3;{{ "{:,}".format(stats.total_revenue) }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card dash-stat-pending h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="dash-stat-label">Pending Orders</small>
+                    <span class="dash-stat-icon" style="color: var(--orange-dark);"><i class="fa-solid fa-clock"></i></span>
+                </div>
+                <h3 class="fw-bold mb-0" style="color: var(--orange);">{{ stats.pending_orders }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="dash-stat-label">Total Orders</small>
+                    <span class="dash-stat-icon" style="color: var(--success);"><i class="fa-solid fa-box"></i></span>
+                </div>
+                <h3 class="fw-bold mb-0" style="color: var(--text-primary);">{{ stats.order_count }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="dash-stat-card h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <small class="dash-stat-label">Live Products</small>
+                    <span class="dash-stat-icon" style="color: var(--success);"><i class="fa-solid fa-tags"></i></span>
+                </div>
+                <h3 class="fw-bold mb-0" style="color: var(--text-primary);">{{ stats.total_products }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="dash-table-card">
+        <div class="dash-table-header">
+            <h5 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">
+                <i class="fa-solid fa-list me-2" style="color: var(--orange);"></i>Recent Orders
+            </h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="ordersTable">
+                <thead>
+                    <tr class="dash-table-head-row">
+                        <th class="ps-4">Order ID</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+{% for order in orders %}
+                    <tr class="dash-table-row">
+                        <td class="ps-4">
+                            <button onclick="openOrderModal('{{ order.safe_json }}')" class="dash-order-id-btn">
+                                #{{ order.order_id }}
+                            </button>
+                        </td>
+                        <td>
+                            <div class="fw-bold" style="color: var(--text-muted);">{{ order.name }}</div>
+                            <div class="small" style="color: var(--text-muted);">{{ order.phone }}</div>
+                        </td>
+                        <td class="fw-bold" style="color: var(--orange);">&#x09F3;{{ order.total }}</td>
+                        <td>
+                            <div class="small fw-bold text-uppercase" style="color: var(--success);">{{ order.payment_method }}</div>
+{% if order.transaction_id and order.transaction_id != 'N/A' %}
+                            <code class="small" style="color: #DC3545;">{{ order.transaction_id }}</code>
+{% endif %}
+                        </td>
+                        <td>
+{% if order.status == 'Pending' %}
+                            <span class="dash-badge dash-badge-pending">Pending</span>
+{% elif order.status == 'Confirmed' %}
+                            <span class="dash-badge dash-badge-confirmed">Confirmed</span>
+{% elif order.status == 'Cancelled' %}
+                            <span class="dash-badge dash-badge-cancelled">Cancelled</span>
+{% else %}
+                            <span class="dash-badge dash-badge-default">{{ order.status }}</span>
+{% endif %}
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="dropdown">
+                                <button class="dash-manage-btn" data-bs-toggle="dropdown">
+                                    Manage <i class="fa-solid fa-chevron-down ms-1" style="font-size: 0.65rem;"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/admin/order_action/{{ order._id }}/Confirmed"><i class="fa-solid fa-check me-2" style="color: var(--success);"></i>Confirm Order</a></li>
+                                    <li><a class="dropdown-item text-danger" href="/admin/order_action/{{ order._id }}/Cancelled"><i class="fa-solid fa-xmark me-2"></i>Cancel Order</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" target="_blank" href="https://wa.me/{{ order.phone }}"><i class="fa-brands fa-whatsapp me-2" style="color: var(--success);"></i>WhatsApp Customer</a></li>
+                                    <li><a class="dropdown-item" style="color: var(--text-muted);" href="/admin/delete_order/{{ order._id }}" onclick="return confirm('Permanently delete this order record?')"><i class="fa-solid fa-trash-can me-2"></i>Delete Record</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+{% endfor %}
+{% if not orders %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5">
+                            <i class="fa-solid fa-inbox d-block mb-3" style="font-size: 2.5rem; color: var(--black-border);"></i>
+                            <p style="color: var(--text-muted); margin: 0;">No orders found.</p>
+                        </td>
+                    </tr>
+{% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="dash-modal-content">
+            <div class="modal-header dash-modal-header">
+                <h4 class="fw-bold mb-0" style="font-family: 'Playfair Display', serif; color: var(--text-primary);">
+                    Order Summary <span id="modalOrderId" style="color: var(--orange); font-size: 1.1rem;"></span>
+                </h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1) brightness(0.6);"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-5">
+                        <div class="dash-modal-info-box">
+                            <label class="dash-modal-label">Customer Details</label>
+                            <h5 class="fw-bold mb-1" id="modalCustomerName" style="color: var(--text-primary);"></h5>
+                            <p class="fw-bold small mb-3" id="modalCustomerPhone" style="color: var(--success);"></p>
+                            <label class="dash-modal-label">Delivery Address</label>
+                            <p class="small mb-4 lh-sm" id="modalCustomerAddress" style="color: var(--text-secondary);"></p>
+                            <label class="dash-modal-label">Payment</label>
+                            <div class="dash-modal-payment-box">
+                                <p class="mb-1 small"><strong style="color: var(--text-secondary);">Method:</strong> <span id="modalPayMethod" style="color: var(--text-primary);"></span></p>
+                                <p class="mb-0 small"><strong style="color: var(--text-secondary);">TrxID:</strong> <code class="fw-bold" id="modalTrxId" style="color: #DC3545;"></code></p>
+                            </div>
+                            <div id="modalPromoSection" class="mt-3 d-none">
+                                <label class="dash-modal-label">Promo Used</label>
+                                <span class="dash-modal-promo-badge" id="modalPromoCode"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <label class="dash-modal-label mb-3">Items Purchased</label>
+                        <div id="modalItemsContainer" class="pe-2" style="max-height: 350px; overflow-y: auto;"></div>
+                        <div class="dash-modal-total-section">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span style="color: var(--text-muted);">Subtotal</span>
+                                <span style="color: var(--text-secondary);" id="modalSubtotal"></span>
+                            </div>
+                            <div id="modalDiscountRow" class="d-flex justify-content-between small mb-2 d-none">
+                                <span style="color: var(--success);">Discount</span>
+                                <span style="color: var(--success);" id="modalDiscount"></span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pt-2" style="border-top: 1px solid var(--black-border);">
+                                <span class="h5 fw-bold mb-0" style="color: var(--text-primary);">Total Payable</span>
+                                <span class="h4 fw-bold mb-0" style="color: var(--orange);" id="modalTotal"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer dash-modal-footer">
+                <button type="button" class="dash-modal-cancel" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="dash-modal-print" onclick="window.print()">
+                    <i class="fa-solid fa-print me-2"></i>Print Invoice
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterTable() {
+    var input = document.getElementById("orderSearch");
+    var filter = input.value.toUpperCase();
+    var tr = document.getElementById("ordersTable").getElementsByTagName("tr");
+    for (var i = 1; i < tr.length; i++) {
+        var text = tr[i].textContent.toUpperCase();
+        tr[i].style.display = text.indexOf(filter) > -1 ? "" : "none";
+    }
+}
+
+function openOrderModal(safeJson) {
+    try {
+        var decodedData = atob(safeJson);
+        var order = JSON.parse(decodedData);
+
+        document.getElementById('modalOrderId').innerText = "#" + order.order_id;
+        document.getElementById('modalCustomerName').innerText = order.name;
+        document.getElementById('modalCustomerPhone').innerText = order.phone;
+        document.getElementById('modalCustomerAddress').innerText = order.address;
+        document.getElementById('modalPayMethod').innerText = order.payment_method;
+        document.getElementById('modalTrxId').innerText = order.transaction_id || 'N/A';
+
+        document.getElementById('modalSubtotal').innerText = "\u09F3" + (order.subtotal || order.total);
+        document.getElementById('modalTotal').innerText = "\u09F3" + order.total;
+
+        if (order.discount && order.discount > 0) {
+            document.getElementById('modalDiscountRow').classList.remove('d-none');
+            document.getElementById('modalDiscount').innerText = "-\u09F3" + order.discount;
+        } else {
+            document.getElementById('modalDiscountRow').classList.add('d-none');
+        }
+
+        if (order.promo_code) {
+            document.getElementById('modalPromoSection').classList.remove('d-none');
+            document.getElementById('modalPromoCode').innerText = order.promo_code;
+        } else {
+            document.getElementById('modalPromoSection').classList.add('d-none');
+        }
+
+        var container = document.getElementById('modalItemsContainer');
+        container.innerHTML = '';
+
+        for (var i = 0; i < order.items_details.length; i++) {
+            var item = order.items_details[i];
+            var variantBadge = item.variant ? '<div class="mt-1"><span class="dash-item-variant">Option: ' + item.variant + '</span></div>' : '';
+            var imgSrc = item.image || item.main_image || '';
+
+            container.innerHTML += '<div class="dash-modal-item">' +
+                '<img src="' + imgSrc + '" class="rounded" style="width:55px;height:55px;object-fit:cover;border:1px solid var(--black-border);">' +
+                '<div class="ms-3 flex-grow-1">' +
+                '<p class="mb-0 fw-bold small lh-sm" style="color:var(--text-primary);">' + item.title + '</p>' +
+                variantBadge +
+                '<small style="color:var(--text-muted);">\u09F3' + item.price + ' x ' + item.quantity + '</small>' +
+                '</div>' +
+                '<div class="text-end">' +
+                '<span class="fw-bold small" style="color:var(--orange);">\u09F3' + item.subtotal + '</span>' +
+                '</div></div>';
+        }
+
+        var myModal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+        myModal.show();
+    } catch (e) {
+        console.error("Error decoding order data:", e);
+        alert("Could not load order details.");
+    }
+}
+</script>
+
+<style>
+:root{--black:#080808;--black-soft:#0C0C0C;--black-light:#0E0E0E;--black-elevated:#141414;--black-card:#161616;--black-input:#1A1A1A;--black-hover:#1E1E1E;--black-border:#232323;--black-border-light:#1C1C1C;--orange:#FF6B00;--orange-light:#FF8C33;--orange-dark:#E05E00;--orange-deeper:#B84D00;--orange-glow:rgba(255,107,0,0.18);--orange-glow-strong:rgba(255,107,0,0.30);--orange-subtle:rgba(255,107,0,0.06);--text-primary:#F0F0F0;--text-secondary:#999999;--text-muted:#5A5A5A;--text-dim:#3A3A3A;--danger:#EF4444;--success:#22C55E;--success-glow:rgba(34,197,94,0.2)}
+.dash-title{font-family:'Playfair Display',serif;font-weight:700;font-size:1.6rem;color:var(--text-primary)}
+.dash-subtitle{color:var(--text-muted);font-size:0.88rem}
+.dash-orange-divider{width:40px;height:3px;background:var(--orange);border-radius:3px;margin-top:8px}
+.dash-search-box{display:flex;align-items:center;background:var(--black-card);border:1px solid var(--black-border);border-radius:50px;overflow:hidden;min-width:240px;transition:0.2s}
+.dash-search-box:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-glow)}
+.dash-search-icon{padding:0 14px;color:var(--text-dim);font-size:0.85rem}
+.dash-search-input{background:transparent!important;border:none!important;color:var(--text-primary)!important;padding:9px 10px 9px 0;font-size:0.85rem;box-shadow:none!important;outline:none!important;width:100%}
+.dash-search-input::placeholder{color:var(--text-dim)!important}
+.dash-refresh-btn{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--black-card);border:1px solid var(--black-border);color:var(--text-secondary);cursor:pointer;transition:0.3s;flex-shrink:0}
+.dash-refresh-btn:hover{background:var(--orange);color:var(--black);border-color:var(--orange);transform:rotate(90deg);box-shadow:0 4px 16px var(--orange-glow)}
+.dash-stat-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:16px;padding:1.25rem;transition:all 0.3s ease;position:relative;overflow:hidden}
+.dash-stat-card::before{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;border-radius:50%;opacity:0.06;transition:opacity 0.3s}
+.dash-stat-card:hover{border-color:rgba(255,107,0,0.3);transform:translateY(-3px);box-shadow:0 8px 25px rgba(0,0,0,0.25)}
+.dash-stat-card:hover::before{opacity:0.12}
+.dash-stat-revenue{background:linear-gradient(135deg,var(--black-card) 0%,rgba(255,107,0,0.08) 100%);border-color:rgba(255,107,0,0.2)}
+.dash-stat-revenue::before{background:var(--orange)}
+.dash-stat-pending{background:linear-gradient(135deg,var(--black-card) 0%,rgba(255,107,0,0.05) 100%);border-color:rgba(255,107,0,0.15)}
+.dash-stat-pending::before{background:var(--orange-dark)}
+.dash-stat-label{font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em}
+.dash-stat-icon{font-size:1.2rem;color:var(--orange);opacity:0.6}
+.dash-table-card{background:var(--black-card);border:1px solid var(--black-border);border-radius:20px;overflow:hidden}
+.dash-table-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--black-border);background:var(--black-card)}
+.dash-table-head-row{color:var(--text-muted)!important;font-size:0.7rem!important;text-transform:uppercase;letter-spacing:1px;border:none!important;background:var(--black-elevated)!important}
+.dash-table-head-row th{padding:1rem 0.75rem!important;border:none!important;font-weight:700}
+.dash-table-row{border-bottom:1px solid var(--black-border-light)!important;transition:background-color 0.15s ease}
+.dash-table-row:hover{background-color:var(--orange-subtle)!important}
+.dash-table-row td{padding:1rem 0.75rem!important;border:none!important;color:var(--text-primary);vertical-align:middle}
+.dash-order-id-btn{background:none;border:none;padding:0;font-weight:700;color:var(--orange);text-decoration:none;cursor:pointer;transition:0.2s;font-size:0.9rem}
+.dash-order-id-btn:hover{color:var(--orange-light);text-decoration:underline}
+.dash-badge{padding:5px 16px;border-radius:50px;font-size:0.72rem;font-weight:700;letter-spacing:0.02em;display:inline-block}
+.dash-badge-pending{background:rgba(255,107,0,0.1);color:var(--orange);border:1px solid rgba(255,107,0,0.2)}
+.dash-badge-confirmed{background:rgba(34,197,94,0.1);color:var(--success);border:1px solid rgba(34,197,94,0.2)}
+.dash-badge-cancelled{background:rgba(239,68,68,0.08);color:var(--danger);border:1px solid rgba(239,68,68,0.15)}
+.dash-badge-default{background:rgba(90,90,90,0.08);color:var(--text-muted);border:1px solid rgba(90,90,90,0.15)}
+.dash-manage-btn{background:var(--black-hover);border:1px solid var(--black-border);color:var(--text-secondary);padding:6px 16px;border-radius:50px;font-size:0.8rem;font-weight:600;cursor:pointer;transition:0.2s}
+.dash-manage-btn:hover{background:var(--orange);color:var(--black);border-color:var(--orange);box-shadow:0 4px 14px var(--orange-glow)}
+.dropdown-menu{background:var(--black-card)!important;border:1px solid var(--black-border)!important;border-radius:12px!important;box-shadow:0 10px 30px rgba(0,0,0,0.5)!important;padding:8px!important;min-width:200px}
+.dropdown-item{color:var(--text-secondary)!important;border-radius:8px!important;margin:2px 0!important;font-size:0.85rem;padding:9px 14px!important;transition:0.15s}
+.dropdown-item:hover{background:var(--orange-subtle)!important;color:var(--orange)!important}
+.dropdown-item.text-danger:hover{background:rgba(239,68,68,0.08)!important;color:var(--danger)!important}
+.dropdown-divider{border-color:var(--black-border)!important}
+.dash-modal-content{background:var(--black-card)!important;border:1px solid var(--black-border)!important;border-radius:24px!important;overflow:hidden;color:var(--text-primary);box-shadow:0 25px 60px rgba(0,0,0,0.6)}
+.dash-modal-header{border-bottom:1px solid var(--black-border)!important;padding:1.25rem 1.5rem;background:var(--black-card)}
+.dash-modal-footer{border-top:1px solid var(--black-border)!important;padding:1rem 1.5rem;background:var(--black-card)}
+.modal-backdrop{backdrop-filter:blur(4px)}
+.dash-modal-info-box{padding:1.25rem;background:var(--black-input);border:1px solid var(--black-border);border-radius:16px;height:100%}
+.dash-modal-label{font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;display:block}
+.dash-modal-payment-box{padding:10px 14px;border:1px solid var(--black-border);border-radius:10px;background:var(--black-hover)}
+.dash-modal-promo-badge{display:inline-block;width:100%;padding:8px 14px;background:rgba(34,197,94,0.08);color:var(--success);border:1px solid rgba(34,197,94,0.2);border-radius:10px;font-size:0.82rem;font-weight:600}
+.dash-modal-item{display:flex;align-items:center;margin-bottom:10px;padding:10px;background:var(--black-input);border:1px solid var(--black-border);border-radius:12px;transition:0.2s}
+.dash-modal-item:hover{border-color:rgba(255,107,0,0.2)}
+.dash-item-variant{background:var(--black-hover);color:var(--text-secondary);border:1px solid var(--black-border);font-size:10px;padding:2px 8px;border-radius:6px;font-weight:500}
+.dash-modal-total-section{margin-top:1rem;padding-top:1rem}
+.dash-modal-cancel{background:var(--black-hover);color:var(--text-secondary);border:1px solid var(--black-border);padding:10px 28px;border-radius:50px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:0.2s}
+.dash-modal-cancel:hover{background:var(--black-border);color:var(--text-primary)}
+.dash-modal-print{background:var(--orange);color:var(--black);border:none;padding:10px 28px;border-radius:50px;font-weight:700;font-size:0.9rem;cursor:pointer;transition:0.2s}
+.dash-modal-print:hover{background:var(--orange-dark);box-shadow:0 6px 20px var(--orange-glow)}
+.dash-alert{background:var(--black-card);border:1px solid var(--black-border);border-radius:14px;padding:14px 18px;font-size:0.88rem;color:var(--text-primary);display:flex;align-items:center}
+.dash-alert-success{border-left:4px solid var(--success)}.dash-alert-success i{color:var(--success)}
+.dash-alert-danger{border-left:4px solid var(--danger)}.dash-alert-danger i{color:var(--danger)}
+.dash-alert-warning{border-left:4px solid var(--orange)}.dash-alert-warning i{color:var(--orange)}
+.dash-alert-info{border-left:4px solid var(--orange)}.dash-alert-info i{color:var(--orange)}
+#modalItemsContainer::-webkit-scrollbar{width:4px}
+#modalItemsContainer::-webkit-scrollbar-track{background:transparent}
+#modalItemsContainer::-webkit-scrollbar-thumb{background:var(--black-hover);border-radius:10px}
+@media print{body{background:#fff!important;color:#000!important}body *{visibility:hidden}#orderDetailsModal,#orderDetailsModal *{visibility:visible}#orderDetailsModal{position:absolute;left:0;top:0;width:100%;background:#fff!important;border:none!important;box-shadow:none!important}.dash-modal-content{background:#fff!important}.dash-modal-info-box{background:#f8f8f8!important;border-color:#ddd!important}.dash-modal-item{background:#f8f8f8!important;border-color:#ddd!important}.dash-modal-payment-box{background:#f0f0f0!important;border-color:#ddd!important}.btn-close,.modal-footer,.dropdown,.dash-alert,.dash-modal-print{display:none!important}.dash-modal-header{border-color:#ddd!important}.dash-modal-total-section{border-color:#ddd!important}#modalCustomerName,#modalCustomerPhone,#modalCustomerAddress,#modalPayMethod,#modalOrderId,.dash-modal-item p.fw-bold,#modalSubtotal,#modalTotal{color:#000!important}#modalTrxId{color:#333!important}}
+@media(max-width:768px){.dash-title{font-size:1.3rem}.dash-search-box{min-width:180px}.dash-stat-card{padding:1rem}.dash-table-card{border-radius:16px}.dash-modal-content{border-radius:18px!important}}
+@media(max-width:576px){.dash-search-box{min-width:0;flex:1}.dash-manage-btn{padding:5px 12px;font-size:0.75rem}}
+</style>
+
+{% endblock %}
