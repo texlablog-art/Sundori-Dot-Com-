@@ -12,24 +12,33 @@
 
     <style>
         :root {
-            --black: #111111;
-            --black-light: #1A1A1A;
-            --black-medium: #222222;
-            --black-soft: #2A2A2A;
-            --black-card: #1E1E1E;
-            --black-border: #333333;
-            --gold: #C9A84C;
-            --gold-light: #F5E6B8;
-            --gold-dark: #8B6914;
-            --gold-glow: rgba(201, 168, 76, 0.25);
-            --green: #1A7A3A;
-            --green-dark: #145A2C;
-            --green-glow: rgba(26, 122, 58, 0.25);
-            --text-primary: #F5F5F5;
-            --text-secondary: #AAAAAA;
-            --text-muted: #777777;
+            --black: #0D0D0D;
+            --black-light: #141414;
+            --black-medium: #1A1A1A;
+            --black-soft: #232323;
+            --black-card: #161616;
+            --black-border: #2E2E2E;
+            --orange: #FF6B2B;
+            --orange-bright: #FF8548;
+            --orange-light: #FFAA75;
+            --orange-pale: #FFD4B8;
+            --orange-dark: #D9550F;
+            --orange-deeper: #B34508;
+            --orange-glow: rgba(255, 107, 43, 0.25);
+            --orange-glow-strong: rgba(255, 107, 43, 0.4);
+            --orange-subtle: rgba(255, 107, 43, 0.08);
+            --orange-subtle-border: rgba(255, 107, 43, 0.15);
+            --red: #E8363A;
+            --red-glow: rgba(232, 54, 58, 0.25);
+            --green: #22C55E;
+            --green-dark: #16A34A;
+            --green-glow: rgba(34, 197, 94, 0.25);
+            --text-primary: #F0F0F0;
+            --text-secondary: #B0B0B0;
+            --text-muted: #6E6E6E;
             --danger: #dc2626;
             --danger-dim: rgba(220, 38, 38, 0.6);
+            --star-gold: #F5A623;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,22 +52,22 @@
 
         /* ===== টপ বার ===== */
         .top-urgency-bar {
-            background: linear-gradient(90deg, var(--black-medium), rgba(201, 168, 76, 0.12), var(--black-medium));
-            color: var(--gold-light);
+            background: linear-gradient(90deg, var(--black-medium), rgba(255, 107, 43, 0.1), var(--black-medium));
+            color: var(--orange-light);
             text-align: center;
             padding: 9px 16px;
             font-size: 0.88rem;
             font-weight: 600;
             position: relative;
             overflow: hidden;
-            border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+            border-bottom: 1px solid rgba(255, 107, 43, 0.12);
         }
         .top-urgency-bar::before {
             content: '';
             position: absolute;
             top: 0; left: -100%;
             width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 43, 0.06), transparent);
             animation: shimmer 2.5s infinite;
         }
         @keyframes shimmer { to { left: 160%; } }
@@ -71,8 +80,8 @@
             animation: livePulse 1.2s infinite;
         }
         @keyframes livePulse {
-            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(26,122,58,0.5); }
-            50% { opacity: 0.5; box-shadow: 0 0 0 4px rgba(26,122,58,0); }
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+            50% { opacity: 0.5; box-shadow: 0 0 0 4px rgba(34,197,94,0); }
         }
 
         /* ===== লাইভ ভিউয়ার বার ===== */
@@ -85,9 +94,9 @@
             font-weight: 500;
             border-bottom: 1px solid var(--black-border);
         }
-        .viewer-bar .eye-icon { color: var(--gold); margin-right: 4px; }
+        .viewer-bar .eye-icon { color: var(--orange); margin-right: 4px; }
         .viewer-count { 
-            color: var(--gold); 
+            color: var(--orange); 
             font-weight: 800; 
             display: inline-block;
             min-width: 20px;
@@ -101,10 +110,10 @@
             font-size: 0.72rem; font-weight: 700;
             border: 1px solid;
         }
-        .trust-badge.red { background: rgba(220,38,38,0.1); color: #f87171; border-color: rgba(220,38,38,0.2); }
-        .trust-badge.green { background: rgba(26,122,58,0.1); color: #4ade80; border-color: rgba(26,122,58,0.2); }
-        .trust-badge.blue { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
-        .trust-badge.gold { background: rgba(201,168,76,0.1); color: var(--gold); border-color: rgba(201,168,76,0.2); }
+        .trust-badge.red { background: rgba(232, 54, 58, 0.08); color: #f87171; border-color: rgba(232, 54, 58, 0.16); }
+        .trust-badge.green { background: rgba(34, 197, 94, 0.08); color: #4ade80; border-color: rgba(34, 197, 94, 0.16); }
+        .trust-badge.blue { background: rgba(59, 130, 246, 0.08); color: #60a5fa; border-color: rgba(59, 130, 246, 0.16); }
+        .trust-badge.orange { background: linear-gradient(135deg, var(--orange-subtle), rgba(255, 107, 43, 0.12)); color: var(--orange); border-color: var(--orange-subtle-border); }
         .trust-badge.dark { background: var(--black-soft); color: var(--text-secondary); border-color: var(--black-border); }
 
         /* ===== কার্ড ===== */
@@ -121,7 +130,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(to right, var(--gold), var(--green));
+            background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
             z-index: 2;
         }
         .product-title {
@@ -148,11 +157,11 @@
         .main-image-wrap:hover img { transform: scale(1.03); }
         .image-badge {
             position: absolute; top: 12px; left: 12px;
-            background: var(--gold-dark);
-            color: var(--black);
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+            color: #fff;
             padding: 5px 12px; border-radius: 8px;
             font-weight: 800; font-size: 0.8rem;
-            box-shadow: 0 4px 12px var(--gold-glow);
+            box-shadow: 0 4px 12px var(--orange-glow);
             animation: badgePulse 2s infinite;
         }
         @keyframes badgePulse {
@@ -169,26 +178,26 @@
             background: var(--black-soft);
         }
         .thumb-img.active, .thumb-img:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px var(--gold-glow);
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px var(--orange-glow);
         }
 
         /* ===== লাস্ট পারচেসড ===== */
         .last-purchased {
             display: flex; align-items: center; gap: 8px;
             margin-top: 14px; padding: 10px 14px;
-            background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.12));
-            border: 1px solid rgba(201,168,76,0.18);
+            background: linear-gradient(135deg, var(--orange-subtle), rgba(255,107,43,0.12));
+            border: 1px solid var(--orange-subtle-border);
             border-radius: 10px;
-            font-size: 0.82rem; font-weight: 600; color: var(--gold-light);
+            font-size: 0.82rem; font-weight: 600; color: var(--orange-light);
         }
         .last-purchased .lp-avatar {
             width: 30px; height: 30px; border-radius: 50%;
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange));
             display: flex; align-items: center; justify-content: center;
-            color: var(--black); font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
+            color: #fff; font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
         }
-        .lp-time { color: var(--gold); font-weight: 700; }
+        .lp-time { color: var(--orange); font-weight: 700; }
 
         /* ===== প্রাইস কার্ড ===== */
         .sticky-side { position: sticky; top: 14px; }
@@ -205,7 +214,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(to right, var(--gold), var(--green));
+            background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
             z-index: 2;
         }
         .price-card-top {
@@ -217,14 +226,14 @@
             content: '';
             position: absolute; top: -40%; right: -20%;
             width: 180px; height: 180px;
-            background: radial-gradient(circle, rgba(201,168,76,0.1), transparent 70%);
+            background: radial-gradient(circle, rgba(255,107,43,0.08), transparent 70%);
             border-radius: 50%;
         }
         .savings-tag {
             display: inline-block;
-            background: rgba(201,168,76,0.1);
-            border: 1px solid rgba(201,168,76,0.2);
-            color: var(--gold);
+            background: linear-gradient(135deg, var(--orange-subtle), rgba(255,107,43,0.12));
+            border: 1px solid var(--orange-subtle-border);
+            color: var(--orange);
             padding: 4px 14px; border-radius: 20px;
             font-size: 0.78rem; font-weight: 700;
             margin-bottom: 10px;
@@ -235,22 +244,22 @@
             font-size: 1.1rem; font-weight: 500;
         }
         .new-price {
-            color: var(--gold); font-weight: 800;
+            color: var(--orange); font-weight: 800;
             font-size: 3rem; line-height: 1.1;
             display: block; margin: 4px 0;
-            text-shadow: 0 2px 16px rgba(201,168,76,0.2);
+            text-shadow: 0 2px 16px var(--orange-glow);
         }
         .new-price .currency { font-size: 1.5rem; vertical-align: super; margin-right: 2px; }
         .price-sub { color: rgba(255,255,255,0.35); font-size: 0.78rem; }
 
         /* ===== কাউন্টডাউন ===== */
         .countdown-section {
-            background: rgba(201,168,76,0.05);
-            border-bottom: 1px solid rgba(201,168,76,0.12);
+            background: rgba(255, 107, 43, 0.04);
+            border-bottom: 1px solid rgba(255, 107, 43, 0.1);
             padding: 12px 20px; text-align: center;
         }
         .countdown-label {
-            font-size: 0.78rem; color: var(--gold);
+            font-size: 0.78rem; color: var(--orange);
             font-weight: 700; margin-bottom: 5px;
         }
         .countdown-timer { display: flex; justify-content: center; gap: 6px; }
@@ -261,7 +270,7 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             border: 1px solid var(--black-border);
         }
-        .cd-block .num { font-size: 1.2rem; font-weight: 800; color: var(--gold); line-height: 1; }
+        .cd-block .num { font-size: 1.2rem; font-weight: 800; color: var(--orange); line-height: 1; }
         .cd-block .lbl { font-size: 0.58rem; color: var(--text-muted); font-weight: 600; }
 
         /* ===== স্টক ===== */
@@ -272,18 +281,18 @@
         }
         .stock-text {
             font-size: 0.8rem; font-weight: 700;
-            color: var(--gold); margin-bottom: 6px;
+            color: var(--orange); margin-bottom: 6px;
             display: flex; align-items: center; gap: 5px;
         }
         .fire-icon { animation: fireFlicker 0.5s infinite alternate; display: inline-block; }
         @keyframes fireFlicker { from { transform: scale(1); } to { transform: scale(1.2); } }
         .stock-bar-bg {
-            height: 7px; background: rgba(201,168,76,0.1);
+            height: 7px; background: rgba(255, 107, 43, 0.08);
             border-radius: 10px; overflow: hidden;
         }
         .stock-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+            background: linear-gradient(90deg, var(--orange-dark), var(--orange), var(--orange-bright));
             border-radius: 10px;
             transition: width 1.5s ease;
             position: relative;
@@ -305,7 +314,7 @@
         }
         .check-icon {
             width: 20px; height: 20px;
-            background: rgba(26,122,58,0.15); color: var(--green);
+            background: rgba(34,197,94,0.12); color: var(--green);
             border-radius: 50%; display: flex;
             align-items: center; justify-content: center;
             font-size: 0.6rem; flex-shrink: 0; margin-top: 2px;
@@ -321,7 +330,8 @@
         }
         .step-num {
             width: 22px; height: 22px;
-            background: var(--gold); color: var(--black);
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange));
+            color: #fff;
             border-radius: 50%; display: flex;
             align-items: center; justify-content: center;
             font-size: 0.68rem; font-weight: 800;
@@ -340,9 +350,9 @@
             background: var(--black-medium); transition: 0.25s; outline: none;
         }
         .form-input:focus {
-            border-color: var(--gold);
+            border-color: var(--orange);
             background: var(--black-soft);
-            box-shadow: 0 0 0 4px var(--gold-glow);
+            box-shadow: 0 0 0 4px var(--orange-glow);
         }
         .form-input::placeholder { color: var(--text-muted); font-weight: 400; }
         .form-input.error { border-color: var(--danger); box-shadow: 0 0 0 4px rgba(220,38,38,0.1); }
@@ -360,18 +370,18 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-cta-primary {
-            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
-            color: var(--black);
-            box-shadow: 0 4px 20px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+            background: linear-gradient(135deg, var(--orange-dark), var(--orange), var(--orange-bright));
+            color: #fff;
+            box-shadow: 0 4px 20px var(--orange-glow), inset 0 1px 0 rgba(255,255,255,0.15);
             animation: ctaBreath 3s ease-in-out infinite;
         }
         @keyframes ctaBreath {
-            0%, 100% { box-shadow: 0 4px 20px var(--gold-glow), inset 0 1px 0 rgba(255,255,255,0.15); }
-            50% { box-shadow: 0 6px 30px rgba(201,168,76,0.4), inset 0 1px 0 rgba(255,255,255,0.15); }
+            0%, 100% { box-shadow: 0 4px 20px var(--orange-glow), inset 0 1px 0 rgba(255,255,255,0.15); }
+            50% { box-shadow: 0 6px 30px var(--orange-glow-strong), inset 0 1px 0 rgba(255,255,255,0.15); }
         }
         .btn-cta-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 35px rgba(201,168,76,0.45);
+            box-shadow: 0 8px 35px var(--orange-glow-strong);
         }
         .btn-cta-primary:active { transform: translateY(0); }
         .btn-cta-primary::before {
@@ -385,7 +395,7 @@
 
         .btn-cta-secondary {
             background: var(--black-medium);
-            color: var(--gold);
+            color: var(--orange);
             border: 1px solid var(--black-border);
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             font-size: 0.95rem; padding: 13px;
@@ -393,7 +403,7 @@
         .btn-cta-secondary:hover { 
             background: var(--black-soft); 
             transform: translateY(-1px); 
-            border-color: rgba(201,168,76,0.3);
+            border-color: rgba(255, 107, 43, 0.3);
         }
 
         .secure-note {
@@ -405,8 +415,8 @@
         /* ===== গ্যারান্টি ===== */
         .guarantee-badge {
             display: flex; align-items: center; gap: 10px;
-            background: linear-gradient(135deg, rgba(26,122,58,0.06), rgba(26,122,58,0.12));
-            border: 1px solid rgba(26,122,58,0.2); border-radius: 11px;
+            background: linear-gradient(135deg, rgba(34,197,94,0.05), rgba(34,197,94,0.1));
+            border: 1px solid rgba(34,197,94,0.18); border-radius: 11px;
             padding: 10px 14px; margin-top: 12px;
         }
         .guarantee-badge i { font-size: 1.3rem; color: var(--green); }
@@ -415,8 +425,8 @@
 
         /* ===== মিস করলে কী হবে ===== */
         .miss-section {
-            background: linear-gradient(135deg, rgba(220,38,38,0.04), rgba(220,38,38,0.08));
-            border: 1px solid rgba(220,38,38,0.15); border-radius: 14px;
+            background: linear-gradient(135deg, rgba(232,54,58,0.03), rgba(232,54,58,0.06));
+            border: 1px solid rgba(232,54,58,0.12); border-radius: 14px;
             padding: 18px; margin-top: 16px;
         }
         .miss-section h5 {
@@ -431,7 +441,7 @@
         }
         .miss-item .miss-x {
             width: 20px; height: 20px; border-radius: 50%;
-            background: var(--danger); color: white;
+            background: var(--red); color: white;
             display: flex; align-items: center; justify-content: center;
             font-size: 0.6rem; flex-shrink: 0; margin-top: 1px;
         }
@@ -447,7 +457,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(to right, var(--gold), var(--green));
+            background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
         }
         .info-card h5 {
             font-size: 0.88rem; font-weight: 700;
@@ -460,9 +470,9 @@
             display: flex; align-items: center; justify-content: center;
             font-size: 0.82rem; flex-shrink: 0;
         }
-        .step-icon.orange { background: rgba(201,168,76,0.1); color: var(--gold); }
-        .step-icon.green { background: rgba(26,122,58,0.1); color: var(--green); }
-        .step-icon.blue { background: rgba(59,130,246,0.1); color: #60a5fa; }
+        .step-icon.orange { background: linear-gradient(135deg, var(--orange-subtle), rgba(255,107,43,0.12)); color: var(--orange); }
+        .step-icon.green { background: rgba(34, 197, 94, 0.08); color: var(--green); }
+        .step-icon.blue { background: rgba(59,130,246,0.08); color: #60a5fa; }
         .step-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; line-height: 1.4; }
         .step-text small { display: block; color: var(--text-muted); font-size: 0.74rem; }
 
@@ -477,7 +487,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(to right, var(--gold), var(--green));
+            background: linear-gradient(to right, var(--orange-dark), var(--orange), var(--orange-bright), var(--green));
         }
         .desc-section h4 {
             font-size: 1rem; font-weight: 800;
@@ -497,6 +507,7 @@
         .desc-content p { margin-bottom: 8px; }
 
         /* ===== রিভিউ ===== */
+        .review-stars { color: var(--star-gold); font-size: 0.72rem; margin-bottom: 2px; }
         .review-snippet {
             display: flex; align-items: flex-start; gap: 10px;
             padding: 12px 0; border-bottom: 1px solid var(--black-border);
@@ -507,13 +518,12 @@
             display: flex; align-items: center; justify-content: center;
             color: white; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
         }
-        .review-stars { color: var(--gold); font-size: 0.72rem; margin-bottom: 2px; }
         .review-text { font-size: 0.82rem; color: var(--text-secondary); font-weight: 500; line-height: 1.5; }
         .review-name { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
         .review-verified {
             display: inline-flex; align-items: center; gap: 3px;
             font-size: 0.68rem; color: var(--green); font-weight: 700;
-            background: rgba(26,122,58,0.15); padding: 1px 6px;
+            background: rgba(34, 197, 94, 0.12); padding: 1px 6px;
             border-radius: 4px; margin-left: 6px;
         }
 
@@ -529,7 +539,7 @@
             user-select: none;
         }
         .faq-q i { transition: 0.3s; color: var(--text-muted); font-size: 0.75rem; }
-        .faq-item.open .faq-q i { transform: rotate(180deg); color: var(--gold); }
+        .faq-item.open .faq-q i { transform: rotate(180deg); color: var(--orange); }
         .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
         .faq-item.open .faq-a { max-height: 200px; }
         .faq-a-inner { padding: 0 14px 12px; font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
@@ -566,7 +576,7 @@
         .mobile-sticky-inner { display: flex; align-items: center; gap: 10px; }
         .mobile-price-side { flex-shrink: 0; }
         .mobile-price-side .old { font-size: 0.75rem; color: var(--text-muted); text-decoration: line-through; }
-        .mobile-price-side .new { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+        .mobile-price-side .new { font-size: 1.3rem; font-weight: 800; color: var(--orange); }
         .mobile-sticky-inner .btn-cta { margin: 0; flex: 1; padding: 13px; font-size: 1rem; border-radius: 11px; }
 
         /* ===== অ্যানিমেশন ===== */
@@ -611,20 +621,20 @@
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--black-border); border-radius: 10px; }
-    </style>
+</style>
 </head>
 <body>
 
 <!-- আর্জেন্সি টপ বার -->
 <div class="top-urgency-bar">
-    <i class="fa-solid fa-bolt" style="color: var(--gold);"></i>
+    <i class="fa-solid fa-bolt" style="color: var(--orange);"></i>
     <span id="urgency-text">আজকের দিনে ৫২ জন এই প্রোডাক্ট অর্ডার করেছেন</span>
     <span class="live-dot"></span>
 </div>
 
 <!-- লাইভ ভিউয়ার বার -->
 <div class="viewer-bar">
-    <i class="fa-solid fa-eye eye-icon"></i>
+    <i class="fa-solid fa-eye eye-icon" style="color: var(--orange);"></i>
     এখন <span class="viewer-count" id="viewerCount">২৪</span> জন এই পেজ দেখছেন
 </div>
 
@@ -638,13 +648,13 @@
                     <span class="trust-badge red"><i class="fa-solid fa-fire"></i> বেস্ট সেলার</span>
                     <span class="trust-badge green"><i class="fa-solid fa-shield-halved"></i> অরিজিনাল</span>
                     <span class="trust-badge blue"><i class="fa-solid fa-rotate-left"></i> রিটার্ন</span>
-                    <span class="trust-badge gold"><i class="fa-solid fa-truck-fast"></i> এক্সপ্রেস</span>
+                    <span class="trust-badge orange"><i class="fa-solid fa-truck-fast"></i> এক্সপ্রেস</span>
                 </div>
 
                 <h1 class="product-title">{{ product.title }}</h1>
 
                 <div class="d-flex align-items-center gap-2 mb-3" style="font-size: 0.82rem;">
-                    <span style="color: var(--gold); font-weight: 700;">
+                    <span style="color: var(--star-gold); font-weight: 700;">
                         <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
                         <span style="color: var(--text-primary); font-weight: 600; margin-left: 3px;">4.9</span>
                     </span>
@@ -682,13 +692,13 @@
 
             <!-- বিবরণ -->
             <div class="desc-section fade-up fade-d1">
-                <h4><i class="fa-solid fa-circle-info" style="color: var(--gold);"></i> প্রোডাক্টের বিবরণ</h4>
+                <h4><i class="fa-solid fa-circle-info" style="color: var(--orange);"></i> প্রোডাক্টের বিবরণ</h4>
                 <div class="desc-content">{{ product.description | safe }}</div>
             </div>
 
             <!-- কম্প্যারিজন -->
             <div class="desc-section fade-up fade-d2">
-                <h4><i class="fa-solid fa-scale-balanced" style="color: var(--gold);"></i> কেন আমাদের থেকে নেবেন?</h4>
+                <h4><i class="fa-solid fa-scale-balanced" style="color: var(--orange);"></i> কেন আমাদের থেকে নেবেন?</h4>
                 <table class="compare-table">
                     <thead>
                         <tr>
@@ -729,7 +739,7 @@
 
             <!-- ডাইনামিক রিভিউ -->
             <div class="desc-section fade-up fade-d3">
-                <h4><i class="fa-solid fa-comment-dots" style="color: var(--gold);"></i> ক্রেতাদের মতামত</h4>
+                <h4><i class="fa-solid fa-comment-dots" style="color: var(--orange);"></i> ক্রেতাদের মতামত</h4>
                 <div id="reviewContainer"></div>
             </div>
 
@@ -746,32 +756,32 @@
                 </div>
                 <div class="miss-item">
                     <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
-                    <span>সীমিত স্টক — পরে এই প্রোডাক্ট আর পেতে পারেন না সপ্তাহখানেক</span>
+                    <span>সীমিত স্টক — পরে এই প্রোডাক্ট আর পেতে পারেন না</span>
                 </div>
                 <div class="miss-item">
                     <div class="miss-x"><i class="fa-solid fa-xmark"></i></div>
-                    <span>অন্যরা আপনার চেয়ে আগে প্রোডাক্টটি ব্যবহার করে ফায়দা নিয়ে নেবে</span>
+                    <span>অন্যররা আপনার চেয়ে আগে এটি ব্যবহার করেছে</span>
                 </div>
             </div>
 
             <!-- FAQ -->
             <div class="desc-section fade-up fade-d4">
-                <h4><i class="fa-solid fa-circle-question" style="color: var(--gold);"></i> সচরাচর জিজ্ঞাসা</h4>
+                <h4><i class="fa-solid fa-circle-question" style="color: var(--orange);"></i> সচরাচর জিজ্ঞাসা</h4>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">এটি কি অরিজিনাল প্রোডাক্ট?<i class="fa-solid fa-chevron-down"></i></div>
                     <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, আমরা ১০০% অরিজিনাল প্রোডাক্টই সেল করি। কোনো সমস্যা থাকলে রিটার্ন/রিপ্লেসমেন্ট পাবেন।</div></div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">ডেলিভারি কতদিনে পাবো?<i class="fa-solid fa-chevron-down"></i></div>
-                    <div class="faq-a"><div class="faq-a-inner">ঢাকায় ১-২ দিন, ঢাকার বাইরে ২-৪ দিনের মধ্যে ডেলিভারি পাবেন।</div></div>
+                    <div class="faq-a"><div class="faq-a-inner">ঢাকায় ১-২ দিন, ঢাকারের বাইরে ২-৪ দিনের মধ্যে ডেলিভারি পাবেন।</div></div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">ক্যাশ অন ডেলিভারি আছে?<i class="fa-solid fa-chevron-down"></i></div>
-                    <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, প্রোডাক্ট হাতে পেয়ে পেমেন্ট করতে পারবেন। কোনো অগ্রিম পেমেন্ট লাগবে না।</div></div>
+                    <div class="faq-a"><div class="faq-a-inner">হ্যাঁ, প্রোডাক্ট হাতে পেমেন্ট করতে পারবেন। কোনো অগ্রিম পেমেন্ট লাগবে।</div></div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-q" onclick="toggleFaq(this)">রিটার্ন পলিসি কি?<i class="fa-solid fa-chevron-down"></i></div>
-                    <div class="faq-a"><div class="faq-a-inner">প্রোডাক্ট পেয়ে যদি মনে না হয়, ডেলিভারির সময়ই রিটার্ন করতে পারবেন। কোনো প্রশ্ন নেই।</div></div>
+                    <div class="faq-a"><div class="faq-a-inner">প্রোডাক্ট পেয়ে মনে হলে ডেলিভারির সময় রিটার্ন করুন। কোনো প্রশ্ন নেই।</div></div>
                 </div>
             </div>
 
@@ -806,7 +816,7 @@
 
                     <div class="stock-bar-wrap">
                         <div class="stock-text">
-                            <i class="fa-solid fa-fire fire-icon" style="color: var(--gold);"></i>
+                            <i class="fa-solid fa-fire fire-icon" style="color: var(--orange);"></i>
                             <span>সীমিত স্টক — মাত্র <strong id="stock-left">৫</strong>টি বাকি!</span>
                         </div>
                         <div class="stock-bar-bg">
@@ -896,14 +906,14 @@
 
                 <!-- ডেলিভারি প্রসেস -->
                 <div class="info-card fade-up fade-d2 desktop-only">
-                    <h5><i class="fa-solid fa-truck-fast me-1" style="color: var(--gold);"></i> কিভাবে ডেলিভারি পাবেন?</h5>
+                    <h5><i class="fa-solid fa-truck-fast me-1" style="color: var(--orange);"></i> কিভাবে ডেলিভারি পাবেন?</h5>
                     <div class="delivery-step">
                         <div class="step-icon orange"><i class="fa-solid fa-clipboard-list"></i></div>
-                        <div class="step-text">অর্ডার কনফার্ম<small>ফর্ম পূরণ করে সাবমিট করুন</small></div>
+                        <div class="step-text">অর্ডার কনফার্ম<small>ফর্ম পূরণ করুন</small></div>
                     </div>
                     <div class="delivery-step">
                         <div class="step-icon blue"><i class="fa-solid fa-phone"></i></div>
-                        <div class="step-text">কল ভেরিফিকেশন<small>আমাদের টিম কল করে নিশ্চিত করবে</small></div>
+                        <div class="step-text">কল ভেরিফিকেশন<small>আমাদের টিম কল করবে নিশ্চিত করবে</small></div>
                     </div>
                     <div class="delivery-step">
                         <div class="step-icon green"><i class="fa-solid fa-box-open"></i></div>
@@ -947,13 +957,11 @@
     const delPriceRaw = '{{ product.del_price }}';
     const priceRaw = '{{ product.price }}';
     
-    // বাংলা সংখ্যা → ইংরেজি কনভার্ট ফাংশন
     function bnToEn(str) {
         const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
         return String(str).replace(/[০-৯]/g, d => map[d] || d);
     }
     
-    // ইংরেজি → বাংলা কনভার্ট
     function enToBn(num) {
         const map = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
         return String(num).replace(/\d/g, d => map[d]);
@@ -964,13 +972,11 @@
     const savings = delPrice - price;
     const discountPercent = delPrice > 0 ? Math.round((savings / delPrice) * 100) : 0;
 
-    // প্রাইস ডিসপ্লে
     document.getElementById('delPriceDisplay').textContent = enToBn(delPrice.toLocaleString('en-IN'));
     document.getElementById('priceDisplay').textContent = enToBn(price.toLocaleString('en-IN'));
     document.getElementById('savings-amount').textContent = enToBn(savings.toLocaleString('en-IN'));
     document.getElementById('discount-percent').textContent = enToBn(discountPercent);
     
-    // মোবাইল প্রাইস
     document.querySelector('.mobile-del-price').textContent = enToBn(delPrice.toLocaleString('en-IN'));
     document.querySelector('.mobile-price').textContent = enToBn(price.toLocaleString('en-IN'));
 
@@ -982,33 +988,31 @@
         'জান্নাত','সাকিব','আফরিন','রুমান','তাসনিম','হাসিব','শারমিন','ফাহিম',
         'নাজমুল','সুমাইয়া','রিফাত','আবদুল্লাহ','মাসুদা','কামরুল','সাবরিন','জুয়েল',
         'তানজিনা','মেহেদী','আশরাফুল','নাজনীন','সোহেল','রুবিনা','ওয়াসিম','ফারহানা',
-        'তৌহিদ','ইসরাত','বিলাল','নাফিসা','রাসেল','প্রিয়া','শাকিল','মারিয়া',
+        'তৌহিদ','ইসরত','বিলাল','নাফিসা','রাসেল','প্রিয়া','শাকিল','মারিয়া',
         'জাকির','হাসিনা','ইকবাল','তামান্না','নাঈম','রুমানা','ফয়সাল','সামিয়া'
     ];
 
     const cities = [
         'ঢাকা','চট্টগ্রাম','সিলেট','রাজশাহী','খুলনা','বরিশাল','রংপুর','ময়মনসিংহ',
-        'কুমিল্লা','গাজীপুর','নারায়ণগঞ্জ','যশোর','কক্সবাজার','টাঙ্গাইল','বগুড়া',
-        'দিনাজপুর','ব্রাহ্মণবাড়িয়া','ফেনী','নোয়াখালী','পাবনা','কিশোরগঞ্জ','মানিকগঞ্জ',
-        'মুন্সিগঞ্জ','শরীয়তপুর','মাদারীপুর','গোপালগঞ্জ','ঝালকাঠি','পিরোজপুর','চাঁদপুর','লক্ষ্মীপুর'
+        'কুমিল্লা','গাজীপুর','নারায়াণগঞ্জ','যশোর','কক্সবাজার','টাঙ্গাইল','বগুড়া',
+        'দিনাজপুর','ব্রাহ্মণবাড়ি','ফেনী','নোয়াখালী','পাবনা','কিশোরগঞ্জ','মানিকগঞ্জ',
+        'মুন্সিগঞ্জ','শরীয়তপুর','মাদারীপুর','গোপালগঞ্জ','ঝালকাঠি','পিরোজপুর','চাঁদপুর',
+        'লক্ষ্মীপুর','গোপালগঞ্জ','ফেনী','নোয়াখালী','পাবনা','কিশোরগঞ্জ','মারিয়া'
     ];
 
     const reviewTexts = [
         'অসাধারণ কোয়ালিটি! ছবির চেয়েও ভালো পেয়েছি। ধন্যবাদ Shadhon Group!',
         '২ দিনের মধ্যে ডেলিভারি পেয়েছি। প্যাকেজিং চমৎকার ছিল।',
-        'দামের তুলনায় অনেক ভালো। আবার অর্ডার করবো ইনশাআল্লাহ।',
-        'সবাইকে রেকমেন্ড করবো। ১০০% অরিজিনাল প্রোডাক্ট।',
-        'প্রথমে একটু সন্দেহ ছিল, কিন্তু পেয়ে মুগ্ধ হয়েছি!',
+        'দামের তুলনায় অনেক ভালো। আবার অর্ডার করবো ইনশাল্লাহ।',
+        'সবাইকে রেকমেন্ড করব। ১০০% অরিজিনাল প্রোডাক্ট।',
+        'প্রথম দেখে মুগ্ধ হইনি, কিন্তু পেয়ে মুগ্ধ হয়েছি!',
         'অরিজিনাল প্রোডাক্ট, কোনো কম্প্রোমাইজ নেই। সন্তুষ্ট আমি।',
-        'দারুণ সার্ভিস! প্রোডাক্টও অসাধারণ, প্যাকেজিংও দারুণ।',
-        'আগেও নিয়েছি, এবারও নিলাম। কনসিস্টেন্সি মেইনটেইন করে।',
-        'মার্কেটে এত ভালো প্রোডাক্ট এই দামে পাওয়া কঠিন।',
-        'ফ্যামিলির সবাই পছন্দ করেছে। ধন্যবাদ আপনাদের!',
+        'দারুণ সার্ভিস! প্রোডাক্টও অসাধারণ। ধন্যবাদ Shadhon Group!',
+        'একদম নির নিলেম। বর্য প্রয়ে একটু ঝামাল।',
+        'মার্কেটে এত ভালো প্রোডাক্ট এই দামে পাওয়।',
         'কোয়ালিটি দেখে অবাক হয়ে গেলাম। রিপিট কাস্টমার হলাম।',
-        'একদম নিরাশ হইনি। বরং এক্সপেক্টেশনের বেশি পেয়েছি।',
-        'সাশ্রয়ী দামে প্রিমিয়াম কোয়ালিটি — দারুণ কম্বিনেশন!',
-        'ডেলিভারি ম্যানও বেশ বিনয়ী ছিলেন। ওভারঅল গুড এক্সপেরিয়েন্স।',
-        'অফিসে সব কলিগ জিজ্ঞেস করছে কোথায় থেকে নিলাম!'
+        'ডেলিভারি ম্যানও বেশি ছিল। ওভারঅল গুড এক্সপেরিয়েন্স।',
+        'অফিসে সব কলিগ জিজ্ঞেশন করছি কোথায় থেকে নিলাম!',
     ];
 
     const starPatterns = [
@@ -1021,9 +1025,9 @@
     ];
 
     const avatarColors = [
-        '#3b82f6,#1d4ed8','#8b5cf6,#6d28d9','#ec4899,#be185d','#f59e0b,#b45309',
-        '#10b981,#047857','#ef4444,#b91c1c','#06b6d4,#0e7490','#f97316,#c2410c',
-        '#6366f1,#4338ca','#14b8a6,#0d9488','#e11d48,#9f1239','#84cc16,#4d7c0f'
+        '#3b82f6,#1d4ed8','#8b5cf6','#6d28d9','#ec4899','#be185d','#f59e0b','#b45309',
+        '#10b981','#047857','#ef4444','#b91c1c','#06b6d4','#0e7490','#f97316','#c2410c',
+        '#6366f1','#4338ca','#14b8a6','#0d9488','#e11d48','#9f1239','#06b6d4',
     ];
 
     function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
@@ -1080,10 +1084,7 @@
         }
     }
 
-    // প্রতিবার র‍্যান্ডম ৫টি রিভিউ দেখাও
     generateReviews(5);
-
-    // ১৫ সেকেন্ড পর রিভিউ রিফ্রেশ
     setInterval(() => generateReviews(5), 15000);
 
     // ==========================================
@@ -1111,7 +1112,6 @@
         document.getElementById('stock-bar').style.width = '18%';
     }, 400);
 
-    // প্রতি ৪০ সেকেন্ডে স্টক ১ কমাও
     setInterval(() => {
         const el = document.getElementById('stock-left');
         let current = parseInt(bnToEn(el.textContent));
@@ -1142,7 +1142,7 @@
         'গত ১ ঘণ্টায় ' + enToBn(String(8 + Math.floor(Math.random()*10))) + ' জন অর্ডার করেছেন — স্টক কমে যাচ্ছে!',
         'এই অফারটি আজ রাত ১২টায় শেষ হবে',
         'সীমিত স্টক — দেরি করলে পাবেন না!',
-        'এই দামে আর কখনো পাবেন না — নিশ্চিত করুন এখনই',
+        'এই দামে আর কখনো পাবেন — নিশ্চিত করুন এখনই!',
         'গতকাল ' + enToBn(String(55 + Math.floor(Math.random()*30))) + ' জন কিনেছে — আপনি পিছিয়ে যাচ্ছেন!'
     ];
     let urgIdx = 0;
@@ -1233,7 +1233,7 @@ function toggleFaq(el) {
 // ফর্ম ভ্যালিডেশন
 // ==========================================
 function bnToEnLocal(str) {
-    const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'7','৮':'8','৯':'9'};
+    const map = {'০':'0','১':'1','২':'2','৩':'3','৪':'4','৫':'5','৬':'6','৭':'৭','৮':'8','৯':'9'};
     return String(str).replace(/[০-৯]/g, d => map[d] || d);
 }
 
@@ -1314,6 +1314,7 @@ function handleSubmit(e) {
     if (n) document.getElementById('cust_name').value = n;
     if (p) document.getElementById('cust_phone').value = p;
     if (a) document.getElementById('cust_address').value = a;
+})();
 })();
 </script>
 
